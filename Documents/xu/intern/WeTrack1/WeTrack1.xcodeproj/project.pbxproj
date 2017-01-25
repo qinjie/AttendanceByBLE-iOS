@@ -1,0 +1,645 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		388C37B21E236A6300864885 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 388C37B11E236A6300864885 /* AppDelegate.swift */; };
+		388C37B41E236A6300864885 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 388C37B31E236A6300864885 /* ViewController.swift */; };
+		388C37B71E236A6300864885 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 388C37B51E236A6300864885 /* Main.storyboard */; };
+		388C37BA1E236A6300864885 /* WeTrack1.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 388C37B81E236A6300864885 /* WeTrack1.xcdatamodeld */; };
+		388C37BC1E236A6300864885 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 388C37BB1E236A6300864885 /* Assets.xcassets */; };
+		388C37BF1E236A6300864885 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 388C37BD1E236A6300864885 /* LaunchScreen.storyboard */; };
+		388C37CA1E236A6300864885 /* WeTrack1Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 388C37C91E236A6300864885 /* WeTrack1Tests.swift */; };
+		388C37D51E236A6400864885 /* WeTrack1UITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 388C37D41E236A6400864885 /* WeTrack1UITests.swift */; };
+		38C864FC1E23BE250022ADBA /* Item.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38C864FB1E23BE250022ADBA /* Item.swift */; };
+		EE3D7F95FCF3DD347C092F3E /* Pods_WeTrack1.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DE6B6D4EC0795DBC0778871B /* Pods_WeTrack1.framework */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		388C37C61E236A6300864885 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 388C37A61E236A6300864885 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 388C37AD1E236A6300864885;
+			remoteInfo = WeTrack1;
+		};
+		388C37D11E236A6400864885 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 388C37A61E236A6300864885 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 388C37AD1E236A6300864885;
+			remoteInfo = WeTrack1;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		388C37AE1E236A6300864885 /* WeTrack1.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WeTrack1.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		388C37B11E236A6300864885 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		388C37B31E236A6300864885 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		388C37B61E236A6300864885 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		388C37B91E236A6300864885 /* WeTrack1.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = WeTrack1.xcdatamodel; sourceTree = "<group>"; };
+		388C37BB1E236A6300864885 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		388C37BE1E236A6300864885 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		388C37C01E236A6300864885 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		388C37C51E236A6300864885 /* WeTrack1Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = WeTrack1Tests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		388C37C91E236A6300864885 /* WeTrack1Tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeTrack1Tests.swift; sourceTree = "<group>"; };
+		388C37CB1E236A6300864885 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		388C37D01E236A6400864885 /* WeTrack1UITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = WeTrack1UITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		388C37D41E236A6400864885 /* WeTrack1UITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeTrack1UITests.swift; sourceTree = "<group>"; };
+		388C37D61E236A6400864885 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		38C864F81E239A560022ADBA /* ObjCBridge.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ObjCBridge.h; path = WeTrack1/ObjCBridge.h; sourceTree = "<group>"; };
+		38C864FB1E23BE250022ADBA /* Item.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Item.swift; sourceTree = "<group>"; };
+		54FF04045B39D5C307965253 /* Pods-WeTrack1.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-WeTrack1.debug.xcconfig"; path = "Pods/Target Support Files/Pods-WeTrack1/Pods-WeTrack1.debug.xcconfig"; sourceTree = "<group>"; };
+		5BBF7AECE011CBB4AB01E3E3 /* Pods-WeTrack1.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-WeTrack1.release.xcconfig"; path = "Pods/Target Support Files/Pods-WeTrack1/Pods-WeTrack1.release.xcconfig"; sourceTree = "<group>"; };
+		DE6B6D4EC0795DBC0778871B /* Pods_WeTrack1.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_WeTrack1.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		388C37AB1E236A6300864885 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				EE3D7F95FCF3DD347C092F3E /* Pods_WeTrack1.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		388C37C21E236A6300864885 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		388C37CD1E236A6400864885 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		388C37A51E236A6300864885 = {
+			isa = PBXGroup;
+			children = (
+				38C864F81E239A560022ADBA /* ObjCBridge.h */,
+				388C37B01E236A6300864885 /* WeTrack1 */,
+				388C37C81E236A6300864885 /* WeTrack1Tests */,
+				388C37D31E236A6400864885 /* WeTrack1UITests */,
+				388C37AF1E236A6300864885 /* Products */,
+				553E46FCE823FF90BA8ED24F /* Pods */,
+				9F25766B51E3FA28C52C4186 /* Frameworks */,
+			);
+			sourceTree = "<group>";
+		};
+		388C37AF1E236A6300864885 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				388C37AE1E236A6300864885 /* WeTrack1.app */,
+				388C37C51E236A6300864885 /* WeTrack1Tests.xctest */,
+				388C37D01E236A6400864885 /* WeTrack1UITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		388C37B01E236A6300864885 /* WeTrack1 */ = {
+			isa = PBXGroup;
+			children = (
+				388C37B11E236A6300864885 /* AppDelegate.swift */,
+				388C37B31E236A6300864885 /* ViewController.swift */,
+				388C37B51E236A6300864885 /* Main.storyboard */,
+				388C37BB1E236A6300864885 /* Assets.xcassets */,
+				388C37BD1E236A6300864885 /* LaunchScreen.storyboard */,
+				388C37C01E236A6300864885 /* Info.plist */,
+				388C37B81E236A6300864885 /* WeTrack1.xcdatamodeld */,
+				38C864FB1E23BE250022ADBA /* Item.swift */,
+			);
+			path = WeTrack1;
+			sourceTree = "<group>";
+		};
+		388C37C81E236A6300864885 /* WeTrack1Tests */ = {
+			isa = PBXGroup;
+			children = (
+				388C37C91E236A6300864885 /* WeTrack1Tests.swift */,
+				388C37CB1E236A6300864885 /* Info.plist */,
+			);
+			path = WeTrack1Tests;
+			sourceTree = "<group>";
+		};
+		388C37D31E236A6400864885 /* WeTrack1UITests */ = {
+			isa = PBXGroup;
+			children = (
+				388C37D41E236A6400864885 /* WeTrack1UITests.swift */,
+				388C37D61E236A6400864885 /* Info.plist */,
+			);
+			path = WeTrack1UITests;
+			sourceTree = "<group>";
+		};
+		553E46FCE823FF90BA8ED24F /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				54FF04045B39D5C307965253 /* Pods-WeTrack1.debug.xcconfig */,
+				5BBF7AECE011CBB4AB01E3E3 /* Pods-WeTrack1.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
+		9F25766B51E3FA28C52C4186 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				DE6B6D4EC0795DBC0778871B /* Pods_WeTrack1.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		388C37AD1E236A6300864885 /* WeTrack1 */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 388C37D91E236A6400864885 /* Build configuration list for PBXNativeTarget "WeTrack1" */;
+			buildPhases = (
+				6A9651896F57963144D8C36E /* [CP] Check Pods Manifest.lock */,
+				388C37AA1E236A6300864885 /* Sources */,
+				388C37AB1E236A6300864885 /* Frameworks */,
+				388C37AC1E236A6300864885 /* Resources */,
+				D4B5978765C34F41FF8B8E7D /* [CP] Embed Pods Frameworks */,
+				A8460F2574AE6DBDA99FBD2B /* [CP] Copy Pods Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = WeTrack1;
+			productName = WeTrack1;
+			productReference = 388C37AE1E236A6300864885 /* WeTrack1.app */;
+			productType = "com.apple.product-type.application";
+		};
+		388C37C41E236A6300864885 /* WeTrack1Tests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 388C37DC1E236A6400864885 /* Build configuration list for PBXNativeTarget "WeTrack1Tests" */;
+			buildPhases = (
+				388C37C11E236A6300864885 /* Sources */,
+				388C37C21E236A6300864885 /* Frameworks */,
+				388C37C31E236A6300864885 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				388C37C71E236A6300864885 /* PBXTargetDependency */,
+			);
+			name = WeTrack1Tests;
+			productName = WeTrack1Tests;
+			productReference = 388C37C51E236A6300864885 /* WeTrack1Tests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		388C37CF1E236A6400864885 /* WeTrack1UITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 388C37DF1E236A6400864885 /* Build configuration list for PBXNativeTarget "WeTrack1UITests" */;
+			buildPhases = (
+				388C37CC1E236A6400864885 /* Sources */,
+				388C37CD1E236A6400864885 /* Frameworks */,
+				388C37CE1E236A6400864885 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				388C37D21E236A6400864885 /* PBXTargetDependency */,
+			);
+			name = WeTrack1UITests;
+			productName = WeTrack1UITests;
+			productReference = 388C37D01E236A6400864885 /* WeTrack1UITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		388C37A61E236A6300864885 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastSwiftUpdateCheck = 0820;
+				LastUpgradeCheck = 0820;
+				ORGANIZATIONNAME = sg;
+				TargetAttributes = {
+					388C37AD1E236A6300864885 = {
+						CreatedOnToolsVersion = 8.2.1;
+						DevelopmentTeam = YN73BLV7YH;
+						ProvisioningStyle = Automatic;
+						SystemCapabilities = {
+							com.apple.BackgroundModes = {
+								enabled = 1;
+							};
+						};
+					};
+					388C37C41E236A6300864885 = {
+						CreatedOnToolsVersion = 8.2.1;
+						DevelopmentTeam = YN73BLV7YH;
+						ProvisioningStyle = Automatic;
+						TestTargetID = 388C37AD1E236A6300864885;
+					};
+					388C37CF1E236A6400864885 = {
+						CreatedOnToolsVersion = 8.2.1;
+						DevelopmentTeam = YN73BLV7YH;
+						ProvisioningStyle = Automatic;
+						TestTargetID = 388C37AD1E236A6300864885;
+					};
+				};
+			};
+			buildConfigurationList = 388C37A91E236A6300864885 /* Build configuration list for PBXProject "WeTrack1" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 388C37A51E236A6300864885;
+			productRefGroup = 388C37AF1E236A6300864885 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				388C37AD1E236A6300864885 /* WeTrack1 */,
+				388C37C41E236A6300864885 /* WeTrack1Tests */,
+				388C37CF1E236A6400864885 /* WeTrack1UITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		388C37AC1E236A6300864885 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				388C37BF1E236A6300864885 /* LaunchScreen.storyboard in Resources */,
+				388C37BC1E236A6300864885 /* Assets.xcassets in Resources */,
+				388C37B71E236A6300864885 /* Main.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		388C37C31E236A6300864885 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		388C37CE1E236A6400864885 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		6A9651896F57963144D8C36E /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+		A8460F2574AE6DBDA99FBD2B /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-WeTrack1/Pods-WeTrack1-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		D4B5978765C34F41FF8B8E7D /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-WeTrack1/Pods-WeTrack1-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		388C37AA1E236A6300864885 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				38C864FC1E23BE250022ADBA /* Item.swift in Sources */,
+				388C37B41E236A6300864885 /* ViewController.swift in Sources */,
+				388C37BA1E236A6300864885 /* WeTrack1.xcdatamodeld in Sources */,
+				388C37B21E236A6300864885 /* AppDelegate.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		388C37C11E236A6300864885 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				388C37CA1E236A6300864885 /* WeTrack1Tests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		388C37CC1E236A6400864885 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				388C37D51E236A6400864885 /* WeTrack1UITests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		388C37C71E236A6300864885 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 388C37AD1E236A6300864885 /* WeTrack1 */;
+			targetProxy = 388C37C61E236A6300864885 /* PBXContainerItemProxy */;
+		};
+		388C37D21E236A6400864885 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 388C37AD1E236A6300864885 /* WeTrack1 */;
+			targetProxy = 388C37D11E236A6400864885 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		388C37B51E236A6300864885 /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				388C37B61E236A6300864885 /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		388C37BD1E236A6300864885 /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				388C37BE1E236A6300864885 /* Base */,
+			);
+			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		388C37D71E236A6400864885 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.2;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		388C37D81E236A6400864885 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.2;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = iphoneos;
+				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		388C37DA1E236A6400864885 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 54FF04045B39D5C307965253 /* Pods-WeTrack1.debug.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				DEVELOPMENT_TEAM = YN73BLV7YH;
+				INFOPLIST_FILE = WeTrack1/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.sg.WeTrack1;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "${PROJECT_NAME}/ObjCBridge.h";
+				SWIFT_VERSION = 3.0;
+			};
+			name = Debug;
+		};
+		388C37DB1E236A6400864885 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 5BBF7AECE011CBB4AB01E3E3 /* Pods-WeTrack1.release.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				DEVELOPMENT_TEAM = YN73BLV7YH;
+				INFOPLIST_FILE = WeTrack1/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.sg.WeTrack1;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "${PROJECT_NAME}/ObjCBridge.h";
+				SWIFT_VERSION = 3.0;
+			};
+			name = Release;
+		};
+		388C37DD1E236A6400864885 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				DEVELOPMENT_TEAM = YN73BLV7YH;
+				INFOPLIST_FILE = WeTrack1Tests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.sg.WeTrack1Tests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 3.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/WeTrack1.app/WeTrack1";
+			};
+			name = Debug;
+		};
+		388C37DE1E236A6400864885 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				DEVELOPMENT_TEAM = YN73BLV7YH;
+				INFOPLIST_FILE = WeTrack1Tests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.sg.WeTrack1Tests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 3.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/WeTrack1.app/WeTrack1";
+			};
+			name = Release;
+		};
+		388C37E01E236A6400864885 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				DEVELOPMENT_TEAM = YN73BLV7YH;
+				INFOPLIST_FILE = WeTrack1UITests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.sg.WeTrack1UITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 3.0;
+				TEST_TARGET_NAME = WeTrack1;
+			};
+			name = Debug;
+		};
+		388C37E11E236A6400864885 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				DEVELOPMENT_TEAM = YN73BLV7YH;
+				INFOPLIST_FILE = WeTrack1UITests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.sg.WeTrack1UITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 3.0;
+				TEST_TARGET_NAME = WeTrack1;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		388C37A91E236A6300864885 /* Build configuration list for PBXProject "WeTrack1" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				388C37D71E236A6400864885 /* Debug */,
+				388C37D81E236A6400864885 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		388C37D91E236A6400864885 /* Build configuration list for PBXNativeTarget "WeTrack1" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				388C37DA1E236A6400864885 /* Debug */,
+				388C37DB1E236A6400864885 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		388C37DC1E236A6400864885 /* Build configuration list for PBXNativeTarget "WeTrack1Tests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				388C37DD1E236A6400864885 /* Debug */,
+				388C37DE1E236A6400864885 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		388C37DF1E236A6400864885 /* Build configuration list for PBXNativeTarget "WeTrack1UITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				388C37E01E236A6400864885 /* Debug */,
+				388C37E11E236A6400864885 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		388C37B81E236A6300864885 /* WeTrack1.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				388C37B91E236A6300864885 /* WeTrack1.xcdatamodel */,
+			);
+			currentVersion = 388C37B91E236A6300864885 /* WeTrack1.xcdatamodel */;
+			path = WeTrack1.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
+	};
+	rootObject = 388C37A61E236A6300864885 /* Project object */;
+}
