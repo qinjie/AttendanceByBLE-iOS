@@ -1,0 +1,6 @@
+framework module Pods_ATK {
+  umbrella header "Pods-ATK-umbrella.h"
+
+  export *
+  module * { export * }
+}

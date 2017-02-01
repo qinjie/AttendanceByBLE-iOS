@@ -1,0 +1,21 @@
+PODS:
+  - Alamofire (4.1.0)
+  - EstimoteSDK (4.11.2)
+  - JTCalendar (2.1.9)
+  - SwiftyJSON (3.1.3)
+
+DEPENDENCIES:
+  - Alamofire
+  - EstimoteSDK
+  - JTCalendar
+  - SwiftyJSON
+
+SPEC CHECKSUMS:
+  Alamofire: e266cf991b933498df791e645e0d8ac294492153
+  EstimoteSDK: 79e289736d75b56bbd8ecb4cf518c3a007c6fb49
+  JTCalendar: beb2f4c1b639bf6880f680b4858227acf83a049c
+  SwiftyJSON: 38a8ea2006779c0fc4c310cb2ee8195327740faf
+
+PODFILE CHECKSUM: 898c959a7fee3e53cd3a70fafc3329a18e7b6dd1
+
+COCOAPODS: 1.1.1
