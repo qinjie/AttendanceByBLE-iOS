@@ -1,0 +1,6 @@
+framework module Pods_ATK_BLE {
+  umbrella header "Pods-ATK_BLE-umbrella.h"
+
+  export *
+  module * { export * }
+}
