@@ -118,15 +118,20 @@ class LoginController: UIViewController{
         Alamofire.request(urlString, method: .post, parameters: parameters, encoding: JSONEncoding.default, headers: nil).responseJSON { (response:DataResponse) in
             switch(response.result) {
             case .success(_):
+                
+                UserDefaults.standard.set("canhnht", forKey: "username")
+                
                 if let data = response.result.value{
                     print(data)
                 }
-               
+                
                 if let JSON = response.result.value as? [String: AnyObject]{
                     
                     Constant.username = JSON["name"] as! String
                     Constant.token = JSON["token"] as! String
                     Constant.user_id = JSON["id"] as! Int
+                    Constant.major = JSON["major"] as! Int
+                    Constant.minor = JSON["minor"] as! Int
                  // constant majo minor status token
                     
                     UserDefaults.standard.set(Constant.token, forKey: "token")
@@ -134,7 +139,9 @@ class LoginController: UIViewController{
                     print("token \(Constant.token)")
                     
                     self.setupData()
-
+                    
+                    self.loadUUID()
+                    
                 }
                 break
                 
@@ -155,11 +162,9 @@ class LoginController: UIViewController{
     
     func setupData(){
         
-        //  let token = "QAMoEorbGpaE6j1__4MyCQRedeHDskzJ"
+        
         let token = UserDefaults.standard.string(forKey: "token")
-        // token = "Bearer " + token!
-        print("Token2: \(token)")
-        //let parameters: [String: Any] = ["Authorization": token]
+        
         let headers: HTTPHeaders = [
             "Authorization": "Bearer " + token!
             // "Accept": "application/json"
@@ -223,14 +228,7 @@ class LoginController: UIViewController{
                 }
             }
             
-            
-            
-            print("HELLO")
-//            guard let responseJSON = response.result.value as? [[String: AnyObject]]
-//                else {
-//                    print("Parse error2")
-//                    return
-//            }
+
             
             DispatchQueue.main.async(execute: {
                 //alertController.dismiss(animated: true, completion: nil)
@@ -238,130 +236,44 @@ class LoginController: UIViewController{
                     self.performSegue(withIdentifier: "loginSegue", sender: nil)
                 }
             })
-//            let jsons = JSON(responseJSON)
-//            // print("JSON  \(jsons)")
-//            
-//            let delegate = UIApplication.shared.delegate as? AppDelegate
-//            
-//            if let context = delegate?.managedObjectContext {
-//                
-//                for json in jsons.array! {
-//                    
-//                    let newLesson = NSEntityDescription.insertNewObject(forEntityName: "Lesson", into: context) as! Lesson
-//                    
-//                    newLesson.lessonName = String(describing: json["lesson"]["subject_area"])
-//                    newLesson.lecturer = String(describing: json["lecturers"]["name"])
-//                    newLesson.sTime = String(describing: json["lesson"]["start_time"])
-//                    newLesson.eTime = String(describing: json["lesson"]["end_time"])
-//                    
-//                    let newVenue = NSEntityDescription.insertNewObject(forEntityName: "Venue", into: context) as! Venue
-//                    newVenue.id = String(describing: json["venue"]["id"])
-//                    newVenue.location = String(describing: json["location"])
-//                    newVenue.name = String(describing: json["venue"]["name"])
-//                    newVenue.uuid = String(describing: json["venue"]["uuid"])
-//                    newVenue.major = String(describing: json["venue"]["major"])
-//                    newVenue.minor = String(describing: json["venue"]["minor"])
-//                    
-//                    newLesson.venue = newVenue
-//                    
-//                }
-                /*
-                 let request = NSFetchRequest<NSFetchRequestResult>(entityName: "Lesson")
-                 request.returnsObjectsAsFaults = false
-                 
-                 do {
-                 let lssons = try! context.fetch(request) as! [Lesson]
-                 
-                 print("zzz le setup to view \(lssons.count)")
-                 
-                 //  self.loadData()
-                 }catch{
-                 fatalError("Failed to fetch employees: \(error)")
-                 }
-                 */
+
            
       
             }
             // self.collectionView!.reloadData()
         }
     
-        // Setup data of venue
-        
-   //     url = Constant.baseURL + "/atk-ble/api/web/index.php/v1/venue"
-        //        Alamofire.request(url, method: .get, parameters: nil, encoding: JSONEncoding.default, headers: headers).responseJSON { (response:DataResponse) in
-        //
-        //            guard let responseJSON = response.result.value as? [[String: AnyObject]]
-        //                else {
-        //                    print("Parse error2")
-        //                    return
-        //            }
-        //            let jsons = JSON(responseJSON)
-        //            print("JSON  \(jsons)")
-        //
-        //            let delegate = UIApplication.shared.delegate as? AppDelegate
-        //
-        //            if let context = delegate?.managedObjectContext {
-        //
-        //                for json in jsons.array! {
-        //
-        //                    let newVenue = NSEntityDescription.insertNewObject(forEntityName: "Venue", into: context) as! Venue
-        //
-        //                    newVenue.id = String(describing: json["id"])
-        //                    newVenue.location = String(describing: json["location"])
-        //                    newVenue.name = String(describing: json["name"])
-        //                    newVenue.uuid = String(describing: json["uuid"])
-        //                    newVenue.major = String(describing: json["major"])
-        //                    newVenue.minor = String(describing: json["minor"])
-        //                }
-        //                /*
-        //                 let request = NSFetchRequest<NSFetchRequestResult>(entityName: "Lesson")
-        //                 request.returnsObjectsAsFaults = false
-        //
-        //                 do {
-        //                 let lssons = try! context.fetch(request) as! [Lesson]
-        //
-        //                 print("zzz le setup to view \(lssons.count)")
-        //
-        //                 //  self.loadData()
-        //                 }catch{
-        //                 fatalError("Failed to fetch employees: \(error)")
-        //                 }
-        //                 */
-        //                do {
-        //                    try(context.save())
-        //                } catch let err {
-        //                    print(err)
-        //                }
-        //            }
-        //            // self.collectionView!.reloadData()
-        //        }
-        
-        
-   // }
-    
-    
-    /*
-     // MARK: - Navigation
-     
-     // In a storyboard-based application, you will often want to do a little preparation before navigation
-     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-     // Get the new view controller using segue.destinationViewController.
-     // Pass the selected object to the new view controller.
-     }
-     */
-    
-    
-    /*
-     let usernameStored = UserDefaults.standard.string(forKey: "username")
-     let passwordStored = UserDefaults.standard.string(forKey: "password")
-     if ((username == usernameStored) && (password == passwordStored)){
-     // login successfull
-     
-     UserDefaults.standard.set(true, forKey: "isUserLogin")
-     UserDefaults.standard.synchronize()
-     dismiss(animated: true, completion: nil)
-     }*/
-    
+        func loadUUID(){
+            
+            let token = UserDefaults.standard.string(forKey: "token")
+            
+            let headers: HTTPHeaders = [
+                "Authorization": "Bearer " + token!
+                // "Accept": "application/json"
+            ]
+            
+            Alamofire.request(Constant.URLlessonUUID, method: .get, parameters: nil, encoding: JSONEncoding.default, headers: headers).responseJSON { (response:DataResponse) in
+                
+                if let JSON = response.result.value as? [[String:AnyObject]]{
+                    
+                    let localdata = "lessonUUID.json" //this is the file. we will write to and read from it
+                    
+                    
+                    if let dir = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first {
+                        
+                        let filePath = dir.appendingPathComponent(localdata)
+                        
+                        // write to file
+                        NSKeyedArchiver.archiveRootObject(JSON, toFile: filePath.path)
+                        
+                        
+                    }
+                    
+                  
+                }
+            }
+        }
+   
     
 }
 extension UIViewController {

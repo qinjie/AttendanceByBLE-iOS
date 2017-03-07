@@ -10,6 +10,8 @@
 		3815A2721E6CF1CF00301CE2 /* LessonCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3815A2711E6CF1CF00301CE2 /* LessonCell.swift */; };
 		3815A2741E6D030F00301CE2 /* TableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3815A2731E6D030F00301CE2 /* TableViewCell.swift */; };
 		3815A2781E6D405800301CE2 /* TodayController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3815A2771E6D405800301CE2 /* TodayController.swift */; };
+		3815A27A1E6D609400301CE2 /* SettingController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3815A2791E6D609400301CE2 /* SettingController.swift */; };
+		3849C6DD1E6E93D300097B17 /* TabbarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3849C6DC1E6E93D300097B17 /* TabbarController.swift */; };
 		38841AA41E690C0E004EF33D /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38841AA31E690C0E004EF33D /* AppDelegate.swift */; };
 		38841AA61E690C0E004EF33D /* LoginController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38841AA51E690C0E004EF33D /* LoginController.swift */; };
 		38841AA91E690C0E004EF33D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 38841AA71E690C0E004EF33D /* Main.storyboard */; };
@@ -28,6 +30,8 @@
 		3815A2711E6CF1CF00301CE2 /* LessonCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LessonCell.swift; sourceTree = "<group>"; };
 		3815A2731E6D030F00301CE2 /* TableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TableViewCell.swift; sourceTree = "<group>"; };
 		3815A2771E6D405800301CE2 /* TodayController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TodayController.swift; sourceTree = "<group>"; };
+		3815A2791E6D609400301CE2 /* SettingController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingController.swift; sourceTree = "<group>"; };
+		3849C6DC1E6E93D300097B17 /* TabbarController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TabbarController.swift; sourceTree = "<group>"; };
 		38841AA01E690C0E004EF33D /* ATK_BLE.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ATK_BLE.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		38841AA31E690C0E004EF33D /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		38841AA51E690C0E004EF33D /* LoginController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginController.swift; sourceTree = "<group>"; };
@@ -90,6 +94,8 @@
 				38E26DF71E6910A4003B009D /* Items.swift */,
 				3815A2731E6D030F00301CE2 /* TableViewCell.swift */,
 				38E26DF91E694E30003B009D /* Lesson.swift */,
+				3815A2791E6D609400301CE2 /* SettingController.swift */,
+				3849C6DC1E6E93D300097B17 /* TabbarController.swift */,
 				3815A2711E6CF1CF00301CE2 /* LessonCell.swift */,
 				38E26DFD1E6961F5003B009D /* TableViewController.swift */,
 				3815A2771E6D405800301CE2 /* TodayController.swift */,
@@ -242,6 +248,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				38E26DFA1E694E30003B009D /* Lesson.swift in Sources */,
+				3849C6DD1E6E93D300097B17 /* TabbarController.swift in Sources */,
 				38E26DFE1E6961F5003B009D /* TableViewController.swift in Sources */,
 				38E26DF81E6910A4003B009D /* Items.swift in Sources */,
 				3815A2741E6D030F00301CE2 /* TableViewCell.swift in Sources */,
@@ -249,6 +256,7 @@
 				38841AA41E690C0E004EF33D /* AppDelegate.swift in Sources */,
 				38E26DF61E691001003B009D /* ATKController.swift in Sources */,
 				38E26DFC1E69595C003B009D /* TimetableController.swift in Sources */,
+				3815A27A1E6D609400301CE2 /* SettingController.swift in Sources */,
 				3815A2721E6CF1CF00301CE2 /* LessonCell.swift in Sources */,
 				3815A2781E6D405800301CE2 /* TodayController.swift in Sources */,
 			);

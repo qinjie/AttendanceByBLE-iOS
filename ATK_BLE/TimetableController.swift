@@ -39,22 +39,35 @@ class TimetableController: UITableViewController {
         
         navigationItem.title = "Weekly Timetable"
         
-        let localdata = "timetable.txt"
+        var localdata = "timetable.txt"
         
         if let dir = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first {
             
-            let filePath = dir.appendingPathComponent(localdata)
-            
-            NSKeyedArchiver.archiveRootObject(GlobalData.timetable, toFile: filePath.path)
+            var filePath = dir.appendingPathComponent(localdata)
             
             // read from file
             if let dict = NSKeyedUnarchiver.unarchiveObject(withFile: filePath.path) as? [Lesson]{
                 
                 GlobalData.timetable = dict
                 
-                
             }
-       
+            
+            localdata = "lessonUUID.json"
+            
+            filePath = dir.appendingPathComponent(localdata)
+            
+            if let JSON = NSKeyedUnarchiver.unarchiveObject(withFile: filePath.path) as? [[String: Any]]{
+                print(JSON)
+                var dict = [Int:String]()
+                for json in JSON{
+                    let id = (json["lesson_id"] as? Int)!
+                    let uuid = (json["uuid"] as? String)!
+                    dict.updateValue(uuid, forKey: id)
+                }
+                GlobalData.lessonUUID = dict
+            }
+            
+            
         }
      
     }

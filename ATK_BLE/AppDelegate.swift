@@ -16,6 +16,23 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         
+        var mainStoryboard = UIStoryboard(name: "Main", bundle: nil)
+        //        var loginController: LoginController? = (mainStoryboard.instantiateViewController(withIdentifier: "Login") as? LoginController)
+        //         self.window.rootViewController = loginController
+        if (UserDefaults.standard.string(forKey: "username") == nil) {
+            
+            var loginController: LoginController? = (mainStoryboard.instantiateViewController(withIdentifier: "LoginPage") as? LoginController)
+            
+            self.window?.rootViewController = loginController
+        }else{
+            
+            var mainViewController: TabbarController? = (mainStoryboard.instantiateViewController(withIdentifier: "Home") as? TabbarController)
+            
+            self.window?.rootViewController = mainViewController
+        }
+        
+
+        
         // Override point for customization after application launch.
         application.registerUserNotificationSettings(UIUserNotificationSettings(types: [.alert, .badge, .sound], categories: nil))
         UIApplication.shared.cancelAllLocalNotifications()
