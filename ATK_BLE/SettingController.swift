@@ -10,6 +10,17 @@ import UIKit
 
 class SettingController: UITableViewController {
 
+    @IBAction func logout(_ sender: Any) {
+        
+        UserDefaults.standard.removeObject(forKey: "username")
+        
+        
+        let appDelegate = UIApplication.shared.delegate as! AppDelegate
+        appDelegate.resetAppToFirstController()
+        
+    }
+    
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 

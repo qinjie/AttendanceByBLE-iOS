@@ -33,6 +33,8 @@ struct Constant{
     
     static var isLogin = false
     
+    
+    
 }
 
 struct GlobalData{
@@ -40,6 +42,11 @@ struct GlobalData{
     static var timetable = [Lesson]()
     static var today = [Lesson]()
     static var lessonUUID = [Int:String]()
+    static var currentDateStr = ""
+    static var currentLecturerMajor = 0
+    static var currentLecturerMinor = 0
+    static var currentLecturerId = 0
+ 
 }
 
 

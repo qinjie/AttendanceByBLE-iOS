@@ -279,7 +279,7 @@
                             <tableViewSection headerTitle="Section-2" id="x5x-lS-0ja">
                                 <cells>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" id="Psx-gH-bXQ">
-                                        <rect key="frame" x="0.0" y="245" width="375" height="44"/>
+                                        <rect key="frame" x="0.0" y="244" width="375" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="Psx-gH-bXQ" id="T7H-lP-t8P">
                                             <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
@@ -287,7 +287,7 @@
                                         </tableViewCellContentView>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" id="zvs-7d-hQM">
-                                        <rect key="frame" x="0.0" y="289" width="375" height="44"/>
+                                        <rect key="frame" x="0.0" y="288" width="375" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="zvs-7d-hQM" id="9M3-Qe-9FD">
                                             <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
@@ -295,7 +295,7 @@
                                         </tableViewCellContentView>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" id="tMq-OU-mxN">
-                                        <rect key="frame" x="0.0" y="333" width="375" height="44"/>
+                                        <rect key="frame" x="0.0" y="332" width="375" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="tMq-OU-mxN" id="LDo-5T-7OO">
                                             <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
@@ -307,7 +307,7 @@
                             <tableViewSection headerTitle="Section-3" id="Ds9-YD-gXd">
                                 <cells>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" id="vfJ-M9-ON1">
-                                        <rect key="frame" x="0.0" y="434" width="375" height="44"/>
+                                        <rect key="frame" x="0.0" y="432" width="375" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="vfJ-M9-ON1" id="25b-ca-e61">
                                             <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
@@ -319,6 +319,9 @@
                                                     <state key="normal" title="Log out">
                                                         <color key="titleColor" red="1" green="0.2243081432" blue="0.033105715100000002" alpha="0.79771012929999996" colorSpace="calibratedRGB"/>
                                                     </state>
+                                                    <connections>
+                                                        <action selector="logout:" destination="KKh-jy-gsd" eventType="touchUpInside" id="2fL-J0-2Go"/>
+                                                    </connections>
                                                 </button>
                                             </subviews>
                                             <constraints>
@@ -353,10 +356,10 @@
                         <color key="backgroundColor" red="1" green="0.2243081432" blue="0.033105715100000002" alpha="1" colorSpace="calibratedRGB"/>
                     </tabBar>
                     <connections>
+                        <segue destination="vEf-YH-Yw8" kind="relationship" relationship="viewControllers" id="qbV-Mm-cfh"/>
                         <segue destination="pn1-zr-afc" kind="relationship" relationship="viewControllers" id="5ye-rh-0IP"/>
                         <segue destination="xJZ-aV-4V0" kind="relationship" relationship="viewControllers" id="A6v-0z-mWG"/>
                         <segue destination="Gkr-qV-T2T" kind="relationship" relationship="viewControllers" id="hhp-aV-Bvm"/>
-                        <segue destination="vEf-YH-Yw8" kind="relationship" relationship="viewControllers" id="qbV-Mm-cfh"/>
                     </connections>
                 </tabBarController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="vq9-C4-MD4" userLabel="First Responder" sceneMemberID="firstResponder"/>

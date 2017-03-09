@@ -135,6 +135,9 @@ class LoginController: UIViewController{
                  // constant majo minor status token
                     
                     UserDefaults.standard.set(Constant.token, forKey: "token")
+                    UserDefaults.standard.set(Constant.major, forKey: "major")
+                    UserDefaults.standard.set(Constant.minor, forKey: "minor")
+                    UserDefaults.standard.set(Constant.username, forKey: "username")
                     
                     print("token \(Constant.token)")
                     

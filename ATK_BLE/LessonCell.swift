@@ -151,9 +151,9 @@ class LessonCell: UITableViewCell {
         containerView.addSubview(start_time)
         containerView.addSubview(end_time)
         
-        containerView.addConstraintsWithFormat("H:|-20-[v0(100)][v1(70)]-12-|", views: subjectLabel, start_time)
+        containerView.addConstraintsWithFormat("H:|-20-[v0][v1(70)]-12-|", views: subjectLabel, start_time)
         
-        containerView.addConstraintsWithFormat("H:|-20-[v0(100)][v1(70)]-12-|", views: venue, end_time)
+        containerView.addConstraintsWithFormat("H:|-20-[v0][v1(70)]-12-|", views: venue, end_time)
         
         containerView.addConstraintsWithFormat("V:|-15-[v0]-15-[v1]-15-|", views: start_time, end_time)
         

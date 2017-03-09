@@ -17,6 +17,8 @@
 		38841AA91E690C0E004EF33D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 38841AA71E690C0E004EF33D /* Main.storyboard */; };
 		38841AAB1E690C0E004EF33D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 38841AAA1E690C0E004EF33D /* Assets.xcassets */; };
 		38841AAE1E690C0E004EF33D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 38841AAC1E690C0E004EF33D /* LaunchScreen.storyboard */; };
+		38851CE21E6FF0EE001DC32C /* BluetoothDeviceHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = 38851CDE1E6FF0EE001DC32C /* BluetoothDeviceHandler.m */; };
+		38851CE31E6FF0EE001DC32C /* BluetoothManagerHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = 38851CE11E6FF0EE001DC32C /* BluetoothManagerHandler.m */; };
 		38E26DF61E691001003B009D /* ATKController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38E26DF51E691001003B009D /* ATKController.swift */; };
 		38E26DF81E6910A4003B009D /* Items.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38E26DF71E6910A4003B009D /* Items.swift */; };
 		38E26DFA1E694E30003B009D /* Lesson.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38E26DF91E694E30003B009D /* Lesson.swift */; };
@@ -39,6 +41,13 @@
 		38841AAA1E690C0E004EF33D /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		38841AAD1E690C0E004EF33D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		38841AAF1E690C0E004EF33D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		38851CDB1E6FF0ED001DC32C /* ATK_BLE-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "ATK_BLE-Bridging-Header.h"; sourceTree = "<group>"; };
+		38851CDC1E6FF0EE001DC32C /* BluetoothDevice.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BluetoothDevice.h; path = ATK_BLE/BluetoothDevice.h; sourceTree = "<group>"; };
+		38851CDD1E6FF0EE001DC32C /* BluetoothDeviceHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BluetoothDeviceHandler.h; path = ATK_BLE/BluetoothDeviceHandler.h; sourceTree = "<group>"; };
+		38851CDE1E6FF0EE001DC32C /* BluetoothDeviceHandler.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = BluetoothDeviceHandler.m; path = ATK_BLE/BluetoothDeviceHandler.m; sourceTree = "<group>"; };
+		38851CDF1E6FF0EE001DC32C /* BluetoothManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BluetoothManager.h; path = ATK_BLE/BluetoothManager.h; sourceTree = "<group>"; };
+		38851CE01E6FF0EE001DC32C /* BluetoothManagerHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BluetoothManagerHandler.h; path = ATK_BLE/BluetoothManagerHandler.h; sourceTree = "<group>"; };
+		38851CE11E6FF0EE001DC32C /* BluetoothManagerHandler.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = BluetoothManagerHandler.m; path = ATK_BLE/BluetoothManagerHandler.m; sourceTree = "<group>"; };
 		38E26DF51E691001003B009D /* ATKController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ATKController.swift; sourceTree = "<group>"; };
 		38E26DF71E6910A4003B009D /* Items.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Items.swift; sourceTree = "<group>"; };
 		38E26DF91E694E30003B009D /* Lesson.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Lesson.swift; sourceTree = "<group>"; };
@@ -71,10 +80,12 @@
 		38841A971E690C0E004EF33D = {
 			isa = PBXGroup;
 			children = (
+				38851CE41E6FF0F3001DC32C /* Objective-C */,
 				38841AA21E690C0E004EF33D /* ATK_BLE */,
 				38841AA11E690C0E004EF33D /* Products */,
 				C7EBCFCC2957C30BAF3A18D5 /* Pods */,
 				384D65599B2822FAEDA21118 /* Frameworks */,
+				38851CDB1E6FF0ED001DC32C /* ATK_BLE-Bridging-Header.h */,
 			);
 			sourceTree = "<group>";
 		};
@@ -107,6 +118,19 @@
 				38841AAF1E690C0E004EF33D /* Info.plist */,
 			);
 			path = ATK_BLE;
+			sourceTree = "<group>";
+		};
+		38851CE41E6FF0F3001DC32C /* Objective-C */ = {
+			isa = PBXGroup;
+			children = (
+				38851CDC1E6FF0EE001DC32C /* BluetoothDevice.h */,
+				38851CDD1E6FF0EE001DC32C /* BluetoothDeviceHandler.h */,
+				38851CDE1E6FF0EE001DC32C /* BluetoothDeviceHandler.m */,
+				38851CDF1E6FF0EE001DC32C /* BluetoothManager.h */,
+				38851CE01E6FF0EE001DC32C /* BluetoothManagerHandler.h */,
+				38851CE11E6FF0EE001DC32C /* BluetoothManagerHandler.m */,
+			);
+			name = "Objective-C";
 			sourceTree = "<group>";
 		};
 		C7EBCFCC2957C30BAF3A18D5 /* Pods */ = {
@@ -154,6 +178,7 @@
 					38841A9F1E690C0E004EF33D = {
 						CreatedOnToolsVersion = 8.2.1;
 						DevelopmentTeam = YN73BLV7YH;
+						LastSwiftMigration = 0820;
 						ProvisioningStyle = Automatic;
 						SystemCapabilities = {
 							com.apple.BackgroundModes = {
@@ -251,12 +276,14 @@
 				3849C6DD1E6E93D300097B17 /* TabbarController.swift in Sources */,
 				38E26DFE1E6961F5003B009D /* TableViewController.swift in Sources */,
 				38E26DF81E6910A4003B009D /* Items.swift in Sources */,
+				38851CE21E6FF0EE001DC32C /* BluetoothDeviceHandler.m in Sources */,
 				3815A2741E6D030F00301CE2 /* TableViewCell.swift in Sources */,
 				38841AA61E690C0E004EF33D /* LoginController.swift in Sources */,
 				38841AA41E690C0E004EF33D /* AppDelegate.swift in Sources */,
 				38E26DF61E691001003B009D /* ATKController.swift in Sources */,
 				38E26DFC1E69595C003B009D /* TimetableController.swift in Sources */,
 				3815A27A1E6D609400301CE2 /* SettingController.swift in Sources */,
+				38851CE31E6FF0EE001DC32C /* BluetoothManagerHandler.m in Sources */,
 				3815A2721E6CF1CF00301CE2 /* LessonCell.swift in Sources */,
 				3815A2781E6D405800301CE2 /* TodayController.swift in Sources */,
 			);
@@ -380,11 +407,14 @@
 			baseConfigurationReference = 2F04FDBD21813133A02CD771 /* Pods-ATK_BLE.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
 				DEVELOPMENT_TEAM = YN73BLV7YH;
 				INFOPLIST_FILE = ATK_BLE/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.iot.ATK-BLE";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "ATK_BLE-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 3.0;
 			};
 			name = Debug;
@@ -394,11 +424,13 @@
 			baseConfigurationReference = A480AF68145EB8C64A5ACCB4 /* Pods-ATK_BLE.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
 				DEVELOPMENT_TEAM = YN73BLV7YH;
 				INFOPLIST_FILE = ATK_BLE/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.iot.ATK-BLE";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "ATK_BLE-Bridging-Header.h";
 				SWIFT_VERSION = 3.0;
 			};
 			name = Release;

@@ -6,26 +6,10 @@
          contextName = "GLOBAL">
          <PersistentStrings>
             <PersistentString
+               value = "Constant.token">
+            </PersistentString>
+            <PersistentString
                value = "GlobalData.today">
-            </PersistentString>
-         </PersistentStrings>
-      </ContextState>
-      <ContextState
-         contextName = "TodayController.(start() -&gt; ()).(closure #1):TodayController.swift">
-         <PersistentStrings>
-            <PersistentString
-               value = "token">
-            </PersistentString>
-         </PersistentStrings>
-      </ContextState>
-      <ContextState
-         contextName = "TodayController.viewDidLoad() -&gt; ():TodayController.swift">
-      </ContextState>
-      <ContextState
-         contextName = "TimetableController.viewDidLoad() -&gt; ():TimetableController.swift">
-         <PersistentStrings>
-            <PersistentString
-               value = "">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -36,6 +20,52 @@
                value = "">
             </PersistentString>
          </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "TodayController.broadcasting() -&gt; ():TodayController.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "Constant.major">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "TodayController.start() -&gt; ():TodayController.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "Constant.URLcurrentLesson">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "TimetableController.viewDidLoad() -&gt; ():TimetableController.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "TodayController.startMonitorLesson(id : Int) -&gt; ():TodayController.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "currentLesson">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "TodayController.(start() -&gt; ()).(closure #1):TodayController.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "Constant.token">
+            </PersistentString>
+            <PersistentString
+               value = "lesson_id">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "TodayController.viewDidLoad() -&gt; ():TodayController.swift">
       </ContextState>
    </ContextStates>
 </VariablesViewState>

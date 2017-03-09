@@ -16,8 +16,7 @@ class TodayController: UITableViewController, CBPeripheralManagerDelegate, CLLoc
     
     var lessons : [Lesson]!
 
-    var currentday : String!
-    var currenttime : String!
+    var nextLesson : Lesson!
     var currentLesson : Lesson!
     
     var isBroadcasting = false
@@ -26,6 +25,10 @@ class TodayController: UITableViewController, CBPeripheralManagerDelegate, CLLoc
     
     var uuid : UUID!
     var dataDictionary = NSDictionary()
+    
+    var lecturerMajor : Int!
+    var lecturerMinor : Int!
+    var lecturerName : String!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -37,46 +40,133 @@ class TodayController: UITableViewController, CBPeripheralManagerDelegate, CLLoc
         tableView.rowHeight = UITableViewAutomaticDimension
         tableView.estimatedRowHeight = 300
         
-        let today = Date()
-        let dateFormatter = DateFormatter()
-        
-        dateFormatter.dateFormat = "yyyy-MM-dd"
-        let y = dateFormatter.string(from: today)
-        
-        GlobalData.today = GlobalData.timetable.filter({$0.ldate == y})
-        
         lessons = GlobalData.today
         
         locationManager.delegate = self
         locationManager.requestAlwaysAuthorization()
         bluetoothPeripheralManager = CBPeripheralManager(delegate: self, queue: nil, options: nil)
         
-        start()
+        newDay()
         
         
     }
     
-    func start(){
+    var today = Date()
+    var dateFormatter = DateFormatter()
+    var currentTimeStr = ""
+    
+    func newDay(){
         
-        let token = UserDefaults.standard.string(forKey: "token")
+        today = Date()
         
-        let headers: HTTPHeaders = [
-            "Authorization": "Bearer " + token!
-             "Accept": "application/json"
-        ]
+        dateFormatter.dateFormat = "yyyy-MM-dd"
         
-        Alamofire.request(Constant.URLcurrentLesson, method: .post, parameters: nil, encoding: JSONEncoding.default, headers: headers).responseJSON { (response:DataResponse) in
-            let data = response.result.value
-            print(data)
-            if let JSON = response.result.value as? [String:AnyObject]{
+        
+        GlobalData.currentDateStr = dateFormatter.string(from: today)
+        
+        GlobalData.today = GlobalData.timetable.filter({$0.ldate == GlobalData.currentDateStr})
+        
+        let tomorrowStr = dateFormatter.string(from: Calendar.current.date(byAdding: .day, value: 1, to: today)!) + " 07:00:00"
+        
+        print(tomorrowStr)
+        
+        dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+        
+        let tomorrow = dateFormatter.date(from: tomorrowStr)
+        
+        print(tomorrow)
+        
+        let timer = Timer(fireAt: tomorrow!, interval: 0, target: self, selector: #selector(newDay), userInfo: nil, repeats: false)
+        RunLoop.main.add(timer, forMode: RunLoopMode.commonModes)
+        
+        
+        dateFormatter.dateFormat = "HH:mm:ss"
+        
+        currentTimeStr = dateFormatter.string(from: today)
+        
+        nextLesson = GlobalData.today.first(where: {($0.start_time! <= currentTimeStr) && ($0.end_time! > currentTimeStr)})
+        
+    }
+
+    func updateLesson(){
+        
+        currentLesson = nextLesson
+        
+        dateFormatter.dateFormat = "HH:mm:ss"
+        
+        currentTimeStr = dateFormatter.string(from: today)
+        
+        nextLesson = GlobalData.today.first(where: {$0.start_time! > currentTimeStr})
+        
+        if (currentLesson != nil){
+            
+            ATK()
+           
+            if (nextLesson != nil){
                 
-                print(JSON)
-                let lesson_id = (JSON["id"] as? Int)!
+                dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
                 
-                self.startMonitorLesson(id: lesson_id)
+                let x = GlobalData.currentDateStr + " " + nextLesson.start_time!
+                
+                let y = dateFormatter.date(from: x)
+                
+                let date = y?.addingTimeInterval(10)
+                let timer = Timer(fireAt: date!, interval: 0, target: self, selector: #selector(updateLesson), userInfo: nil, repeats: false)
+                RunLoop.main.add(timer, forMode: RunLoopMode.commonModes)
+
+            }else{
+            
             }
+            
+            
+        }else{
+            
         }
         
+        ATK()
+        
+        dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+        
+    }
+    
+    
+    func ATK(){
+    getCurrentLesson()
+        
+    }
+    
+    
+    func getCurrentLesson(){
+        
+        let today = Date()
+        let dateFormatter = DateFormatter()
+        
+        dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+        
+        //   let y = dateFormatter.string(from: today)
+        let x = "2017-03-09 09:57:00"
+        let y = dateFormatter.date(from: x)
+        
+        
+        //        for lesson in GlobalData.today{
+        //            if (lesson.start_time! > y){
+        //                print(lesson.start_time)
+        //            }
+        //        }
+        
+        let date = y?.addingTimeInterval(9.9)
+        let timer = Timer(fireAt: date!, interval: 0, target: self, selector: #selector(printL), userInfo: nil, repeats: false)
+        RunLoop.main.add(timer, forMode: RunLoopMode.commonModes)
+        
+        //        self.updateTimer = Timer.scheduledTimer(timeInterval: 5, target: self, selector: #selector(self.printL), userInfo: nil, repeats: true)
+        
+    }
+    var updateTimer: Timer?
+    
+    func printL(){
+        print("TEST")
+        
+    
     }
     
     func startMonitorLesson(id : Int){
@@ -87,8 +177,10 @@ class TodayController: UITableViewController, CBPeripheralManagerDelegate, CLLoc
         uuid = NSUUID(uuidString: GlobalData.lessonUUID[id]!) as! UUID
         
         let newRegion = CLBeaconRegion(proximityUUID: uuid, identifier: currentLesson.name!)
+        let lectureRegion = CLBeaconRegion(proximityUUID: uuid, major: UInt16(lecturerMajor) as CLBeaconMajorValue, minor: UInt16(lecturerMinor) as CLBeaconMinorValue, identifier: GlobalData.currentLecturerId.description)
         
         self.locationManager.startMonitoring(for: newRegion)
+        self.locationManager.startMonitoring(for: lectureRegion)
         
         broadcasting()
         
@@ -114,6 +206,16 @@ class TodayController: UITableViewController, CBPeripheralManagerDelegate, CLLoc
                 isBroadcasting = true
             }
             else{
+                let alert = UIAlertController(title: "Bluetooth Turn on Request", message: " ATK would like to turn on your bluetooth!", preferredStyle: UIAlertControllerStyle.alert)
+                
+                // add the actions (buttons)
+                alert.addAction(UIAlertAction(title: "Allow", style: UIAlertActionStyle.default, handler: { action in
+                    self.turnOnBlt()
+                }))
+                alert.addAction(UIAlertAction(title: "Cancel", style: UIAlertActionStyle.cancel, handler: nil))
+                
+                self.present(alert, animated: true, completion: nil)
+                
 //                bluetoothPeripheralManager.stopAdvertising()
 //                
 //                
@@ -128,9 +230,13 @@ class TodayController: UITableViewController, CBPeripheralManagerDelegate, CLLoc
 
         
     }
-    
-    
-    
+
+    func turnOnBlt(){
+        let bluetoothManager = BluetoothManagerHandler.sharedInstance()
+        
+        bluetoothManager?.setPower(true)
+    }
+
     
     // MARK: CBPeripheralManagerDelegate method implementation
     //
@@ -212,5 +318,52 @@ class TodayController: UITableViewController, CBPeripheralManagerDelegate, CLLoc
      // Pass the selected object to the new view controller.
      }
      */
-    
+//    func start(){
+//        
+//        Constant.token = UserDefaults.standard.string(forKey: "token")!
+//        
+//        let headers: HTTPHeaders = [
+//            "Authorization": "Bearer " + Constant.token,
+//            "Content-Type": "application/json"
+//        ]
+//        
+//        let today = Date()
+//        let dateFormatter = DateFormatter()
+//        
+//        dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+//        
+//        let y = dateFormatter.string(from: today)
+//        
+//        print(y)
+//        
+//        
+//        let parameters: [String: Any] = ["datetime": y]
+//        
+//        Alamofire.request(Constant.URLcurrentLesson, method: .post, parameters: parameters, encoding: JSONEncoding.default, headers: headers).responseJSON { (response:DataResponse) in
+//            let data = response.result.value
+//            print(data)
+//            if let JSON = response.result.value as? [String:AnyObject]{
+//                
+//                print(JSON)
+//                let lesson_id = (JSON["lesson_id"] as? Int)!
+//                
+//                
+//                if let lecturer = JSON["lecturers"] as? [String:AnyObject]{
+//                    
+//                    self.lecturerName = (lecturer["name"] as? String)!
+//                    GlobalData.currentLecturerId = (lecturer["id"] as? Int)!
+//                    
+//                    if let beacon = lecturer["beacon"] as? [String:AnyObject]{
+//                        self.lecturerMajor = (beacon["major"] as? Int)!
+//                        self.lecturerMinor = (beacon["minor"] as? Int)!
+//                        
+//                    }
+//                    
+//                }
+//                
+//                self.startMonitorLesson(id: lesson_id)
+//            }
+//        }
+//        
+//    }
 }

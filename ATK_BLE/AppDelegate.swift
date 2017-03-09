@@ -13,20 +13,22 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
     
     var window: UIWindow?
     var locationManager: CLLocationManager!
+    var foundLecturer = false
+    var foundClassmate = false
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         
-        var mainStoryboard = UIStoryboard(name: "Main", bundle: nil)
+        let mainStoryboard = UIStoryboard(name: "Main", bundle: nil)
         //        var loginController: LoginController? = (mainStoryboard.instantiateViewController(withIdentifier: "Login") as? LoginController)
         //         self.window.rootViewController = loginController
         if (UserDefaults.standard.string(forKey: "username") == nil) {
             
-            var loginController: LoginController? = (mainStoryboard.instantiateViewController(withIdentifier: "LoginPage") as? LoginController)
+            let loginController: LoginController? = (mainStoryboard.instantiateViewController(withIdentifier: "LoginPage") as? LoginController)
             
             self.window?.rootViewController = loginController
         }else{
             
-            var mainViewController: TabbarController? = (mainStoryboard.instantiateViewController(withIdentifier: "Home") as? TabbarController)
+            let mainViewController: TabbarController? = (mainStoryboard.instantiateViewController(withIdentifier: "Home") as? TabbarController)
             
             self.window?.rootViewController = mainViewController
         }
@@ -56,7 +58,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
     }
     
     func noti(content : String){
-        var notification = UILocalNotification()
+        let notification = UILocalNotification()
         notification.alertBody = content
         notification.soundName = "Default"
         UIApplication.shared.presentLocalNotificationNow(notification)
@@ -73,7 +75,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
         case .inside:
             print(" -____- Inside \(region.identifier)");
             
-            noti(content: "ATK-INSIDE  halo " + region.identifier)
+            noti(content: "found  " + region.identifier)
+            
+            if (region.identifier == GlobalData.currentLecturerId.description){
+                foundLecturer = true
+            }else{
+                foundClassmate = true
+            }
+            
         //report(region: CLRegion)
         case .outside:
             print(" -____- Outside");
@@ -93,7 +102,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
         //print("@1: did enter region!!!")
         
         if (region is CLBeaconRegion) {
-            
+         
             print("@2: did enter region!!!  \(region.identifier)" )
             
             //   noti(content: "ENTER  " + region.identifier)
@@ -108,6 +117,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
             print("@2: did exit region!!!   \(region.identifier)")
             noti(content: "ATK-EXIT " + region.identifier)
         }
+    }
+    
+    
+    func resetAppToFirstController() {
+        let mainStoryboard = UIStoryboard(name: "Main", bundle: nil)
+        let loginController: LoginController? = (mainStoryboard.instantiateViewController(withIdentifier: "Login") as? LoginController)
+        self.window?.rootViewController = loginController
     }
     
     
