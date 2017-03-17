@@ -106,3 +106,12 @@ class Venue{
     var minor: Int32 = 0
     
 }
+
+class BeaconUser{
+    
+    var id: Int = 0
+    var major: Int = 0
+    var minor: Int = 0
+    
+}
+

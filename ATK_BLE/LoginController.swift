@@ -41,46 +41,7 @@ class LoginController: UIViewController{
         UserDefaults.standard.set("123456", forKey: "password")
         
         
-        //   clearData()
-        //  self.setupData()
-        
-        /*   let username = usernameTextField.text
-         let password = passTextField.text
-         
-         NSLog("========START TEST LOGIN 1=======")
-         let parameters: [String: Any] = ["username": username,
-         "password": password,
-         "device_hash":"f8:32:e4:5f:77:4fff"
-         ]
-         
-         let urlString = Constants.baseURL + "/atk-ble/api/web/index.php/v1/student/login"
-         Alamofire.request(urlString, method: .post, parameters: parameters, encoding: JSONEncoding.default, headers: nil).responseJSON { (response:DataResponse) in
-         
-         guard let responseJSON = response.result.value as? [String: AnyObject] else {
-         print("Parse error")
-         return
-         }
-         
-         let json = JSON(responseJSON)
-         let name = json["name"].stringValue
-         
-         if (name == "Bad Request"){
-         print("IT HAS ERROR WHEN LOGIN ")
-         print(response.result.error)
-         self.displayMyAlertMessage(mess: "username or pass or device is invalid")
-         
-         }else{
-         if let data = response.result.value{
-         print("IT HAS DATA WHEN LOGIN ")
-         print(data)
-         // login successfull
-         UserDefaults.standard.set(true, forKey: "isUserLogin")
-         UserDefaults.standard.synchronize()
-         self.dismiss(animated: true, completion: nil)
-         }
-         }
-         NSLog("//======END TEST LOGIN==========//")
-         }*/
+     
     }
     
     

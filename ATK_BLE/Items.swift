@@ -18,6 +18,8 @@ struct Constant{
     static let URLlessonUUID = baseURL + "api/web/index.php/v1/beacon-lesson/uuid"
 
     static let URLcurrentLesson = baseURL + "api/web/index.php/v1/timetable/time"
+    
+    static let URLclassmate = baseURL + "api/web/index.php/v1/timetable/get-student"
     static var device_token = ""
 
     static let photoURL = "http://128.199.93.67/WeTrack/backend/web/"

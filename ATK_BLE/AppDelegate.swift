@@ -19,19 +19,19 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         
         let mainStoryboard = UIStoryboard(name: "Main", bundle: nil)
-        //        var loginController: LoginController? = (mainStoryboard.instantiateViewController(withIdentifier: "Login") as? LoginController)
-        //         self.window.rootViewController = loginController
-        if (UserDefaults.standard.string(forKey: "username") == nil) {
-            
-            let loginController: LoginController? = (mainStoryboard.instantiateViewController(withIdentifier: "LoginPage") as? LoginController)
-            
-            self.window?.rootViewController = loginController
-        }else{
-            
-            let mainViewController: TabbarController? = (mainStoryboard.instantiateViewController(withIdentifier: "Home") as? TabbarController)
-            
-            self.window?.rootViewController = mainViewController
-        }
+                var loginController: LoginController? = (mainStoryboard.instantiateViewController(withIdentifier: "LoginPage") as? LoginController)
+                 self.window?.rootViewController = loginController
+//        if (UserDefaults.standard.string(forKey: "username") == nil) {
+//            
+//            let loginController: LoginController? = (mainStoryboard.instantiateViewController(withIdentifier: "LoginPage") as? LoginController)
+//            
+//            self.window?.rootViewController = loginController
+//        }else{
+//            
+//            let mainViewController: TabbarController? = (mainStoryboard.instantiateViewController(withIdentifier: "Home") as? TabbarController)
+//            
+//            self.window?.rootViewController = mainViewController
+//        }
         
 
         

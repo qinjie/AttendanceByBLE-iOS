@@ -15,7 +15,7 @@ class TodayController: UITableViewController, CBPeripheralManagerDelegate, CLLoc
     fileprivate let cellId = "cell"
     
     var lessons : [Lesson]!
-
+    var classmate = [BeaconUser]()
     var nextLesson : Lesson!
     var currentLesson : Lesson!
     
@@ -74,7 +74,7 @@ class TodayController: UITableViewController, CBPeripheralManagerDelegate, CLLoc
         
         let tomorrow = dateFormatter.date(from: tomorrowStr)
         
-        print(tomorrow)
+        print("tomorrow \(tomorrow)")
         
         let timer = Timer(fireAt: tomorrow!, interval: 0, target: self, selector: #selector(newDay), userInfo: nil, repeats: false)
         RunLoop.main.add(timer, forMode: RunLoopMode.commonModes)
@@ -86,6 +86,7 @@ class TodayController: UITableViewController, CBPeripheralManagerDelegate, CLLoc
         
         nextLesson = GlobalData.today.first(where: {($0.start_time! <= currentTimeStr) && ($0.end_time! > currentTimeStr)})
         
+        updateLesson()
     }
 
     func updateLesson(){
@@ -123,7 +124,7 @@ class TodayController: UITableViewController, CBPeripheralManagerDelegate, CLLoc
             
         }
         
-        ATK()
+      //  ATK()
         
         dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
         
@@ -131,10 +132,69 @@ class TodayController: UITableViewController, CBPeripheralManagerDelegate, CLLoc
     
     
     func ATK(){
-    getCurrentLesson()
+        
+        // get classmate major minor
+        
+        let headers: HTTPHeaders = [
+            "Authorization": "Bearer " + Constant.token,
+            "Content-Type": "application/json"
+        ]
+        
+        let parameters: [String: Any] = ["lesson_id": 29]
+        
+        Alamofire.request(Constant.URLclassmate, method: .post, parameters: parameters, encoding: JSONEncoding.default, headers: headers).responseJSON { (response:DataResponse) in
+            
+            if let JSON = response.result.value as? [[String: AnyObject]]{
+                
+                print(JSON)
+                for json in JSON{
+                    let x = BeaconUser()
+                    x.id = json["user_id"] as! Int
+                    
+                    if (x.id != Constant.user_id){
+                        
+                        if let beacon = json["beacon_user"] as? [String: AnyObject]{
+                            x.major = beacon["major"] as! Int
+                            x.minor = beacon["minor"] as! Int
+                            self.classmate.append(x)
+                        }
+                        
+                    }
+                    
+                }
+                self.detectClassmate()
+               
+            }else {
+                print("Parse error")
+                return
+            }
+        
+        }
         
     }
     
+    func detectClassmate(){
+        
+        uuid = NSUUID(uuidString: GlobalData.lessonUUID[currentLesson.lesson_id!]!) as! UUID
+        print("Current Lesson : \(uuid)")
+        
+        if (classmate.count > 20){
+            for i in 0 ..< 20 {
+                
+               let newRegion = CLBeaconRegion(proximityUUID: uuid , major: UInt16(classmate[i].major) as CLBeaconMajorValue, minor: UInt16(classmate[i].minor) as CLBeaconMinorValue, identifier: classmate[i].id.description)
+                
+               locationManager.startMonitoring(for: newRegion)
+            }
+        }else{
+            for cm in classmate {
+                
+                let newRegion = CLBeaconRegion(proximityUUID: uuid , major: UInt16(cm.major) as CLBeaconMajorValue, minor: UInt16(cm.minor) as CLBeaconMinorValue, identifier: cm.id.description)
+                
+                locationManager.startMonitoring(for: newRegion)
+            }
+        }
+        
+    }
     
     func getCurrentLesson(){
         
@@ -237,9 +297,22 @@ class TodayController: UITableViewController, CBPeripheralManagerDelegate, CLLoc
         bluetoothManager?.setPower(true)
     }
 
+    @IBAction func checkLesson(_ sender: Any) {
+        self.performSegue(withIdentifier: "currentLessonSegue", sender: nil)
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        
+        let detailPage = segue.destination as! ATKController
+        
+        detailPage.currentLesson = self.currentLesson
+     
+        
+    }
+    
     
     // MARK: CBPeripheralManagerDelegate method implementation
-    //
+
     func peripheralManagerDidUpdateState(_ peripheral: CBPeripheralManager) {
         var statusMessage = ""
         
@@ -276,6 +349,7 @@ class TodayController: UITableViewController, CBPeripheralManagerDelegate, CLLoc
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
     
+            print("count \(lessons.count)")
             return lessons.count
     }
     
@@ -309,61 +383,59 @@ class TodayController: UITableViewController, CBPeripheralManagerDelegate, CLLoc
     }
     
     
-    /*
-     // MARK: - Navigation
+    func locationManager(_ manager: CLLocationManager, didStartMonitoringFor region: CLRegion) {
+        print("Started monitoring \(region.identifier) region")
+        
+        //noti(content: "start " + region.identifier)
+        
+    }
+    
+    func noti(content : String){
+        let notification = UILocalNotification()
+        notification.alertBody = content
+        notification.soundName = "Default"
+        UIApplication.shared.presentLocalNotificationNow(notification)
+    }
+    
+    func locationManager(_ manager: CLLocationManager, didStopMonitoringFor region: CLRegion) {
+        print("Stop monitoring \(region.identifier) region")
+    }
+    
+    func locationManager(_ manager: CLLocationManager, didDetermineState state: CLRegionState, for region: CLRegion){
+        
+        print("@3: -____- state \(region.identifier)" )
+        switch state {
+        case .inside:
+            print(" -____- Inside \(region.identifier)");
+            
+            noti(content: "found  " + region.identifier)
      
-     // In a storyboard-based application, you will often want to do a little preparation before navigation
-     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-     // Get the new view controller using segue.destinationViewController.
-     // Pass the selected object to the new view controller.
-     }
-     */
-//    func start(){
-//        
-//        Constant.token = UserDefaults.standard.string(forKey: "token")!
-//        
-//        let headers: HTTPHeaders = [
-//            "Authorization": "Bearer " + Constant.token,
-//            "Content-Type": "application/json"
-//        ]
-//        
-//        let today = Date()
-//        let dateFormatter = DateFormatter()
-//        
-//        dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
-//        
-//        let y = dateFormatter.string(from: today)
-//        
-//        print(y)
-//        
-//        
-//        let parameters: [String: Any] = ["datetime": y]
-//        
-//        Alamofire.request(Constant.URLcurrentLesson, method: .post, parameters: parameters, encoding: JSONEncoding.default, headers: headers).responseJSON { (response:DataResponse) in
-//            let data = response.result.value
-//            print(data)
-//            if let JSON = response.result.value as? [String:AnyObject]{
-//                
-//                print(JSON)
-//                let lesson_id = (JSON["lesson_id"] as? Int)!
-//                
-//                
-//                if let lecturer = JSON["lecturers"] as? [String:AnyObject]{
-//                    
-//                    self.lecturerName = (lecturer["name"] as? String)!
-//                    GlobalData.currentLecturerId = (lecturer["id"] as? Int)!
-//                    
-//                    if let beacon = lecturer["beacon"] as? [String:AnyObject]{
-//                        self.lecturerMajor = (beacon["major"] as? Int)!
-//                        self.lecturerMinor = (beacon["minor"] as? Int)!
-//                        
-//                    }
-//                    
-//                }
-//                
-//                self.startMonitorLesson(id: lesson_id)
-//            }
-//        }
-//        
-//    }
+            
+        //report(region: CLRegion)
+        case .outside:
+            print(" -____- Outside");
+            
+            // noti(content: "OUTSIDE  " + region.identifier)
+            
+        case .unknown:
+            print(" -____- Unknown");
+        default:
+            print(" -____-  default");
+        }
+    }
+    
+    
+    
+    
+    func locationManager(_ manager: CLLocationManager, didEnterRegion region: CLRegion) {
+        
+        //print("@1: did enter region!!!")
+        
+        if (region is CLBeaconRegion) {
+            
+            print("@2: did enter region!!!  \(region.identifier)" )
+            
+            //   noti(content: "ENTER  " + region.identifier)
+        }
+    }
 }

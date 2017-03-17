@@ -6,10 +6,18 @@
          contextName = "GLOBAL">
          <PersistentStrings>
             <PersistentString
-               value = "Constant.token">
+               value = "GlobalData.today">
             </PersistentString>
             <PersistentString
-               value = "GlobalData.today">
+               value = "Constant.token">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "TabbarController.viewDidLoad() -&gt; ():TabbarController.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "GlobalData.currentDateStr">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -18,6 +26,17 @@
          <PersistentStrings>
             <PersistentString
                value = "">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "TabbarController.(viewDidLoad() -&gt; ()).(closure #1):TabbarController.swift">
+      </ContextState>
+      <ContextState
+         contextName = "TodayController.updateLesson() -&gt; ():TodayController.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "currentLesson">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -57,10 +76,10 @@
          contextName = "TodayController.(start() -&gt; ()).(closure #1):TodayController.swift">
          <PersistentStrings>
             <PersistentString
-               value = "Constant.token">
+               value = "lesson_id">
             </PersistentString>
             <PersistentString
-               value = "lesson_id">
+               value = "Constant.token">
             </PersistentString>
          </PersistentStrings>
       </ContextState>

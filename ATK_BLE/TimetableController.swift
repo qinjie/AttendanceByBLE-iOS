@@ -40,7 +40,10 @@ class TimetableController: UITableViewController {
         
         navigationItem.title = "Weekly Timetable"
         
-             
+//        let SyncBtn = UIBarButtonItem(title: "Sync", style: UIBarButtonItemStyle.plain, target: self, action: #selector(LoginController.setupData))
+//        SyncBtn.image = UIImage(named: "sync30")
+//        self.navigationItem.rightBarButtonItem = SyncBtn
+    
     }
 
     
