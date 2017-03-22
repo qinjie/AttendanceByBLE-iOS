@@ -49,7 +49,35 @@ class TodayController: UITableViewController, CBPeripheralManagerDelegate, CLLoc
         newDay()
         
         
+        let mapBtn = UIBarButtonItem(title: "Tick-30", style: UIBarButtonItemStyle.plain, target: self, action: #selector(TodayController.checkLesson(sender:)))
+        mapBtn.image = UIImage(named: "Tick-30")
+        self.navigationItem.rightBarButtonItem = mapBtn
+        
     }
+    func checkLesson(sender: UIBarButtonItem) {
+        
+         self.performSegue(withIdentifier: "currentLessonSegue", sender: nil)
+    }
+
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        
+        // retrieve selected cell & fruit
+        
+        if currentLesson != nil {
+            
+            let atkController = segue.destination as! ATKController
+            atkController.lesson = currentLesson
+            atkController.uuids = self.uuid.description
+        }
+    }
+
+        //    func maps(sender: UIBarButtonItem) {
+    //        // Perform your custom actions
+    //        // ...
+    //         self.performSegue(withIdentifier: "mapSegue", sender: nil)
+    //       
+    //    }
+
     
     var today = Date()
     var dateFormatter = DateFormatter()
@@ -101,6 +129,8 @@ class TodayController: UITableViewController, CBPeripheralManagerDelegate, CLLoc
         
         if (currentLesson != nil){
             
+            GlobalData.currentLesson = self.currentLesson
+            
             ATK()
            
             if (nextLesson != nil){
@@ -149,7 +179,7 @@ class TodayController: UITableViewController, CBPeripheralManagerDelegate, CLLoc
                 print(JSON)
                 for json in JSON{
                     let x = BeaconUser()
-                    x.id = json["user_id"] as! Int
+                    x.id = json["id"] as! Int
                     
                     if (x.id != Constant.user_id){
                         
@@ -236,10 +266,8 @@ class TodayController: UITableViewController, CBPeripheralManagerDelegate, CLLoc
         // start monitor other vitual beacon
         uuid = NSUUID(uuidString: GlobalData.lessonUUID[id]!) as! UUID
         
-        let newRegion = CLBeaconRegion(proximityUUID: uuid, identifier: currentLesson.name!)
         let lectureRegion = CLBeaconRegion(proximityUUID: uuid, major: UInt16(lecturerMajor) as CLBeaconMajorValue, minor: UInt16(lecturerMinor) as CLBeaconMinorValue, identifier: GlobalData.currentLecturerId.description)
         
-        self.locationManager.startMonitoring(for: newRegion)
         self.locationManager.startMonitoring(for: lectureRegion)
         
         broadcasting()
@@ -297,18 +325,11 @@ class TodayController: UITableViewController, CBPeripheralManagerDelegate, CLLoc
         bluetoothManager?.setPower(true)
     }
 
-    @IBAction func checkLesson(_ sender: Any) {
-        self.performSegue(withIdentifier: "currentLessonSegue", sender: nil)
-    }
+//    @IBAction func checkLesson(_ sender: Any) {
+//        
+//        self.performSegue(withIdentifier: "currentLessonSegue", sender: nil)
+//    }
     
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        
-        let detailPage = segue.destination as! ATKController
-        
-        detailPage.currentLesson = self.currentLesson
-     
-        
-    }
     
     
     // MARK: CBPeripheralManagerDelegate method implementation
@@ -354,7 +375,7 @@ class TodayController: UITableViewController, CBPeripheralManagerDelegate, CLLoc
     }
     
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat{
-        return 100.0;
+        return 120.0;
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -379,7 +400,7 @@ class TodayController: UITableViewController, CBPeripheralManagerDelegate, CLLoc
         // 1
         guard let cell = tableView.cellForRow(at: indexPath) as? LessonCell else { return }
         
-        print(cell.lesson?.name)
+        print(cell.lesson?.catalog)
     }
     
     

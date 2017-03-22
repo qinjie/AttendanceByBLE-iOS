@@ -13,8 +13,12 @@ class Lesson: NSObject, NSCoding{
    // var detect: Bool = true
     var lesson_id: Int?
     
-    var name: String?
+    var subject: String?
+    var catalog: String?
     var venueName: String?
+    
+    var lecturer: String?
+    
     
     var ldate: String?
     var weekday: String?
@@ -37,7 +41,9 @@ class Lesson: NSObject, NSCoding{
     
     override init(){
         lesson_id = 0
-        name = "X"
+        subject = "X"
+        catalog = "X"
+        lecturer = "Y"
         ldate = "0/0/0"
         weekday = "0"
         ldateid = 0
@@ -54,8 +60,11 @@ class Lesson: NSObject, NSCoding{
         
      //   status = aDecoder.decodeObject(forKey: "status") as? Bool ?? true
         
-        name = aDecoder.decodeObject(forKey: "name") as! String?
+        subject = aDecoder.decodeObject(forKey: "subject") as! String?
+        catalog = aDecoder.decodeObject(forKey: "catalog") as! String?
         venueName = aDecoder.decodeObject(forKey: "venueName") as! String?
+        
+        lecturer = aDecoder.decodeObject(forKey: "lecturer") as! String?
         
         ldateid = aDecoder.decodeObject(forKey: "ldateid") as! Int?
         ldate = aDecoder.decodeObject(forKey: "ldate") as! String?
@@ -79,8 +88,10 @@ class Lesson: NSObject, NSCoding{
         
         aCoder.encode(lesson_id, forKey: "lesson_id")
         
-        aCoder.encode(name, forKey: "name")
+        aCoder.encode(subject, forKey: "subject")
+        aCoder.encode(catalog, forKey: "catalog")
         aCoder.encode(venueName, forKey: "venueName")
+        aCoder.encode(lecturer, forKey: "lecturer")
         
         aCoder.encode(ldateid, forKey: "ldateid")
         aCoder.encode(ldate, forKey: "ldate")

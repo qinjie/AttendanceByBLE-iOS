@@ -103,9 +103,10 @@ class LoginController: UIViewController{
                     print("token \(Constant.token)")
                     
                     self.setupData()
-                    
-                    self.loadUUID()
-                    
+                    DispatchQueue.main.async {
+                        self.loadattendance()
+                        self.loadUUID()
+                    }
                 }
                 break
                 
@@ -127,10 +128,8 @@ class LoginController: UIViewController{
     func setupData(){
         
         
-        let token = UserDefaults.standard.string(forKey: "token")
-        
         let headers: HTTPHeaders = [
-            "Authorization": "Bearer " + token!
+            "Authorization": "Bearer " + Constant.token
             // "Accept": "application/json"
         ]
     
@@ -145,11 +144,19 @@ class LoginController: UIViewController{
                     if let lesson = json["lesson"] as? [String: Any]{
                         
                         newLesson.lesson_id = (lesson["id"] as? Int)!
-                        newLesson.name = (lesson["catalog_number"] as? String)!
+                        newLesson.catalog = (lesson["catalog_number"] as? String)!
+                        newLesson.subject = (lesson["subject_area"] as? String)!
                         newLesson.start_time = (lesson["start_time"] as? String)!
                         newLesson.end_time = (lesson["end_time"] as? String)!
                         newLesson.weekday = (lesson["weekday"] as? String)!
                     }
+                    
+                    if let lecturer = json["lecturers"] as? [String: Any]{
+           
+                        newLesson.lecturer = (lecturer["name"] as? String)!
+                        print(newLesson.lecturer)
+                    }
+
                     
                     if let lesson_date = json["lesson_date"] as? [String: Any]{
                         
@@ -208,7 +215,7 @@ class LoginController: UIViewController{
         }
     
         func loadUUID(){
-            
+             print("load uuid ")
             let token = UserDefaults.standard.string(forKey: "token")
             
             let headers: HTTPHeaders = [
@@ -237,7 +244,25 @@ class LoginController: UIViewController{
                 }
             }
         }
-   
+    
+    func loadattendance(){
+        print("load att ")
+        let headers: HTTPHeaders = [
+            "Authorization": "Bearer " + Constant.token
+            // "Accept": "application/json"
+        ]
+        
+        Alamofire.request(Constant.URLattendance, method: .get, parameters: nil, encoding: JSONEncoding.default, headers: headers).responseJSON { (response:DataResponse) in
+            
+            if let JSON = response.result.value as? [[String:Any]]{
+                for json in JSON{
+                   let id = (json["lesson_date_id"] as? Int)!
+                   GlobalData.attendance.append(id)
+                }
+            }
+                
+        }
+    }
     
 }
 extension UIViewController {

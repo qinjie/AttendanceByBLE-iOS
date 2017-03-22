@@ -23,7 +23,10 @@ class SettingController: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        tableView.rowHeight = UITableViewAutomaticDimension
+        tableView.estimatedRowHeight = 300
+        
+        navigationItem.title = "Setting"
         // Do any additional setup after loading the view.
     }
 

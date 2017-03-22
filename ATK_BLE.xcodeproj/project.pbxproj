@@ -12,6 +12,7 @@
 		3815A2781E6D405800301CE2 /* TodayController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3815A2771E6D405800301CE2 /* TodayController.swift */; };
 		3815A27A1E6D609400301CE2 /* SettingController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3815A2791E6D609400301CE2 /* SettingController.swift */; };
 		3849C6DD1E6E93D300097B17 /* TabbarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3849C6DC1E6E93D300097B17 /* TabbarController.swift */; };
+		386688CC1E7FC2FF00DFA4C7 /* TableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 386688CB1E7FC2FF00DFA4C7 /* TableViewController.swift */; };
 		38841AA41E690C0E004EF33D /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38841AA31E690C0E004EF33D /* AppDelegate.swift */; };
 		38841AA61E690C0E004EF33D /* LoginController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38841AA51E690C0E004EF33D /* LoginController.swift */; };
 		38841AA91E690C0E004EF33D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 38841AA71E690C0E004EF33D /* Main.storyboard */; };
@@ -23,7 +24,6 @@
 		38E26DF81E6910A4003B009D /* Items.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38E26DF71E6910A4003B009D /* Items.swift */; };
 		38E26DFA1E694E30003B009D /* Lesson.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38E26DF91E694E30003B009D /* Lesson.swift */; };
 		38E26DFC1E69595C003B009D /* TimetableController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38E26DFB1E69595C003B009D /* TimetableController.swift */; };
-		38E26DFE1E6961F5003B009D /* TableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38E26DFD1E6961F5003B009D /* TableViewController.swift */; };
 		3CE89EF5A7A07C1622FF4DCA /* Pods_ATK_BLE.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8730CE69BF02DA57AF883CE4 /* Pods_ATK_BLE.framework */; };
 /* End PBXBuildFile section */
 
@@ -34,6 +34,7 @@
 		3815A2771E6D405800301CE2 /* TodayController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TodayController.swift; sourceTree = "<group>"; };
 		3815A2791E6D609400301CE2 /* SettingController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingController.swift; sourceTree = "<group>"; };
 		3849C6DC1E6E93D300097B17 /* TabbarController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TabbarController.swift; sourceTree = "<group>"; };
+		386688CB1E7FC2FF00DFA4C7 /* TableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TableViewController.swift; sourceTree = "<group>"; };
 		38841AA01E690C0E004EF33D /* ATK_BLE.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ATK_BLE.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		38841AA31E690C0E004EF33D /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		38841AA51E690C0E004EF33D /* LoginController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginController.swift; sourceTree = "<group>"; };
@@ -52,7 +53,6 @@
 		38E26DF71E6910A4003B009D /* Items.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Items.swift; sourceTree = "<group>"; };
 		38E26DF91E694E30003B009D /* Lesson.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Lesson.swift; sourceTree = "<group>"; };
 		38E26DFB1E69595C003B009D /* TimetableController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TimetableController.swift; sourceTree = "<group>"; };
-		38E26DFD1E6961F5003B009D /* TableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TableViewController.swift; sourceTree = "<group>"; };
 		8730CE69BF02DA57AF883CE4 /* Pods_ATK_BLE.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ATK_BLE.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		A480AF68145EB8C64A5ACCB4 /* Pods-ATK_BLE.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ATK_BLE.release.xcconfig"; path = "Pods/Target Support Files/Pods-ATK_BLE/Pods-ATK_BLE.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -104,11 +104,11 @@
 				38E26DFB1E69595C003B009D /* TimetableController.swift */,
 				38E26DF71E6910A4003B009D /* Items.swift */,
 				3815A2731E6D030F00301CE2 /* TableViewCell.swift */,
+				386688CB1E7FC2FF00DFA4C7 /* TableViewController.swift */,
 				38E26DF91E694E30003B009D /* Lesson.swift */,
 				3815A2791E6D609400301CE2 /* SettingController.swift */,
 				3849C6DC1E6E93D300097B17 /* TabbarController.swift */,
 				3815A2711E6CF1CF00301CE2 /* LessonCell.swift */,
-				38E26DFD1E6961F5003B009D /* TableViewController.swift */,
 				3815A2771E6D405800301CE2 /* TodayController.swift */,
 				38E26DF51E691001003B009D /* ATKController.swift */,
 				38841AA51E690C0E004EF33D /* LoginController.swift */,
@@ -273,8 +273,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				38E26DFA1E694E30003B009D /* Lesson.swift in Sources */,
+				386688CC1E7FC2FF00DFA4C7 /* TableViewController.swift in Sources */,
 				3849C6DD1E6E93D300097B17 /* TabbarController.swift in Sources */,
-				38E26DFE1E6961F5003B009D /* TableViewController.swift in Sources */,
 				38E26DF81E6910A4003B009D /* Items.swift in Sources */,
 				38851CE21E6FF0EE001DC32C /* BluetoothDeviceHandler.m in Sources */,
 				3815A2741E6D030F00301CE2 /* TableViewCell.swift in Sources */,

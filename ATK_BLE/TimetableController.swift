@@ -39,13 +39,17 @@ class TimetableController: UITableViewController {
         tableView.estimatedRowHeight = 300
         
         navigationItem.title = "Weekly Timetable"
-        
+        NotificationCenter.default.addObserver(self,selector: #selector(rload), name: NSNotification.Name(rawValue: "atksuccesfully"), object: nil)
+
 //        let SyncBtn = UIBarButtonItem(title: "Sync", style: UIBarButtonItemStyle.plain, target: self, action: #selector(LoginController.setupData))
 //        SyncBtn.image = UIImage(named: "sync30")
 //        self.navigationItem.rightBarButtonItem = SyncBtn
     
     }
-
+    
+    func rload(){
+        self.tableView.reloadData()                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                
+    }
     
     // MARK: - Table view data source
     
@@ -60,7 +64,7 @@ class TimetableController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat{
-        return 100.0;
+        return 120.0;
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -71,6 +75,12 @@ class TimetableController: UITableViewController {
 
         let lesson = lessonInDay[indexPath.row]
         cell.lesson = lesson
+
+        if (GlobalData.attendance.contains((cell.lesson?.ldateid)!)){
+            cell.backgroundColor = UIColor(red:0.84, green:1.00, blue:0.95, alpha:1.0)
+        }else{
+            cell.backgroundColor = UIColor.white
+        }
             //   print("cell \(cell.subjectLabel.text)")
 //        cell.idLabel.text = lesson.lesson_id?.description
 //        cell.start_time.text = lesson.start_time
@@ -88,7 +98,8 @@ class TimetableController: UITableViewController {
         // 1
         guard let cell = tableView.cellForRow(at: indexPath) as? LessonCell else { return }
         
-        print(cell.lesson?.name)
+        print(cell.lesson?.lecturer)
+        print(cell.lesson?.ldateid)
     }
 
     

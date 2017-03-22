@@ -20,6 +20,10 @@ struct Constant{
     static let URLcurrentLesson = baseURL + "api/web/index.php/v1/timetable/time"
     
     static let URLclassmate = baseURL + "api/web/index.php/v1/timetable/get-student"
+    
+    static let URLatk = baseURL + "api/web/index.php/v1/beacon-attendance-student/student-list"
+    static let URLattendance = baseURL + "api/web/index.php/v1/attendance"
+    
     static var device_token = ""
 
     static let photoURL = "http://128.199.93.67/WeTrack/backend/web/"
@@ -44,6 +48,8 @@ struct GlobalData{
     static var timetable = [Lesson]()
     static var today = [Lesson]()
     static var lessonUUID = [Int:String]()
+    static var currentLesson = Lesson()
+    static var attendance = [Int]()
     static var currentDateStr = ""
     static var currentLecturerMajor = 0
     static var currentLecturerMinor = 0

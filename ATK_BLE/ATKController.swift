@@ -10,7 +10,7 @@ import UIKit
 import CoreLocation
 
 
-class ATKController: UIViewController, CLLocationManagerDelegate  {
+class ATKController: UITableViewController , CLLocationManagerDelegate  {
 
     @IBOutlet weak var catalog: UILabel!
     @IBOutlet weak var venue: UILabel!
@@ -20,11 +20,16 @@ class ATKController: UIViewController, CLLocationManagerDelegate  {
     @IBOutlet weak var id1: UILabel!
     @IBOutlet weak var id2: UILabel!
     
-    var currentLesson : Lesson!
+    var lesson : Lesson!
+    var uuids : String!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        starttime.text = lesson.start_time
+        endtime.text = lesson.end_time
+        catalog.text = lesson.catalog
+        uuid.text = uuids
         
 //        self.locationManager = CLLocationManager()
 //        self.locationManager.delegate = self
