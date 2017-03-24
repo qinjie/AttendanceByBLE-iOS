@@ -53,7 +53,16 @@ class TodayController: UITableViewController, CBPeripheralManagerDelegate, CLLoc
         mapBtn.image = UIImage(named: "Tick-30")
         self.navigationItem.rightBarButtonItem = mapBtn
         
+    
+        NotificationCenter.default.addObserver(self,selector: #selector(rload), name: NSNotification.Name(rawValue: "atksuccesfully"), object: nil)
+        
     }
+    
+    func rload(){
+        displayMyAlertMessage(title: "Successfull Attendance", mess: "You had taken attendance for \(currentLesson.catalog!)")
+    
+    }
+    
     func checkLesson(sender: UIBarButtonItem) {
         
          self.performSegue(withIdentifier: "currentLessonSegue", sender: nil)
@@ -62,12 +71,14 @@ class TodayController: UITableViewController, CBPeripheralManagerDelegate, CLLoc
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         
         // retrieve selected cell & fruit
-        
+        let atkController = segue.destination as! ATKController
         if currentLesson != nil {
             
-            let atkController = segue.destination as! ATKController
+           
             atkController.lesson = currentLesson
             atkController.uuids = self.uuid.description
+        }else{
+            atkController.lesson = Lesson()
         }
     }
 
@@ -196,10 +207,19 @@ class TodayController: UITableViewController, CBPeripheralManagerDelegate, CLLoc
                
             }else {
                 print("Parse error")
-                return
+  
             }
         
         }
+        
+        let rand = Int(arc4random_uniform(2))
+        let x = rand * 60
+        let date = Date().addingTimeInterval(TimeInterval(x))
+        print(date)
+        let timer2 = Timer(fireAt: date, interval: 0, target: self, selector: #selector(broadcasting), userInfo: nil, repeats: false)
+        RunLoop.main.add(timer2, forMode: RunLoopMode.commonModes)
+     
+        
         
     }
     
@@ -299,6 +319,7 @@ class TodayController: UITableViewController, CBPeripheralManagerDelegate, CLLoc
                 // add the actions (buttons)
                 alert.addAction(UIAlertAction(title: "Allow", style: UIAlertActionStyle.default, handler: { action in
                     self.turnOnBlt()
+                    self.broadcasting()
                 }))
                 alert.addAction(UIAlertAction(title: "Cancel", style: UIAlertActionStyle.cancel, handler: nil))
                 

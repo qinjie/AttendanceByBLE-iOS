@@ -48,6 +48,7 @@ class TimetableController: UITableViewController {
     }
     
     func rload(){
+        displayMyAlertMessage(title: "Successfull Attendance", mess: "You had taken attendance for \(GlobalData.currentLesson.catalog!)")
         self.tableView.reloadData()                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                
     }
     

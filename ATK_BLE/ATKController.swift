@@ -41,5 +41,6 @@ class ATKController: UITableViewController , CLLocationManagerDelegate  {
         
     }
  
+    @IBOutlet weak var test: UIButton!
 
-}
+   }

@@ -31,7 +31,7 @@ class LoginController: UIViewController{
 
         
         if ((usernameTextField.text == "") || (passTextField.text == "")) {
-            displayMyAlertMessage(mess: "All fields are required")
+            displayMyAlertMessage(title: "Alert",mess: "All fields are required")
     
         }
         
@@ -275,9 +275,9 @@ extension UIViewController {
             view.endEditing(true)
         }
     
-    func displayMyAlertMessage(mess : String){
+    func displayMyAlertMessage(title: String, mess : String){
         
-        var myAlert = UIAlertController(title: "Alert", message: mess, preferredStyle: UIAlertControllerStyle.alert)
+        var myAlert = UIAlertController(title: title, message: mess, preferredStyle: UIAlertControllerStyle.alert)
         
         let okAction = UIAlertAction(title: "OK!!", style: UIAlertActionStyle.default, handler: nil)
         

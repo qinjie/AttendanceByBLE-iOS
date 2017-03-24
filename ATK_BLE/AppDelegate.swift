@@ -121,6 +121,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
                     if (statusCode == 200){
                         GlobalData.attendance.append(GlobalData.currentLesson.ldateid!)
                         NotificationCenter.default.post(name: NSNotification.Name(rawValue: "atksuccesfully"), object: nil)
+                                                
                     }
                         if let data = response.result.value{
                             print(data)
