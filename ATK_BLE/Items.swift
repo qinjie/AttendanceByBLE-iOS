@@ -26,12 +26,13 @@ struct Constant{
     static let URLattendance = baseURL + "api/web/index.php/v1/attendance"
     
     static let URLchangepass = baseURL + "api/web/index.php/v1/user/change-password"
-    
+    static let URLchangedevice = baseURL + "api/web/index.php/v1/student/register-device"
     static var device_token = ""
 
     static let photoURL = "http://128.199.93.67/WeTrack/backend/web/"
     static var token = ""
     static var username = ""
+    static var name = ""
     static var password = ""
     static var major : Int = 0
     static var minor : Int = 0
@@ -42,7 +43,8 @@ struct Constant{
     static var userphoto = URL(string: "")
     
     static var isLogin = false
-    
+    static var device_hash = ""
+    static var change_device = false
     
     
 }

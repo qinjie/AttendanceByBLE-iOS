@@ -39,8 +39,7 @@ class LoginController: UIViewController{
         
             login()
         //   setupData()
-            UserDefaults.standard.set("canhnht", forKey: "username")
-            UserDefaults.standard.set("123456", forKey: "password")
+           
         
         }
      
@@ -83,7 +82,7 @@ class LoginController: UIViewController{
         self.present(alertController, animated: false, completion: nil)
         
         
-        Constant.password = "123456"
+        
         
         let urlString = Constant.URLstudentlogin
         
@@ -94,21 +93,35 @@ class LoginController: UIViewController{
             let code = response.response?.statusCode
             if (code == 200){
  
+                UserDefaults.standard.set(self.usernameTextField.text, forKey: "username")
+                UserDefaults.standard.set(self.passTextField.text, forKey: "password")
+                Constant.password = self.passTextField.text!
+                Constant.username = self.usernameTextField.text!
                 
-                UserDefaults.standard.set("canhnht", forKey: "username")
-                UserDefaults.standard.set("123456", forKey: "username")
+                let thisdevice = UIDevice.current.identifierForVendor?.uuidString
+                
                 if let data = response.result.value{
                     print(data)
                 }
                 
                 if let JSON = response.result.value as? [String: AnyObject]{
                     
-                    Constant.username = JSON["name"] as! String
+                    
+                    Constant.name = JSON["name"] as! String
                     Constant.token = JSON["token"] as! String
                     Constant.student_id = JSON["id"] as! Int
                     Constant.major = JSON["major"] as! Int
                     Constant.minor = JSON["minor"] as! Int
-                 // constant majo minor status token
+                    
+                    Constant.device_hash = JSON["device_hash"] as! String
+                    
+                    if (Constant.device_hash != thisdevice){
+                        
+                        Constant.change_device = true
+                        
+                    }
+                
+                    // constant major minor status token
                     
                     UserDefaults.standard.set(Constant.token, forKey: "token")
                     UserDefaults.standard.set(Constant.major, forKey: "major")
@@ -265,9 +278,9 @@ class LoginController: UIViewController{
                             let newId = x["id"] as? Int!
                             if (newId != Constant.student_id){
                                 classmates.student_id?.append(newId!)
-                                print(x["beacon_user"])
+                                //print(x["beacon_user"])
                                 if let y = x["beacon_user"] as? [String:AnyObject]{
-                                    print(y)
+                                   // print(y)
                                     let newmajor = y["major"] as? Int!
                                     classmates.major?.append(newmajor!)
                                     let newminor = y["minor"] as? Int!

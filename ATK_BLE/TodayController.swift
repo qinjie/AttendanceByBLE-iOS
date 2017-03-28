@@ -46,7 +46,7 @@ class TodayController: UITableViewController, CBPeripheralManagerDelegate, CLLoc
         locationManager.requestAlwaysAuthorization()
         bluetoothPeripheralManager = CBPeripheralManager(delegate: self, queue: nil, options: nil)
         
-        newDay()
+        
         
         let mapBtn = UIBarButtonItem(title: "Tick-30", style: UIBarButtonItemStyle.plain, target: self, action: #selector(TodayController.checkLesson(sender:)))
         mapBtn.image = UIImage(named: "Tick-30")
@@ -55,13 +55,63 @@ class TodayController: UITableViewController, CBPeripheralManagerDelegate, CLLoc
     
         NotificationCenter.default.addObserver(self,selector: #selector(rload), name: NSNotification.Name(rawValue: "atksuccesfully"), object: nil)
         
+        if (Constant.change_device){
+            changeDV()
+        } else{
+            
+            newDay()
+            
+        }
+       
+        
     }
     
+    func changeDV(){
+        
+        let alert = UIAlertController(title: "NEW DEVICE", message: "You are loging in new device. Do you want to register new device?\n1. Accept: You have to wait until tomorrow to take attendance on this device.\n2. Decline: You can only view your timetable on this device.", preferredStyle: UIAlertControllerStyle.alert)
+        
+        
+        
+        alert.addAction(UIAlertAction(title: "Accept", style: UIAlertActionStyle.default, handler: { action in
+            
+            // register new device
+            
+            let headers: HTTPHeaders = [
+                 "Content-Type": "application/json"
+            ]
+            
+            let thisdevice = UIDevice.current.identifierForVendor?.uuidString
+            
+            let parameters: [String: Any] = ["username":Constant.username,
+                                             "password":Constant.password,
+                                             "device_hash": thisdevice!]
+            
+            print(Constant.username)
+            print(Constant.password)
+            print(thisdevice)
+            Alamofire.request(Constant.URLchangedevice, method: .post, parameters: parameters, encoding: JSONEncoding.default, headers: headers).responseJSON { (response:DataResponse) in
+                if let data = response.result.value{
+                    print(data)
+                }
+            }
+            
+            
+        }))
+        alert.addAction(UIAlertAction(title: "Decline", style: UIAlertActionStyle.cancel, handler: { action in
+            
+            Constant.change_device = true
+            
+            
+        }))
+           
+        self.present(alert, animated: true, completion: nil)
+    }
     func rload(){
         displayMyAlertMessage(title: "Successfull Attendance", mess: "You had taken attendance for \(currentLesson.catalog!)")
     
     }
     
+  
     func checkLesson(sender: UIBarButtonItem) {
         if (currentLesson != nil){
         

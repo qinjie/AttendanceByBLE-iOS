@@ -27,7 +27,7 @@ class SettingController: UITableViewController {
         super.viewDidLoad()
         tableView.rowHeight = UITableViewAutomaticDimension
         tableView.estimatedRowHeight = 300
-        name.text = Constant.username
+        name.text = Constant.name
         navigationItem.title = "Setting"
         // Do any additional setup after loading the view.
     }
