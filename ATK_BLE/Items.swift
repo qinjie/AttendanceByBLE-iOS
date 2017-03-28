@@ -25,6 +25,8 @@ struct Constant{
     static let URLatk = baseURL + "api/web/index.php/v1/beacon-attendance-student/student-list"
     static let URLattendance = baseURL + "api/web/index.php/v1/attendance"
     
+    static let URLchangepass = baseURL + "api/web/index.php/v1/user/change-password"
+    
     static var device_token = ""
 
     static let photoURL = "http://128.199.93.67/WeTrack/backend/web/"

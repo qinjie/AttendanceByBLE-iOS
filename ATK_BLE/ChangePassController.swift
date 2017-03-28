@@ -6,6 +6,7 @@
 //  Copyright © 2017 beacon. All rights reserved.
 //
 
+import Alamofire
 import UIKit
 
 class ChangePassController: UIViewController {
@@ -49,6 +50,23 @@ class ChangePassController: UIViewController {
             }else{
                 
                 if (newPass.text == retypePass.text){
+                    
+                    let headers: HTTPHeaders = [
+                        "Authorization": "Bearer " + Constant.token,
+                        "Content-Type": "application/json"
+                    ]
+                    
+                    let parameters: [String: Any] = [
+                        "oldPassword": currentPass.text ,
+                        "newPassword":newPass.text
+                        ]
+                    
+                    Alamofire.request(Constant.URLchangepass, method: .post, parameters: parameters, encoding: JSONEncoding.default, headers: headers).responseJSON { (response:DataResponse) in
+                        
+                        let JSON = response.result.value
+                        print(JSON)
+
+                    }
                     mess.text = "Your password is changed successfully!!"
                     mess.textColor = UIColor.blue
                     newPass.text = ""

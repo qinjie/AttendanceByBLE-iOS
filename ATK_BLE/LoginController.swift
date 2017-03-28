@@ -31,16 +31,18 @@ class LoginController: UIViewController{
 
         
         if ((usernameTextField.text == "") || (passTextField.text == "")) {
+            
             displayMyAlertMessage(title: "Alert",mess: "All fields are required")
     
-        }
+        }else{
+            
         
-        login()
+            login()
         //   setupData()
-        UserDefaults.standard.set("canhnht", forKey: "username")
-        UserDefaults.standard.set("123456", forKey: "password")
+            UserDefaults.standard.set("canhnht", forKey: "username")
+            UserDefaults.standard.set("123456", forKey: "password")
         
-        
+        }
      
     }
     
@@ -61,16 +63,25 @@ class LoginController: UIViewController{
     }
 
     func login(){
-        NSLog("zzz l========START TEST LOGIN =======")
+       
         let parameters: [String: Any] =
             [
-                "username":"canhnht",
-                "password":"123456",
+                "username": usernameTextField.text ,
+                "password": passTextField.text,
                 "device_hash":"f8:32:e4:5f:77:4fff"
                 
                 //"id" = "4"
                 
         ]
+        
+        let alertController = UIAlertController(title: nil, message: "Please wait...\n\n", preferredStyle: UIAlertControllerStyle.alert)
+        let spinnerIndicator: UIActivityIndicatorView = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.whiteLarge)
+        spinnerIndicator.center = CGPoint(x: 135.0, y: 65.5)
+        spinnerIndicator.color = UIColor.black
+        spinnerIndicator.startAnimating()
+        alertController.view.addSubview(spinnerIndicator)
+        self.present(alertController, animated: false, completion: nil)
+        
         
         Constant.password = "123456"
         
@@ -80,8 +91,9 @@ class LoginController: UIViewController{
         //let urlString = Constants.baseURL + "/atk-ble/api/web/index.php/v1/timetable/today"
         //let urlString = Constants.baseURL + "/atk-ble/api/web/index.php/v1/lecturer/login"
         Alamofire.request(urlString, method: .post, parameters: parameters, encoding: JSONEncoding.default, headers: nil).responseJSON { (response:DataResponse) in
-            switch(response.result) {
-            case .success(_):
+            let code = response.response?.statusCode
+            if (code == 200){
+ 
                 
                 UserDefaults.standard.set("canhnht", forKey: "username")
                 UserDefaults.standard.set("123456", forKey: "username")
@@ -117,12 +129,11 @@ class LoginController: UIViewController{
                         self.loadUUID()
                     }
                 }
-                break
+            } else {
                 
-            case .failure(_):
-                print("IT HAS ERROR WHEN LOGIN ")
-                print(response.result.error)
-                break
+                alertController.dismiss(animated: true, completion: nil)
+                self.displayMyAlertMessage(title: "LOGIN FAILED",mess: "Username or password is invalid!! ")
+                
             }
             
             

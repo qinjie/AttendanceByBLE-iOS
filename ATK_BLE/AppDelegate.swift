@@ -81,7 +81,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
         case .inside:
             print(" >>>> bg Inside \(region.identifier)");
             
-            noti(content: "found  " + region.identifier)
+            noti(content: "Please open to take attendance")
             
             numofdetected += 1
             

@@ -13,12 +13,13 @@ import CoreLocation
 class ATKController: UITableViewController , CLLocationManagerDelegate  {
 
     @IBOutlet weak var catalog: UILabel!
-    @IBOutlet weak var venue: UILabel!
     @IBOutlet weak var uuid: UILabel!
     @IBOutlet weak var starttime: UILabel!
     @IBOutlet weak var endtime: UILabel!
     @IBOutlet weak var id1: UILabel!
     @IBOutlet weak var id2: UILabel!
+    @IBOutlet weak var lecturername: UILabel!
+    @IBOutlet weak var venue: UILabel!
     
     var lesson : Lesson!
     var uuids : String!
@@ -30,6 +31,8 @@ class ATKController: UITableViewController , CLLocationManagerDelegate  {
         endtime.text = lesson.end_time
         catalog.text = lesson.catalog
         uuid.text = uuids
+        venue.text = lesson.venueName
+        lecturername.text = lesson.lecturer
         
 //        self.locationManager = CLLocationManager()
 //        self.locationManager.delegate = self
