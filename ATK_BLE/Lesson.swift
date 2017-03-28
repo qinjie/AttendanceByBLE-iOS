@@ -126,3 +126,46 @@ class BeaconUser{
     
 }
 
+class Classmate: NSObject, NSCoding{
+    
+    // var detect: Bool = true
+    var lesson_id: Int?
+    
+    var student_id: [Int]?
+    var major: [Int]?
+    var minor: [Int]?
+    
+    override init(){
+        
+        lesson_id = 0
+        student_id = []
+        major = []
+        minor = []
+        
+    }
+    
+    required init(coder aDecoder: NSCoder) {
+        
+        lesson_id = aDecoder.decodeObject(forKey: "lesson_id") as! Int?
+        
+        //   status = aDecoder.decodeObject(forKey: "status") as? Bool ?? true
+        
+        student_id = aDecoder.decodeObject(forKey: "student_id") as! [Int]?
+        major = aDecoder.decodeObject(forKey: "major") as! [Int]?
+        minor = aDecoder.decodeObject(forKey: "minor") as! [Int]?
+        
+    }
+    
+    func encode(with aCoder: NSCoder) {
+        
+        aCoder.encode(lesson_id, forKey: "lesson_id")
+        
+        aCoder.encode(student_id, forKey: "student_id")
+        aCoder.encode(major, forKey: "major")
+        aCoder.encode(minor, forKey: "minor")
+        
+    }
+    
+    
+}
+

@@ -15,7 +15,7 @@ class TodayController: UITableViewController, CBPeripheralManagerDelegate, CLLoc
     fileprivate let cellId = "cell"
     
     var lessons : [Lesson]!
-    var classmate = [BeaconUser]()
+    var classmate = Classmate()
     var nextLesson : Lesson!
     var currentLesson : Lesson!
     
@@ -48,7 +48,6 @@ class TodayController: UITableViewController, CBPeripheralManagerDelegate, CLLoc
         
         newDay()
         
-        
         let mapBtn = UIBarButtonItem(title: "Tick-30", style: UIBarButtonItemStyle.plain, target: self, action: #selector(TodayController.checkLesson(sender:)))
         mapBtn.image = UIImage(named: "Tick-30")
         self.navigationItem.rightBarButtonItem = mapBtn
@@ -64,8 +63,14 @@ class TodayController: UITableViewController, CBPeripheralManagerDelegate, CLLoc
     }
     
     func checkLesson(sender: UIBarButtonItem) {
+        if (currentLesson != nil){
         
-         self.performSegue(withIdentifier: "currentLessonSegue", sender: nil)
+            self.performSegue(withIdentifier: "currentLessonSegue", sender: nil)
+        
+        }else{
+        
+            displayMyAlertMessage(title: "Check", mess: "No lesson at the moment")
+        }
     }
 
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -139,7 +144,9 @@ class TodayController: UITableViewController, CBPeripheralManagerDelegate, CLLoc
         nextLesson = GlobalData.today.first(where: {$0.start_time! > currentTimeStr})
         
         if (currentLesson != nil){
-            
+            print("GlobalData.classmates \(GlobalData.classmates.count)")
+            self.classmate = GlobalData.classmates.first(where : {($0.lesson_id! == currentLesson.lesson_id!)})!
+            print("Self.classmates \(self.classmate.student_id?.count)")
             GlobalData.currentLesson = self.currentLesson
             
             ATK()
@@ -176,42 +183,42 @@ class TodayController: UITableViewController, CBPeripheralManagerDelegate, CLLoc
         
         // get classmate major minor
         
-        let headers: HTTPHeaders = [
-            "Authorization": "Bearer " + Constant.token,
-            "Content-Type": "application/json"
-        ]
-        
-        let parameters: [String: Any] = ["lesson_id": 29]
-        
-        Alamofire.request(Constant.URLclassmate, method: .post, parameters: parameters, encoding: JSONEncoding.default, headers: headers).responseJSON { (response:DataResponse) in
-            
-            if let JSON = response.result.value as? [[String: AnyObject]]{
-                
-                print(JSON)
-                for json in JSON{
-                    let x = BeaconUser()
-                    x.id = json["id"] as! Int
-                    
-                    if (x.id != Constant.user_id){
-                        
-                        if let beacon = json["beacon_user"] as? [String: AnyObject]{
-                            x.major = beacon["major"] as! Int
-                            x.minor = beacon["minor"] as! Int
-                            self.classmate.append(x)
-                        }
-                        
-                    }
-                    
-                }
-                self.detectClassmate()
-               
-            }else {
-                print("Parse error")
-  
-            }
-        
-        }
-        
+//        let headers: HTTPHeaders = [
+//            "Authorization": "Bearer " + Constant.token,
+//            "Content-Type": "application/json"
+//        ]
+//        
+//        let parameters: [String: Any] = ["lesson_id": 29]
+//        
+//        Alamofire.request(Constant.URLclassmate, method: .post, parameters: parameters, encoding: JSONEncoding.default, headers: headers).responseJSON { (response:DataResponse) in
+//            
+//            if let JSON = response.result.value as? [[String: AnyObject]]{
+//                
+//            //    print(JSON)
+//                for json in JSON{
+//                    let x = BeaconUser()
+//                    x.id = json["id"] as! Int
+//                    
+//                    if (x.id != Constant.student_id){
+//                        
+//                        if let beacon = json["beacon_user"] as? [String: AnyObject]{
+//                            x.major = beacon["major"] as! Int
+//                            x.minor = beacon["minor"] as! Int
+//                            self.classmate.append(x)
+//                        }
+//                        
+//                    }
+//                    
+//                }
+//                self.detectClassmate()
+//               
+//            }else {
+//                print("Parse error")
+//  
+//            }
+//        
+//        }
+        detectClassmate()
         let rand = Int(arc4random_uniform(2))
         let x = rand * 60
         let date = Date().addingTimeInterval(TimeInterval(x))
@@ -228,20 +235,21 @@ class TodayController: UITableViewController, CBPeripheralManagerDelegate, CLLoc
         uuid = NSUUID(uuidString: GlobalData.lessonUUID[currentLesson.lesson_id!]!) as! UUID
         print("Current Lesson : \(uuid)")
         
-        if (classmate.count > 20){
+        if ((classmate.student_id?.count)! > 20){
             for i in 0 ..< 20 {
                 
-               let newRegion = CLBeaconRegion(proximityUUID: uuid , major: UInt16(classmate[i].major) as CLBeaconMajorValue, minor: UInt16(classmate[i].minor) as CLBeaconMinorValue, identifier: classmate[i].id.description)
+               let newRegion = CLBeaconRegion(proximityUUID: uuid , major: UInt16(classmate.major![i]) as CLBeaconMajorValue, minor: UInt16((classmate.minor?[i])!) as CLBeaconMinorValue, identifier: (classmate.student_id?[i].description)!)
                 
                locationManager.startMonitoring(for: newRegion)
             }
         }else{
-            for cm in classmate {
+            for i in 0 ..< (classmate.student_id?.count)!  {
                 
-                let newRegion = CLBeaconRegion(proximityUUID: uuid , major: UInt16(cm.major) as CLBeaconMajorValue, minor: UInt16(cm.minor) as CLBeaconMinorValue, identifier: cm.id.description)
+                let newRegion = CLBeaconRegion(proximityUUID: uuid , major: UInt16(classmate.major![i]) as CLBeaconMajorValue, minor: UInt16((classmate.minor?[i])!) as CLBeaconMinorValue, identifier: (classmate.student_id?[i].description)!)
                 
                 locationManager.startMonitoring(for: newRegion)
             }
+
         }
         
     }
@@ -391,7 +399,7 @@ class TodayController: UITableViewController, CBPeripheralManagerDelegate, CLLoc
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
     
-            print("count \(lessons.count)")
+            //print("count \(lessons.count)")
             return lessons.count
     }
     
@@ -421,7 +429,7 @@ class TodayController: UITableViewController, CBPeripheralManagerDelegate, CLLoc
         // 1
         guard let cell = tableView.cellForRow(at: indexPath) as? LessonCell else { return }
         
-        print(cell.lesson?.catalog)
+       // print(cell.lesson?.catalog)
     }
     
     

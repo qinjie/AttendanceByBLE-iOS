@@ -71,6 +71,9 @@ class LoginController: UIViewController{
                 //"id" = "4"
                 
         ]
+        
+        Constant.password = "123456"
+        
         let urlString = Constant.URLstudentlogin
         
         print("url \(urlString)")
@@ -81,7 +84,7 @@ class LoginController: UIViewController{
             case .success(_):
                 
                 UserDefaults.standard.set("canhnht", forKey: "username")
-                
+                UserDefaults.standard.set("123456", forKey: "username")
                 if let data = response.result.value{
                     print(data)
                 }
@@ -90,7 +93,7 @@ class LoginController: UIViewController{
                     
                     Constant.username = JSON["name"] as! String
                     Constant.token = JSON["token"] as! String
-                    Constant.user_id = JSON["id"] as! Int
+                    Constant.student_id = JSON["id"] as! Int
                     Constant.major = JSON["major"] as! Int
                     Constant.minor = JSON["minor"] as! Int
                  // constant majo minor status token
@@ -102,9 +105,15 @@ class LoginController: UIViewController{
                     
                     print("token \(Constant.token)")
                     
-                    self.setupData()
+             
+                        self.loadAllClassmate()
+                    
+                  
+                    
+                    
                     DispatchQueue.main.async {
                         self.loadattendance()
+                        
                         self.loadUUID()
                     }
                 }
@@ -134,7 +143,7 @@ class LoginController: UIViewController{
         ]
     
         Alamofire.request(Constant.URLtimetable, method: .get, parameters: nil, encoding: JSONEncoding.default, headers: headers).responseJSON { (response:DataResponse) in
-            
+            print("load setup success")
             if let JSON = response.result.value as? [AnyObject]{
                 
                 for json in JSON {
@@ -154,7 +163,7 @@ class LoginController: UIViewController{
                     if let lecturer = json["lecturers"] as? [String: Any]{
            
                         newLesson.lecturer = (lecturer["name"] as? String)!
-                        print(newLesson.lecturer)
+                     //   print(newLesson.lecturer)
                     }
 
                     
@@ -214,37 +223,105 @@ class LoginController: UIViewController{
             // self.collectionView!.reloadData()
         }
     
-        func loadUUID(){
-             print("load uuid ")
-            let token = UserDefaults.standard.string(forKey: "token")
-            
-            let headers: HTTPHeaders = [
-                "Authorization": "Bearer " + token!
-                // "Accept": "application/json"
-            ]
-            
-            Alamofire.request(Constant.URLlessonUUID, method: .get, parameters: nil, encoding: JSONEncoding.default, headers: headers).responseJSON { (response:DataResponse) in
-                
-                if let JSON = response.result.value as? [[String:AnyObject]]{
+    
+    func loadAllClassmate(){
+        
+        let token = UserDefaults.standard.string(forKey: "token")
+        
+        let headers: HTTPHeaders = [
+            "Authorization": "Bearer " + token!,
+            "Content-Type": "application/json"
+        ]
+        
+        let parameters: [String: Any] =
+            [
+                "student_id": Constant.student_id
+        ]
+        
+        
+        Alamofire.request(Constant.URLallClassmate, method: .post, parameters: parameters, encoding: JSONEncoding.default, headers: headers).responseJSON { (response:DataResponse) in
+            print("load classmate success")
+            if let JSON = response.result.value as? [[String:AnyObject]]{
+                for json in JSON{
+                    let classmates = Classmate()
+                    classmates.lesson_id = json["lesson_id"] as? Int!
+                    classmates.major = [Int]()
+                    classmates.student_id = [Int]()
+                    classmates.minor = [Int]()
                     
-                    let localdata = "lessonUUID.json" //this is the file. we will write to and read from it
-                    
-                    
-                    if let dir = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first {
-                        
-                        let filePath = dir.appendingPathComponent(localdata)
-                        
-                        // write to file
-                        NSKeyedArchiver.archiveRootObject(JSON, toFile: filePath.path)
-                        
-                        
+                    if let list = json["students"] as? [[String:AnyObject]]{
+                        for x in list{
+                            let newId = x["id"] as? Int!
+                            if (newId != Constant.student_id){
+                                classmates.student_id?.append(newId!)
+                                print(x["beacon_user"])
+                                if let y = x["beacon_user"] as? [String:AnyObject]{
+                                    print(y)
+                                    let newmajor = y["major"] as? Int!
+                                    classmates.major?.append(newmajor!)
+                                    let newminor = y["minor"] as? Int!
+                                    classmates.minor?.append(newminor!)
+                                }
+                            }
+                        }
                     }
                     
-                  
+                    GlobalData.classmates.append(classmates)
+                    
                 }
+                
+                let localdata = "classmate.json"
+                
+                if let dir = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first {
+                    
+                    let filePath = dir.appendingPathComponent(localdata)
+                    
+                    // write to file
+                    NSKeyedArchiver.archiveRootObject(GlobalData.classmates, toFile: filePath.path)
+                    
+                    
+                }
+                
+                print("load all classmate ")
+                 self.setupData()
+            }else{
+                print("all classmate parser error")
             }
         }
+    }
     
+    func loadUUID(){
+
+        let token = UserDefaults.standard.string(forKey: "token")
+        
+        let headers: HTTPHeaders = [
+            "Authorization": "Bearer " + token!
+            // "Accept": "application/json"
+        ]
+        
+        Alamofire.request(Constant.URLlessonUUID, method: .get, parameters: nil, encoding: JSONEncoding.default, headers: headers).responseJSON { (response:DataResponse) in
+            
+            if let JSON = response.result.value as? [[String:AnyObject]]{
+                
+                let localdata = "lessonUUID.json" //this is the file. we will write to and read from it
+                
+                
+                if let dir = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first {
+                    
+                    let filePath = dir.appendingPathComponent(localdata)
+                    
+                    // write to file
+                    NSKeyedArchiver.archiveRootObject(JSON, toFile: filePath.path)
+                    
+                    
+                }
+                
+                print("load uuid success")
+            }
+        }
+    }
+    
+
     func loadattendance(){
         print("load att ")
         let headers: HTTPHeaders = [
@@ -260,7 +337,7 @@ class LoginController: UIViewController{
                    GlobalData.attendance.append(id)
                 }
             }
-                
+             print("load atk success")
         }
     }
     

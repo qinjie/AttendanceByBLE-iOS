@@ -95,14 +95,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
                 
                 let para1: Parameters = [
                         "lesson_date_id": GlobalData.currentLesson.ldateid!,
-                        "student_id_1": Constant.user_id,
+                        "student_id_1": Constant.student_id,
                         "student_id_2": id1,
                         "status": 0
                     ]
                 let para2: [String: Any] =
                     [
                         "lesson_date_id": GlobalData.currentLesson.ldateid!,
-                        "student_id_1": Constant.user_id,
+                        "student_id_1": Constant.student_id,
                         "student_id_2": id2,
                         "status": 0
                     ]

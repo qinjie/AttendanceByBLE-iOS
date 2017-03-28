@@ -99,8 +99,8 @@ class TimetableController: UITableViewController {
         // 1
         guard let cell = tableView.cellForRow(at: indexPath) as? LessonCell else { return }
         
-        print(cell.lesson?.lecturer)
-        print(cell.lesson?.ldateid)
+      //  print(cell.lesson?.lecturer)
+       // print(cell.lesson?.ldateid)
     }
 
     

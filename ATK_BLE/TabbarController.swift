@@ -34,7 +34,7 @@ class TabbarController: UITabBarController {
             filePath = dir.appendingPathComponent(localdata)
             
             if let JSON = NSKeyedUnarchiver.unarchiveObject(withFile: filePath.path) as? [[String: Any]]{
-                print(JSON)
+              //  print(JSON)
                 var dict = [Int:String]()
                 for json in JSON{
                     let id = (json["lesson_id"] as? Int)!

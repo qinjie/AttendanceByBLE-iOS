@@ -3,21 +3,35 @@
    version = "1.0">
    <ContextStates>
       <ContextState
-         contextName = "TodayController.broadcasting() -&gt; ():TodayController.swift">
+         contextName = "GLOBAL">
          <PersistentStrings>
             <PersistentString
-               value = "Constant.major">
+               value = "classmate">
             </PersistentString>
             <PersistentString
-               value = "uuid">
+               value = "GlobalData.classmates">
+            </PersistentString>
+            <PersistentString
+               value = "y">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
       <ContextState
-         contextName = "GLOBAL">
+         contextName = "LoginController.(loadAllClassmate() -&gt; ()).(closure #1):LoginController.swift">
+      </ContextState>
+      <ContextState
+         contextName = "TodayController.updateLesson() -&gt; ():TodayController.swift">
          <PersistentStrings>
             <PersistentString
-               value = "Constant.username">
+               value = "GlobalData.classmates">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "TodayController.detectClassmate() -&gt; ():TodayController.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "classmate.student_id">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
