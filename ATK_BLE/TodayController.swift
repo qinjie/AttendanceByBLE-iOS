@@ -85,10 +85,7 @@ class TodayController: UITableViewController, CBPeripheralManagerDelegate, CLLoc
             let parameters: [String: Any] = ["username":Constant.username,
                                              "password":Constant.password,
                                              "device_hash": thisdevice!]
-            
-            print(Constant.username)
-            print(Constant.password)
-            print(thisdevice)
+       
             Alamofire.request(Constant.URLchangedevice, method: .post, parameters: parameters, encoding: JSONEncoding.default, headers: headers).responseJSON { (response:DataResponse) in
                 if let data = response.result.value{
                     print(data)
@@ -125,18 +122,53 @@ class TodayController: UITableViewController, CBPeripheralManagerDelegate, CLLoc
 
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         
-        // retrieve selected cell & fruit
-        let atkController = segue.destination as! ATKController
-        if currentLesson != nil {
-            
-           
-            atkController.lesson = currentLesson
-            atkController.uuids = self.uuid.description
+        if (segue.identifier! == "currentLessonSegue"){
+            // retrieve selected cell & fruit
+            let atkController = segue.destination as! ATKController
+            if currentLesson != nil {
+                
+                
+                atkController.lesson = currentLesson
+                atkController.uuids = self.uuid.description
+            }else{
+                atkController.lesson = Lesson()
+            }
         }else{
-            atkController.lesson = Lesson()
+            
+            if let indexPath = getIndexPathForSelectedCell() {
+                let x = lessons?[indexPath.item]
+                let detailPage = segue.destination as! LessonDetailView
+                detailPage.lesson = x!
+            }
         }
+        
     }
 
+    //    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+    //
+    //        print(segue.identifier)
+    //        if let indexPath = getIndexPathForSelectedCell() {
+    //
+    //            let x = residents?[indexPath.item]
+    //
+    //            let detailPage = segue.destination as! ResidentDetailPage
+    //            detailPage.resident = x!
+    //        }
+    //
+    //
+    //    }
+    //
+    func getIndexPathForSelectedCell() -> IndexPath? {
+        
+        var indexPath:IndexPath?
+        
+        if (tableView.indexPathsForSelectedRows?.count)! > 0 {
+            indexPath = tableView.indexPathsForSelectedRows![0]
+        }
+        return indexPath
+    }
+
+    
         //    func maps(sender: UIBarButtonItem) {
     //        // Perform your custom actions
     //        // ...
@@ -185,42 +217,44 @@ class TodayController: UITableViewController, CBPeripheralManagerDelegate, CLLoc
 
     func updateLesson(){
         
+        today = Date()
+        
         currentLesson = nextLesson
         
         dateFormatter.dateFormat = "HH:mm:ss"
         
         currentTimeStr = dateFormatter.string(from: today)
         
+        print("current time \(currentTimeStr)")
         nextLesson = GlobalData.today.first(where: {$0.start_time! > currentTimeStr})
         
         if (currentLesson != nil){
-            print("GlobalData.classmates \(GlobalData.classmates.count)")
+            print("Current lesson id \(currentLesson.lesson_id)")
             self.classmate = GlobalData.classmates.first(where : {($0.lesson_id! == currentLesson.lesson_id!)})!
             print("Self.classmates \(self.classmate.student_id?.count)")
             GlobalData.currentLesson = self.currentLesson
             
             ATK()
-           
-            if (nextLesson != nil){
-                
-                dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
-                
-                let x = GlobalData.currentDateStr + " " + nextLesson.start_time!
-                
-                let y = dateFormatter.date(from: x)
-                
-                let date = y?.addingTimeInterval(10)
-                let timer = Timer(fireAt: date!, interval: 0, target: self, selector: #selector(updateLesson), userInfo: nil, repeats: false)
-                RunLoop.main.add(timer, forMode: RunLoopMode.commonModes)
-
-            }else{
+        }
+        
+        if (nextLesson != nil){
+            print("next Lesson id \(nextLesson.lesson_id)")
+            dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
             
-            }
+            let x = GlobalData.currentDateStr + " " + nextLesson.start_time!
             
+            let y = dateFormatter.date(from: x)
+            
+            let date = y?.addingTimeInterval(10)
+            let timer = Timer(fireAt: date!, interval: 0, target: self, selector: #selector(updateLesson), userInfo: nil, repeats: false)
+            RunLoop.main.add(timer, forMode: RunLoopMode.commonModes)
             
         }else{
             
         }
+        
+        
+        
         
       //  ATK()
         
@@ -479,9 +513,14 @@ class TodayController: UITableViewController, CBPeripheralManagerDelegate, CLLoc
         // 1
         guard let cell = tableView.cellForRow(at: indexPath) as? LessonCell else { return }
         
-       // print(cell.lesson?.catalog)
+        print(cell.lesson?.catalog)
+        
+        self.performSegue(withIdentifier: "lessonDetailSegue", sender: nil)
+        
     }
     
+    
+
     
     func locationManager(_ manager: CLLocationManager, didStartMonitoringFor region: CLRegion) {
         print("Started monitoring \(region.identifier) region")

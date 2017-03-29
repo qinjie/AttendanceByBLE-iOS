@@ -14,6 +14,7 @@
 		382F77731E85122C005A4E1A /* ChangePassController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 382F77721E85122C005A4E1A /* ChangePassController.swift */; };
 		3849C6DD1E6E93D300097B17 /* TabbarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3849C6DC1E6E93D300097B17 /* TabbarController.swift */; };
 		386688CC1E7FC2FF00DFA4C7 /* TableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 386688CB1E7FC2FF00DFA4C7 /* TableViewController.swift */; };
+		386875CA1E8B614100FB45C4 /* LessonDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 386875C91E8B614100FB45C4 /* LessonDetailView.swift */; };
 		38841AA41E690C0E004EF33D /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38841AA31E690C0E004EF33D /* AppDelegate.swift */; };
 		38841AA61E690C0E004EF33D /* LoginController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38841AA51E690C0E004EF33D /* LoginController.swift */; };
 		38841AA91E690C0E004EF33D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 38841AA71E690C0E004EF33D /* Main.storyboard */; };
@@ -37,6 +38,7 @@
 		382F77721E85122C005A4E1A /* ChangePassController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChangePassController.swift; sourceTree = "<group>"; };
 		3849C6DC1E6E93D300097B17 /* TabbarController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TabbarController.swift; sourceTree = "<group>"; };
 		386688CB1E7FC2FF00DFA4C7 /* TableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TableViewController.swift; sourceTree = "<group>"; };
+		386875C91E8B614100FB45C4 /* LessonDetailView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LessonDetailView.swift; sourceTree = "<group>"; };
 		38841AA01E690C0E004EF33D /* ATK_BLE.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ATK_BLE.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		38841AA31E690C0E004EF33D /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		38841AA51E690C0E004EF33D /* LoginController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginController.swift; sourceTree = "<group>"; };
@@ -110,6 +112,7 @@
 				386688CB1E7FC2FF00DFA4C7 /* TableViewController.swift */,
 				38E26DF91E694E30003B009D /* Lesson.swift */,
 				3815A2791E6D609400301CE2 /* SettingController.swift */,
+				386875C91E8B614100FB45C4 /* LessonDetailView.swift */,
 				3849C6DC1E6E93D300097B17 /* TabbarController.swift */,
 				3815A2711E6CF1CF00301CE2 /* LessonCell.swift */,
 				3815A2771E6D405800301CE2 /* TodayController.swift */,
@@ -278,6 +281,7 @@
 				38E26DFA1E694E30003B009D /* Lesson.swift in Sources */,
 				386688CC1E7FC2FF00DFA4C7 /* TableViewController.swift in Sources */,
 				3849C6DD1E6E93D300097B17 /* TabbarController.swift in Sources */,
+				386875CA1E8B614100FB45C4 /* LessonDetailView.swift in Sources */,
 				38E26DF81E6910A4003B009D /* Items.swift in Sources */,
 				38851CE21E6FF0EE001DC32C /* BluetoothDeviceHandler.m in Sources */,
 				3815A2741E6D030F00301CE2 /* TableViewCell.swift in Sources */,
