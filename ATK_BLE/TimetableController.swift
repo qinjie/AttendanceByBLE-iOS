@@ -14,7 +14,7 @@ class TimetableController: UITableViewController {
     
     var JSON : [[String:Any]]!
     
-    var names = ["Vegetables": ["Tomato", "Potato", "Lettuce"], "Fruits": ["Apple", "Banana"]]
+   
     
     let wday = ["Monday", "Tuesday", "Wednesday", "Thursday" , "Friday", "Saturday", "Sunday"]
     
@@ -96,14 +96,34 @@ class TimetableController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        // 1
+        
         guard let cell = tableView.cellForRow(at: indexPath) as? LessonCell else { return }
         
-      //  print(cell.lesson?.lecturer)
-       // print(cell.lesson?.ldateid)
+        self.performSegue(withIdentifier: "lessonDetailSegue2", sender: nil)
     }
 
+    override func prepare(for segue: UIStoryboardSegue, sender: Any? ) {
+        
+        let indexPath = getIndexPathForSelectedCell()
+        
+                guard let cell = tableView.cellForRow(at: indexPath!) as? LessonCell else { return }
+                let x = cell.lesson
+                let detailPage = segue.destination as! LessonDetailView
+                detailPage.lesson = x!
+       
+        
+        
+    }
     
+    
+    func getIndexPathForSelectedCell() -> IndexPath? {
+        
+        var indexPath:IndexPath?
+        
+            indexPath = tableView.indexPathForSelectedRow
+    
+        return indexPath
+    }
     /*
     // MARK: - Navigation
 

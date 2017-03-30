@@ -187,6 +187,8 @@ class LoginController: UIViewController{
                     if let lecturer = json["lecturers"] as? [String: Any]{
            
                         newLesson.lecturer = (lecturer["name"] as? String)!
+                        newLesson.acad = (lecturer["acad"] as? String)!
+                        newLesson.email = (lecturer["email"] as? String)!
                      //   print(newLesson.lecturer)
                     }
 
@@ -203,6 +205,8 @@ class LoginController: UIViewController{
                         newLesson.major = (venue["major"] as? Int32)!
                         newLesson.minor = (venue["minor"] as? Int32)!
                         newLesson.venueName = (venue["name"] as? String)!
+                        newLesson.location = (venue["location"] as? String)!
+                        
                     }
                         
                         

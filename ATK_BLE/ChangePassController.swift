@@ -63,16 +63,20 @@ class ChangePassController: UIViewController {
                     
                     Alamofire.request(Constant.URLchangepass, method: .post, parameters: parameters, encoding: JSONEncoding.default, headers: headers).responseJSON { (response:DataResponse) in
                         
+                        let code = response.response?.statusCode
+                        if (code == 200){
+                            self.mess.text = "Your password is changed successfully!!"
+                            self.mess.textColor = UIColor.blue
+                            self.newPass.text = ""
+                            self.currentPass.text = ""
+                            self.retypePass.text = ""
+                            self.mess.isHidden = false
+                        }
                         let JSON = response.result.value
                         print(JSON)
 
                     }
-                    mess.text = "Your password is changed successfully!!"
-                    mess.textColor = UIColor.blue
-                    newPass.text = ""
-                    currentPass.text = ""
-                    retypePass.text = ""
-                    mess.isHidden = false
+                    
                 }else{
                     
                     mess.text = "Your retype password is typed unmatch!!"

@@ -11,13 +11,15 @@ import UIKit
 class LessonDetailView: UITableViewController {
     
     @IBOutlet weak var catalog: UILabel!
-    @IBOutlet weak var uuid: UILabel!
     @IBOutlet weak var starttime: UILabel!
     @IBOutlet weak var endtime: UILabel!
-    @IBOutlet weak var id1: UILabel!
-    @IBOutlet weak var id2: UILabel!
+
+    @IBOutlet weak var acad: UILabel!
     @IBOutlet weak var lecturername: UILabel!
+    @IBOutlet weak var email: UILabel!
     @IBOutlet weak var venue: UILabel!
+    @IBOutlet weak var room: UILabel!
+    @IBOutlet weak var classSection: UILabel!
     
     var lesson : Lesson!
     var uuids : String!
@@ -27,21 +29,16 @@ class LessonDetailView: UITableViewController {
         
         starttime.text = lesson.start_time
         endtime.text = lesson.end_time
-        catalog.text = lesson.catalog
-        uuid.text = uuids
+        catalog.text = lesson.catalog! + lesson.subject!
+        room.text = lesson.location
         venue.text = lesson.venueName
         lecturername.text = lesson.lecturer
-        
-        //        self.locationManager = CLLocationManager()
-        //        self.locationManager.delegate = self
-        //        self.locationManager.requestAlwaysAuthorization()
-        //        let uuid = NSUUID(uuidString: "B9407F30-F5F8-466E-AFF9-25556B57FE6D") as! UUID
-        //        let newRegion = CLBeaconRegion(proximityUUID: uuid, identifier: "xuhelios" )
-        //
-        //        locationManager.startMonitoring(for: newRegion)
+        acad.text = lesson.acad
+        email.text = lesson.email
+
         
     }
     
-    @IBOutlet weak var test: UIButton!
+   
     
 }

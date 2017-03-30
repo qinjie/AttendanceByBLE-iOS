@@ -118,7 +118,7 @@ class LessonCell: UITableViewCell {
 //        contentView.addSubview(subjectLabel)
 //        contentView.addSubview(start_time)
 //        contentView.addSubview(end_time)
-        contentView.addSubview(dividerLineView)
+       // contentView.addSubview(dividerLineView)
  
         
 //        //   statusImage.image = UIImage(named: "dol")
@@ -131,8 +131,8 @@ class LessonCell: UITableViewCell {
 ////        
 ////        addConstraint(NSLayoutConstraint(item: lessonPhoto, attribute: .centerY, relatedBy: .equal, toItem: self, attribute: .centerY, multiplier: 1, constant: 0))
 //        
-        contentView.addConstraintsWithFormat("H:|-10-[v0]-10-|", views: dividerLineView)
-        contentView.addConstraintsWithFormat("V:[v0(1)]|", views: dividerLineView)
+//        contentView.addConstraintsWithFormat("H:|-10-[v0]-10-|", views: dividerLineView)
+//        contentView.addConstraintsWithFormat("V:[v0(1)]|", views: dividerLineView)
     }
     
     fileprivate func setupContainerView() {

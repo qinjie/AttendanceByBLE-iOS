@@ -15,10 +15,13 @@ class Lesson: NSObject, NSCoding{
     
     var subject: String?
     var catalog: String?
+    
     var venueName: String?
+    var location: String?
     
     var lecturer: String?
-    
+    var acad: String?
+    var email: String?
     
     var ldate: String?
     var weekday: String?
@@ -47,6 +50,8 @@ class Lesson: NSObject, NSCoding{
         ldate = "0/0/0"
         weekday = "0"
         ldateid = 0
+        acad = ""
+        email = ""
         major = 0
         minor = 0
         start_time = "00:00"
@@ -62,9 +67,13 @@ class Lesson: NSObject, NSCoding{
         
         subject = aDecoder.decodeObject(forKey: "subject") as! String?
         catalog = aDecoder.decodeObject(forKey: "catalog") as! String?
+        
         venueName = aDecoder.decodeObject(forKey: "venueName") as! String?
+        location = aDecoder.decodeObject(forKey: "location") as! String?
         
         lecturer = aDecoder.decodeObject(forKey: "lecturer") as! String?
+        email = aDecoder.decodeObject(forKey: "email") as! String?
+        acad = aDecoder.decodeObject(forKey: "acad") as! String?
         
         ldateid = aDecoder.decodeObject(forKey: "ldateid") as! Int?
         ldate = aDecoder.decodeObject(forKey: "ldate") as! String?
@@ -90,8 +99,14 @@ class Lesson: NSObject, NSCoding{
         
         aCoder.encode(subject, forKey: "subject")
         aCoder.encode(catalog, forKey: "catalog")
+        
         aCoder.encode(venueName, forKey: "venueName")
+        
+        aCoder.encode(location, forKey: "location")
+        
         aCoder.encode(lecturer, forKey: "lecturer")
+        aCoder.encode(acad, forKey: "acad")
+        aCoder.encode(email, forKey: "email")
         
         aCoder.encode(ldateid, forKey: "ldateid")
         aCoder.encode(ldate, forKey: "ldate")

@@ -144,20 +144,7 @@ class TodayController: UITableViewController, CBPeripheralManagerDelegate, CLLoc
         
     }
 
-    //    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-    //
-    //        print(segue.identifier)
-    //        if let indexPath = getIndexPathForSelectedCell() {
-    //
-    //            let x = residents?[indexPath.item]
-    //
-    //            let detailPage = segue.destination as! ResidentDetailPage
-    //            detailPage.resident = x!
-    //        }
-    //
-    //
-    //    }
-    //
+   
     func getIndexPathForSelectedCell() -> IndexPath? {
         
         var indexPath:IndexPath?
