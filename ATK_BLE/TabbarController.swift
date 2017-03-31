@@ -61,6 +61,8 @@ class TabbarController: UITabBarController {
         Constant.minor = UserDefaults.standard.integer(forKey: "minor")
         Constant.username = UserDefaults.standard.string(forKey: "username")!
         
+        
+        
     }
     
     override func didReceiveMemoryWarning() {

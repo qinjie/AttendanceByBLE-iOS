@@ -62,7 +62,7 @@ class TodayController: UITableViewController, CBPeripheralManagerDelegate, CLLoc
             newDay()
             
         }
-       
+        loadHistory()
         
     }
     
@@ -562,6 +562,30 @@ class TodayController: UITableViewController, CBPeripheralManagerDelegate, CLLoc
             print("@2: did enter region!!!  \(region.identifier)" )
             
             //   noti(content: "ENTER  " + region.identifier)
+        }
+    }
+    
+    func loadHistory(){
+        let token = UserDefaults.standard.string(forKey: "token")
+        
+        let headers: HTTPHeaders = [
+            "Authorization": "Bearer " + token!
+            // "Accept": "application/json"
+        ]
+        
+        Alamofire.request(Constant.URLhistory, method: .get, parameters: nil, encoding: JSONEncoding.default, headers: headers).responseJSON { (response:DataResponse) in
+            
+            if let JSON = response.result.value as? [[String:AnyObject]]{
+                
+                for json in JSON {
+                    let x = History()
+                    x.name = json["lesson_name"] as! String
+                    x.total = json["total"] as! Int
+                    x.absent = json["absented"] as! Int
+                    x.present = json["presented"] as! Int
+                    GlobalData.history.append(x)
+                }
+            }
         }
     }
 }

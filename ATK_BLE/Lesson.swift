@@ -141,6 +141,15 @@ class BeaconUser{
     
 }
 
+class History{
+    
+    var name: String = ""
+    var total: Int = 0
+    var absent: Int = 0
+    var present: Int = 0
+    
+}
+
 class Classmate: NSObject, NSCoding{
     
     // var detect: Bool = true
