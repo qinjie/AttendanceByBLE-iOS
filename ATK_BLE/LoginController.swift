@@ -19,6 +19,10 @@ class LoginController: UIViewController{
     override func viewDidLoad() {
         super.viewDidLoad()
         self.hideKeyboardWhenTappedAround()
+        
+        
+        
+        
         // Do any additional setup after loading the view, typically from a nib.
     }
     
@@ -160,6 +164,14 @@ class LoginController: UIViewController{
     
     func setupData(){
         
+        var today = Date()
+        
+        let myCalendar = NSCalendar(calendarIdentifier: NSCalendar.Identifier.gregorian)!
+        let myComponents = myCalendar.components(.weekday, from: today)
+        if (myComponents.weekday == 2) {
+        
+            
+       
         
         let headers: HTTPHeaders = [
             "Authorization": "Bearer " + Constant.token
@@ -249,8 +261,15 @@ class LoginController: UIViewController{
       
             }
             // self.collectionView!.reloadData()
+        }else{
+            DispatchQueue.main.async(execute: {
+                //alertController.dismiss(animated: true, completion: nil)
+                OperationQueue.main.addOperation {
+                    self.performSegue(withIdentifier: "loginSegue", sender: nil)
+                }
+            })
         }
-    
+    }
     
     func loadAllClassmate(){
         
@@ -312,6 +331,8 @@ class LoginController: UIViewController{
                 
                 print("load all classmate ")
                  self.setupData()
+                
+                
             }else{
                 print("all classmate parser error")
             }

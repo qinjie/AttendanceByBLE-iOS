@@ -37,8 +37,11 @@ class HistoryView: UITableViewController {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! HistoryCell
         
-        cell.lesson = histories[indexPath.row]
-        
+        let lesson = histories[indexPath.row]
+        cell.name.text = lesson.name
+        cell.total.text = lesson.total.description
+        cell.absent.text = lesson.absent.description
+        cell.present.text = lesson.present.description
         
         return cell
     }

@@ -29,7 +29,7 @@ class LessonDetailView: UITableViewController {
         
         starttime.text = lesson.start_time
         endtime.text = lesson.end_time
-        catalog.text = lesson.catalog! + lesson.subject!
+        catalog.text = lesson.catalog! + " " + lesson.subject! + " " + (lesson.lesson_id?.description)!
         room.text = lesson.location
         venue.text = lesson.venueName
         lecturername.text = lesson.lecturer

@@ -458,7 +458,7 @@
                         <segue destination="vEf-YH-Yw8" kind="relationship" relationship="viewControllers" id="qbV-Mm-cfh"/>
                         <segue destination="pn1-zr-afc" kind="relationship" relationship="viewControllers" id="5ye-rh-0IP"/>
                         <segue destination="mfu-cC-Pv6" kind="relationship" relationship="viewControllers" id="6g2-2i-5WC"/>
-                        <segue destination="fBI-rQ-zbK" kind="relationship" relationship="viewControllers" id="ZaX-t0-oZ1"/>
+                        <segue destination="F0M-v2-Fvl" kind="relationship" relationship="viewControllers" id="ZaX-t0-oZ1"/>
                     </connections>
                 </tabBarController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="vq9-C4-MD4" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -506,7 +506,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <prototypes>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" rowHeight="101" id="xVq-eV-v05" customClass="HistoryCell" customModule="ATK_BLE" customModuleProvider="target">
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="cell" rowHeight="101" id="xVq-eV-v05" customClass="HistoryCell" customModule="ATK_BLE" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="28" width="375" height="101"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="xVq-eV-v05" id="T9H-Wn-Hgg">
@@ -521,12 +521,24 @@
                                         </label>
                                         <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" image="present" translatesAutoresizingMaskIntoConstraints="NO" id="JKM-87-oHc">
                                             <rect key="frame" x="34" y="59" width="40" height="40"/>
+                                            <constraints>
+                                                <constraint firstAttribute="width" constant="30" id="eUM-C8-XQ0"/>
+                                                <constraint firstAttribute="height" constant="30" id="wlE-rK-UON"/>
+                                            </constraints>
                                         </imageView>
                                         <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" image="absent" translatesAutoresizingMaskIntoConstraints="NO" id="9ov-44-kaW">
                                             <rect key="frame" x="159" y="59" width="40" height="40"/>
+                                            <constraints>
+                                                <constraint firstAttribute="height" constant="32" id="cxg-2h-uGE"/>
+                                                <constraint firstAttribute="width" constant="32" id="e9F-Zw-h3t"/>
+                                            </constraints>
                                         </imageView>
                                         <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" image="total" translatesAutoresizingMaskIntoConstraints="NO" id="E8a-T7-I7Z">
                                             <rect key="frame" x="275" y="59" width="34" height="33"/>
+                                            <constraints>
+                                                <constraint firstAttribute="height" constant="30" id="Bly-b0-FKb"/>
+                                                <constraint firstAttribute="width" constant="30" id="Nhv-n4-sCl"/>
+                                            </constraints>
                                         </imageView>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="present" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="NGr-gB-89V">
                                             <rect key="frame" x="82" y="65" width="57" height="30"/>
@@ -549,8 +561,8 @@
                                     </subviews>
                                     <constraints>
                                         <constraint firstItem="9fx-fD-hoU" firstAttribute="bottom" secondItem="JKM-87-oHc" secondAttribute="bottom" id="0cI-TT-xJM"/>
-                                        <constraint firstItem="9ov-44-kaW" firstAttribute="leading" secondItem="NGr-gB-89V" secondAttribute="trailing" constant="20" id="5Di-2R-qZU"/>
-                                        <constraint firstItem="9ov-44-kaW" firstAttribute="top" secondItem="rCF-m3-Hy6" secondAttribute="bottom" constant="20" id="7HA-Zb-1Dg"/>
+                                        <constraint firstItem="9ov-44-kaW" firstAttribute="leading" secondItem="NGr-gB-89V" secondAttribute="trailing" constant="40" id="5Di-2R-qZU"/>
+                                        <constraint firstItem="9ov-44-kaW" firstAttribute="top" secondItem="rCF-m3-Hy6" secondAttribute="bottom" constant="10" id="7HA-Zb-1Dg"/>
                                         <constraint firstItem="WeS-Jj-qUk" firstAttribute="bottom" secondItem="JKM-87-oHc" secondAttribute="bottom" id="GMc-bp-K9k"/>
                                         <constraint firstItem="WeS-Jj-qUk" firstAttribute="leading" secondItem="E8a-T7-I7Z" secondAttribute="trailing" constant="10" id="HBM-rb-T8A"/>
                                         <constraint firstItem="9ov-44-kaW" firstAttribute="bottom" secondItem="JKM-87-oHc" secondAttribute="bottom" id="Law-rb-uCA"/>
@@ -560,7 +572,7 @@
                                         <constraint firstItem="rCF-m3-Hy6" firstAttribute="leading" secondItem="T9H-Wn-Hgg" secondAttribute="leadingMargin" constant="30" id="b2c-Og-pEs"/>
                                         <constraint firstItem="rCF-m3-Hy6" firstAttribute="top" secondItem="T9H-Wn-Hgg" secondAttribute="topMargin" constant="15" id="bHi-nf-193"/>
                                         <constraint firstItem="NGr-gB-89V" firstAttribute="bottom" secondItem="JKM-87-oHc" secondAttribute="bottom" id="nxc-W3-7mK"/>
-                                        <constraint firstItem="E8a-T7-I7Z" firstAttribute="leading" secondItem="9fx-fD-hoU" secondAttribute="trailing" constant="20" id="tzP-wl-1W3"/>
+                                        <constraint firstItem="E8a-T7-I7Z" firstAttribute="leading" secondItem="9fx-fD-hoU" secondAttribute="trailing" constant="40" id="tzP-wl-1W3"/>
                                         <constraint firstItem="NGr-gB-89V" firstAttribute="leading" secondItem="JKM-87-oHc" secondAttribute="trailing" constant="10" id="vja-qc-jYY"/>
                                     </constraints>
                                 </tableViewCellContentView>
@@ -577,11 +589,11 @@
                             <outlet property="delegate" destination="fBI-rQ-zbK" id="Wwj-vG-1fN"/>
                         </connections>
                     </tableView>
-                    <tabBarItem key="tabBarItem" title="Item" id="E4d-qG-3Qb"/>
+                    <navigationItem key="navigationItem" id="fEV-OH-dvu"/>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Mli-tG-HTq" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2917.5999999999999" y="506.89655172413796"/>
+            <point key="canvasLocation" x="3856.8000000000002" y="506.89655172413796"/>
         </scene>
         <!--Today Lesson-->
         <scene sceneID="VLS-8e-wem">
@@ -621,6 +633,7 @@
                     </navigationItem>
                     <connections>
                         <segue destination="0ST-jD-N02" kind="show" identifier="lessonDetailSegue" id="mcY-eJ-gW5"/>
+                        <segue destination="UgE-rv-2fZ" kind="show" identifier="currentLessonSegue" id="ieg-Vq-Lyk"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="gVP-DA-3DD" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -893,7 +906,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="4tD-Jx-sea" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="4941.6000000000004" y="-691.304347826087"/>
+            <point key="canvasLocation" x="4652" y="-674"/>
         </scene>
         <!--Current Lesson-->
         <scene sceneID="cDU-wG-YAg">
@@ -1079,10 +1092,30 @@
             </objects>
             <point key="canvasLocation" x="4761" y="-1381"/>
         </scene>
+        <!--History-->
+        <scene sceneID="UA0-nS-xxS">
+            <objects>
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="F0M-v2-Fvl" sceneMemberID="viewController">
+                    <tabBarItem key="tabBarItem" title="History" image="Clock-30" selectedImage="Clock-30" id="E4d-qG-3Qb"/>
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="Q6T-2i-62J">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="fBI-rQ-zbK" kind="relationship" relationship="rootViewController" id="vfV-Ox-KFr"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="BMN-DS-0Rt" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2917.5999999999999" y="506.89655172413796"/>
+        </scene>
     </scenes>
     <resources>
         <image name="Building" width="48" height="48"/>
         <image name="Calendar-30" width="30" height="30"/>
+        <image name="Clock-30" width="30" height="30"/>
         <image name="Course" width="48" height="48"/>
         <image name="Register page" width="640" height="1136"/>
         <image name="Settings-30" width="30" height="30"/>
@@ -1098,6 +1131,6 @@
     </resources>
     <inferredMetricsTieBreakers>
         <segue reference="A3W-N9-gLG"/>
-        <segue reference="MNQ-Rr-QdX"/>
+        <segue reference="mcY-eJ-gW5"/>
     </inferredMetricsTieBreakers>
 </document>

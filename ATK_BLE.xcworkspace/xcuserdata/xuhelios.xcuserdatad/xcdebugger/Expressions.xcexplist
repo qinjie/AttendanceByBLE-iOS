@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<VariablesViewState
+   version = "1.0">
+   <ContextStates>
+      <ContextState
+         contextName = "GLOBAL">
+         <PersistentStrings>
+            <PersistentString
+               value = "GlobalData.history">
+            </PersistentString>
+            <PersistentString
+               value = "lesson">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "TodayController.checkLesson(sender : UIBarButtonItem) -&gt; ():TodayController.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "thisdevice">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "TodayController.(loadHistory() -&gt; ()).(closure #1):TodayController.swift">
+      </ContextState>
+   </ContextStates>
+</VariablesViewState>

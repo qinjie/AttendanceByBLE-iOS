@@ -19,10 +19,7 @@ class HistoryCell: UITableViewCell {
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
-        name.text = lesson.name
-        total.text = lesson.total.description
-        absent.text = lesson.absent.description
-        present.text = lesson.present.description
+        
     }
 
     override func setSelected(_ selected: Bool, animated: Bool) {
