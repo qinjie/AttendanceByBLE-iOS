@@ -55,6 +55,8 @@ class TodayController: UITableViewController, CBPeripheralManagerDelegate, CLLoc
     
         NotificationCenter.default.addObserver(self,selector: #selector(rload), name: NSNotification.Name(rawValue: "atksuccesfully"), object: nil)
         
+        NotificationCenter.default.addObserver(self,selector: #selector(syncnewdata), name: NSNotification.Name(rawValue: "updatedata"), object: nil)
+        
         if (Constant.change_device){
             changeDV()
         } else{
@@ -63,6 +65,15 @@ class TodayController: UITableViewController, CBPeripheralManagerDelegate, CLLoc
             
         }
         loadHistory()
+        
+    }
+    
+    func syncnewdata(){
+        
+       
+        
+        GlobalData.today = GlobalData.timetable.filter({$0.ldate == GlobalData.currentDateStr})
+        lessons = GlobalData.today
         
     }
     
@@ -290,11 +301,17 @@ class TodayController: UITableViewController, CBPeripheralManagerDelegate, CLLoc
 //        
 //        }
         detectClassmate()
-        let rand = Int(arc4random_uniform(2))
-        let x = rand * 60
-        let date = Date().addingTimeInterval(TimeInterval(x))
+        var rand = Int(arc4random_uniform(15))
+        var x = rand * 60
+        var date = Date().addingTimeInterval(TimeInterval(x))
         print(date)
-        let timer2 = Timer(fireAt: date, interval: 0, target: self, selector: #selector(broadcasting), userInfo: nil, repeats: false)
+        var timer2 = Timer(fireAt: date, interval: 0, target: self, selector: #selector(broadcasting), userInfo: nil, repeats: false)
+        RunLoop.main.add(timer2, forMode: RunLoopMode.commonModes)
+        rand = Int(arc4random_uniform(20))
+        x = rand * 60
+        date = Date().addingTimeInterval(TimeInterval(x))
+        print(date)
+        timer2 = Timer(fireAt: date, interval: 0, target: self, selector: #selector(broadcasting), userInfo: nil, repeats: false)
         RunLoop.main.add(timer2, forMode: RunLoopMode.commonModes)
      
         

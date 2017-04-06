@@ -157,7 +157,7 @@ class LoginController: UIViewController{
         }
         
         NSLog("//======END TEST LOGIN1==========//")
-       // setupData()
+        
         
     }
     
@@ -170,9 +170,6 @@ class LoginController: UIViewController{
         let myComponents = myCalendar.components(.weekday, from: today)
         if (myComponents.weekday == 2) {
         
-            
-       
-        
         let headers: HTTPHeaders = [
             "Authorization": "Bearer " + Constant.token
             // "Accept": "application/json"
@@ -181,6 +178,8 @@ class LoginController: UIViewController{
         Alamofire.request(Constant.URLtimetable, method: .get, parameters: nil, encoding: JSONEncoding.default, headers: headers).responseJSON { (response:DataResponse) in
             print("load setup success")
             if let JSON = response.result.value as? [AnyObject]{
+                
+                
                 
                 for json in JSON {
                     
@@ -242,7 +241,14 @@ class LoginController: UIViewController{
                 if let dir = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first {
                     
                     let filePath = dir.appendingPathComponent(localdata)
+                    let str = ""
                     
+                    do {
+                        try str.write(to: filePath, atomically: true, encoding: String.Encoding.utf8)
+                    } catch {
+                        
+                    }
+
                     NSKeyedArchiver.archiveRootObject(GlobalData.timetable, toFile: filePath.path)
                     
                 }

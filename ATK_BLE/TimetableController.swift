@@ -5,7 +5,7 @@
 //  Created by xuhelios on 3/3/17.
 //  Copyright © 2017 beacon. All rights reserved.
 //
-
+import Alamofire
 import UIKit
 
 class TimetableController: UITableViewController {
@@ -20,14 +20,6 @@ class TimetableController: UITableViewController {
     
     let wdayInt = ["2", "3", "4", "5", "6", "7", "8"]
     
-    struct Objects {
-        
-        var sectionName : String!
-        var sectionObjects : [String]!
-    }
-    
-    var objectArray = [Objects]()
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -41,9 +33,9 @@ class TimetableController: UITableViewController {
         navigationItem.title = "Weekly Timetable"
         NotificationCenter.default.addObserver(self,selector: #selector(rload), name: NSNotification.Name(rawValue: "atksuccesfully"), object: nil)
 
-//        let SyncBtn = UIBarButtonItem(title: "Sync", style: UIBarButtonItemStyle.plain, target: self, action: #selector(LoginController.setupData))
-//        SyncBtn.image = UIImage(named: "sync30")
-//        self.navigationItem.rightBarButtonItem = SyncBtn
+        let SyncBtn = UIBarButtonItem(title: "Sync", style: UIBarButtonItemStyle.plain, target: self, action: #selector(TimetableController.setupData))
+        SyncBtn.image = UIImage(named: "sync30")
+        self.navigationItem.rightBarButtonItem = SyncBtn
     
     }
     
@@ -124,14 +116,106 @@ class TimetableController: UITableViewController {
     
         return indexPath
     }
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
+    
+    func setupData(){
+        
+        var today = Date()
+        
+        let myCalendar = NSCalendar(calendarIdentifier: NSCalendar.Identifier.gregorian)!
+        let myComponents = myCalendar.components(.weekday, from: today)
+        
+            
+            let headers: HTTPHeaders = [
+                "Authorization": "Bearer " + Constant.token
+                // "Accept": "application/json"
+            ]
+            
+            Alamofire.request(Constant.URLtimetable, method: .get, parameters: nil, encoding: JSONEncoding.default, headers: headers).responseJSON { (response:DataResponse) in
+                print("load setup success")
+                if let JSON = response.result.value as? [AnyObject]{
+                    GlobalData.timetable.removeAll()
+                    for json in JSON {
+                        
+                        let newLesson = Lesson()
+                        
+                        if let lesson = json["lesson"] as? [String: Any]{
+                            
+                            newLesson.lesson_id = (lesson["id"] as? Int)!
+                            newLesson.catalog = (lesson["catalog_number"] as? String)!
+                            newLesson.subject = (lesson["subject_area"] as? String)!
+                            newLesson.start_time = (lesson["start_time"] as? String)!
+                            newLesson.end_time = (lesson["end_time"] as? String)!
+                            newLesson.weekday = (lesson["weekday"] as? String)!
+                        }
+                        
+                        if let lecturer = json["lecturers"] as? [String: Any]{
+                            
+                            newLesson.lecturer = (lecturer["name"] as? String)!
+                            newLesson.acad = (lecturer["acad"] as? String)!
+                            newLesson.email = (lecturer["email"] as? String)!
+                            //   print(newLesson.lecturer)
+                        }
+                        
+                        
+                        if let lesson_date = json["lesson_date"] as? [String: Any]{
+                            
+                            newLesson.ldateid = (lesson_date["id"] as? Int)!
+                            newLesson.ldate = (lesson_date["ldate"] as? String)!
+                            
+                        }
+                        
+                        if let venue = json["venue"] as? [String: Any]{
+                            
+                            newLesson.major = (venue["major"] as? Int32)!
+                            newLesson.minor = (venue["minor"] as? Int32)!
+                            newLesson.venueName = (venue["name"] as? String)!
+                            newLesson.location = (venue["location"] as? String)!
+                            
+                        }
+                        
+                        
+                        //                        newLesson.photo = (json["image_path"] as? String)!
+                        //                        newLesson.remark = (json["remark"] as? String)!
+                        //                        newLesson.nric = (json["nric"] as? String)!
+                        //                        newLesson.dob = (json["dob"] as? String)!
+                        
+                        
+                        
+                        GlobalData.timetable.append(newLesson)
+                        
+                        
+                    }
+                    
+                    NotificationCenter.default.post(name: NSNotification.Name(rawValue: "updatedata"), object: nil)
+                    self.tableView.reloadData()   
+                    print("*****TIMETABLE*****")
+                    
+                    let localdata = "timetable.txt"
+                    
+                    if let dir = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first {
+                        
+                        let filePath = dir.appendingPathComponent(localdata)
+                        
+                        let str = ""
+                        
+                        do {
+                            try str.write(to: filePath, atomically: true, encoding: String.Encoding.utf8)
+                        } catch {
+                        
+                        }
+                        
+                        NSKeyedArchiver.archiveRootObject(GlobalData.timetable, toFile: filePath.path)
+                        
+                    }
+                }
+                
+                
+                
+                
+                
+            }
+            // self.collectionView!.reloadData()
+        
     }
-    */
 
 }

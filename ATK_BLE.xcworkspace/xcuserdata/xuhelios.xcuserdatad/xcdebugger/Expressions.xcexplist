@@ -6,23 +6,12 @@
          contextName = "GLOBAL">
          <PersistentStrings>
             <PersistentString
-               value = "GlobalData.history">
+               value = "GlobalData.timetable">
             </PersistentString>
             <PersistentString
-               value = "lesson">
+               value = "GlobalData.today">
             </PersistentString>
          </PersistentStrings>
-      </ContextState>
-      <ContextState
-         contextName = "TodayController.checkLesson(sender : UIBarButtonItem) -&gt; ():TodayController.swift">
-         <PersistentStrings>
-            <PersistentString
-               value = "thisdevice">
-            </PersistentString>
-         </PersistentStrings>
-      </ContextState>
-      <ContextState
-         contextName = "TodayController.(loadHistory() -&gt; ()).(closure #1):TodayController.swift">
       </ContextState>
    </ContextStates>
 </VariablesViewState>
