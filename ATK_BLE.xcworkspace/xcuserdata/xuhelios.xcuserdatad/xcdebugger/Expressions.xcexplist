@@ -6,12 +6,24 @@
          contextName = "GLOBAL">
          <PersistentStrings>
             <PersistentString
+               value = "GlobalData.today">
+            </PersistentString>
+            <PersistentString
                value = "GlobalData.timetable">
             </PersistentString>
             <PersistentString
-               value = "GlobalData.today">
+               value = "rand">
+            </PersistentString>
+            <PersistentString
+               value = "GlobalData.classmates">
+            </PersistentString>
+            <PersistentString
+               value = "classmates.lesson_id">
             </PersistentString>
          </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "LoginController.(loadAllClassmate() -&gt; ()).(closure #1):LoginController.swift">
       </ContextState>
    </ContextStates>
 </VariablesViewState>

@@ -33,9 +33,7 @@ class TimetableController: UITableViewController {
         navigationItem.title = "Weekly Timetable"
         NotificationCenter.default.addObserver(self,selector: #selector(rload), name: NSNotification.Name(rawValue: "atksuccesfully"), object: nil)
 
-        let SyncBtn = UIBarButtonItem(title: "Sync", style: UIBarButtonItemStyle.plain, target: self, action: #selector(TimetableController.setupData))
-        SyncBtn.image = UIImage(named: "sync30")
-        self.navigationItem.rightBarButtonItem = SyncBtn
+       
     
     }
     
@@ -208,10 +206,7 @@ class TimetableController: UITableViewController {
                         
                     }
                 }
-                
-                
-                
-                
+ 
                 
             }
             // self.collectionView!.reloadData()

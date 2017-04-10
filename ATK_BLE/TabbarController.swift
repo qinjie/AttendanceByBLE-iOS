@@ -45,6 +45,16 @@ class TabbarController: UITabBarController {
             }
             
             
+            localdata = "classmate.json"
+            
+            filePath = dir.appendingPathComponent(localdata)
+            
+            if let dict = NSKeyedUnarchiver.unarchiveObject(withFile: filePath.path) as? [Classmate]{
+                
+                GlobalData.classmates = dict
+                
+            }
+            
         }
         
         let today = Date()

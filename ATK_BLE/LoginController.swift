@@ -179,7 +179,7 @@ class LoginController: UIViewController{
             print("load setup success")
             if let JSON = response.result.value as? [AnyObject]{
                 
-                
+                GlobalData.timetable.removeAll()
                 
                 for json in JSON {
                     
@@ -295,6 +295,7 @@ class LoginController: UIViewController{
         Alamofire.request(Constant.URLallClassmate, method: .post, parameters: parameters, encoding: JSONEncoding.default, headers: headers).responseJSON { (response:DataResponse) in
             print("load classmate success")
             if let JSON = response.result.value as? [[String:AnyObject]]{
+                GlobalData.classmates.removeAll()
                 for json in JSON{
                     let classmates = Classmate()
                     classmates.lesson_id = json["lesson_id"] as? Int!
@@ -328,6 +329,14 @@ class LoginController: UIViewController{
                 if let dir = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first {
                     
                     let filePath = dir.appendingPathComponent(localdata)
+                    
+                    let str = ""
+                    
+                    do {
+                        try str.write(to: filePath, atomically: true, encoding: String.Encoding.utf8)
+                    } catch {
+                        
+                    }
                     
                     // write to file
                     NSKeyedArchiver.archiveRootObject(GlobalData.classmates, toFile: filePath.path)

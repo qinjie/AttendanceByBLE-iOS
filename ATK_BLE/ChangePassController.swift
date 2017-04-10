@@ -21,6 +21,7 @@ class ChangePassController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.hideKeyboardWhenTappedAround()
         mess.isHidden = true
         // Do any additional setup after loading the view.
     }

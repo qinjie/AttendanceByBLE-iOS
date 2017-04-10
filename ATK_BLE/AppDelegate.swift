@@ -25,19 +25,19 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         
         let mainStoryboard = UIStoryboard(name: "Main", bundle: nil)
-                var loginController: LoginController? = (mainStoryboard.instantiateViewController(withIdentifier: "LoginPage") as? LoginController)
-                 self.window?.rootViewController = loginController
-//        if (UserDefaults.standard.string(forKey: "username") == nil) {
-//            
-//            let loginController: LoginController? = (mainStoryboard.instantiateViewController(withIdentifier: "LoginPage") as? LoginController)
-//            
-//            self.window?.rootViewController = loginController
-//        }else{
-//            
-//            let mainViewController: TabbarController? = (mainStoryboard.instantiateViewController(withIdentifier: "Home") as? TabbarController)
-//            
-//            self.window?.rootViewController = mainViewController
-//        }
+//                var loginController: LoginController? = (mainStoryboard.instantiateViewController(withIdentifier: "LoginPage") as? LoginController)
+//                 self.window?.rootViewController = loginController
+        if (UserDefaults.standard.string(forKey: "username") == nil) {
+            
+            let loginController: LoginController? = (mainStoryboard.instantiateViewController(withIdentifier: "LoginPage") as? LoginController)
+            
+            self.window?.rootViewController = loginController
+        }else{
+            
+            let mainViewController: TabbarController? = (mainStoryboard.instantiateViewController(withIdentifier: "Home") as? TabbarController)
+            
+            self.window?.rootViewController = mainViewController
+        }
         
 
         
@@ -83,31 +83,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
             
             noti(content: "Please open to take attendance")
             
-            numofdetected += 1
-            
-            switch (numofdetected){
-            case 1:
-                id1 = region.identifier
-            case 2:
-                id2 = region.identifier
-                
-                //take attendance
+                  //take attendance
                 
                 let para1: Parameters = [
                         "lesson_date_id": GlobalData.currentLesson.ldateid!,
                         "student_id_1": Constant.student_id,
-                        "student_id_2": id1,
-                        "status": 0
-                    ]
-                let para2: [String: Any] =
-                    [
-                        "lesson_date_id": GlobalData.currentLesson.ldateid!,
-                        "student_id_1": Constant.student_id,
-                        "student_id_2": id2,
+                        "student_id_2": region.identifier,
                         "status": 0
                     ]
           
-                let parameters: [String: Any] = ["data": [para1, para2]]
+          
+                let parameters: [String: Any] = ["data": [para1]]
                 
                 print(parameters)
                 let headers: HTTPHeaders = [
@@ -129,16 +115,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
                         
                 }
                 
-            default:
-                print("")
-            }
+         
             
-            if (region.identifier == GlobalData.currentLecturerId.description){
-                foundLecturer = true
-            }else{
-                foundClassmate = true
-            }
-            
+//            if (region.identifier == GlobalData.currentLecturerId.description){
+//                foundLecturer = true
+//            }else{
+//                foundClassmate = true
+//            }
+//            
         //report(region: CLRegion)
         case .outside:
             print(" -____- Outside");
@@ -171,7 +155,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
         
         if (region is CLBeaconRegion) {
             print("@2: did exit region!!!   \(region.identifier)")
-            noti(content: "ATK-EXIT " + region.identifier)
+            //noti(content: "ATK-EXIT " + region.identifier)
         }
     }
     

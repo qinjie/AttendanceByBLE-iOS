@@ -14,6 +14,8 @@ class TodayController: UITableViewController, CBPeripheralManagerDelegate, CLLoc
     
     fileprivate let cellId = "cell"
     
+    @IBOutlet weak var broadcast: UILabel!
+    
     var lessons : [Lesson]!
     var classmate = Classmate()
     var nextLesson : Lesson!
@@ -32,6 +34,9 @@ class TodayController: UITableViewController, CBPeripheralManagerDelegate, CLLoc
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        self.broadcast.isHidden = true
+
         
         //collectionView?.register(LessonCell.self, forCellWithReuseIdentifier: cellId)
         //  self.tableView.register(LessonCell.self, forCellReuseIdentifier: "cell")
@@ -263,55 +268,23 @@ class TodayController: UITableViewController, CBPeripheralManagerDelegate, CLLoc
     
     func ATK(){
         
-        // get classmate major minor
-        
-//        let headers: HTTPHeaders = [
-//            "Authorization": "Bearer " + Constant.token,
-//            "Content-Type": "application/json"
-//        ]
-//        
-//        let parameters: [String: Any] = ["lesson_id": 29]
-//        
-//        Alamofire.request(Constant.URLclassmate, method: .post, parameters: parameters, encoding: JSONEncoding.default, headers: headers).responseJSON { (response:DataResponse) in
-//            
-//            if let JSON = response.result.value as? [[String: AnyObject]]{
-//                
-//            //    print(JSON)
-//                for json in JSON{
-//                    let x = BeaconUser()
-//                    x.id = json["id"] as! Int
-//                    
-//                    if (x.id != Constant.student_id){
-//                        
-//                        if let beacon = json["beacon_user"] as? [String: AnyObject]{
-//                            x.major = beacon["major"] as! Int
-//                            x.minor = beacon["minor"] as! Int
-//                            self.classmate.append(x)
-//                        }
-//                        
-//                    }
-//                    
-//                }
-//                self.detectClassmate()
-//               
-//            }else {
-//                print("Parse error")
-//  
-//            }
-//        
-//        }
         detectClassmate()
-        var rand = Int(arc4random_uniform(15))
+        // broadcasting 2 times, 30 seconds / 1 time
+        var rand = Int(arc4random_uniform(2))
         var x = rand * 60
         var date = Date().addingTimeInterval(TimeInterval(x))
-        print(date)
+        print("date \(date)")
         var timer2 = Timer(fireAt: date, interval: 0, target: self, selector: #selector(broadcasting), userInfo: nil, repeats: false)
+        
         RunLoop.main.add(timer2, forMode: RunLoopMode.commonModes)
-        rand = Int(arc4random_uniform(20))
+
+        rand = 1 + Int(arc4random_uniform(3))
         x = rand * 60
         date = Date().addingTimeInterval(TimeInterval(x))
         print(date)
         timer2 = Timer(fireAt: date, interval: 0, target: self, selector: #selector(broadcasting), userInfo: nil, repeats: false)
+        date = Date().addingTimeInterval(TimeInterval(x+30))
+
         RunLoop.main.add(timer2, forMode: RunLoopMode.commonModes)
      
         
@@ -393,7 +366,15 @@ class TodayController: UITableViewController, CBPeripheralManagerDelegate, CLLoc
     
     
     
+    func turnoffbroad(){
+        bluetoothPeripheralManager.stopAdvertising()
+        isBroadcasting = false
+        self.broadcast.isHidden = true
+    }
+    
     func broadcasting(){
+        
+        noti(content: "Please open to take attendance")
         
         if !isBroadcasting {
             
@@ -408,12 +389,22 @@ class TodayController: UITableViewController, CBPeripheralManagerDelegate, CLLoc
                 bluetoothPeripheralManager.startAdvertising(dataDictionary as? [String : Any])
              
                 isBroadcasting = true
+                self.broadcast.isHidden = false
+            
+                let date = Date().addingTimeInterval(TimeInterval(30))
+                
+                let timer = Timer(fireAt: date, interval: 0, target: self, selector: #selector(turnoffbroad), userInfo: nil, repeats: false)
+                RunLoop.main.add(timer, forMode: RunLoopMode.commonModes)
             }
             else{
+                
+                self.broadcast.isHidden = true
+
                 let alert = UIAlertController(title: "Bluetooth Turn on Request", message: " ATK would like to turn on your bluetooth!", preferredStyle: UIAlertControllerStyle.alert)
                 
                 // add the actions (buttons)
                 alert.addAction(UIAlertAction(title: "Allow", style: UIAlertActionStyle.default, handler: { action in
+                    self.turnOnBlt()
                     self.turnOnBlt()
                     self.broadcasting()
                 }))
