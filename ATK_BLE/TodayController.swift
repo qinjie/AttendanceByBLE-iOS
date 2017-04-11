@@ -35,8 +35,13 @@ class TodayController: UITableViewController, CBPeripheralManagerDelegate, CLLoc
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        self.broadcast.isHidden = true
+        self.broadcast.text = "NOT broadcasting"
+        self.broadcast.textColor = UIColor.green
+        
+        self.switchBtn.isOn = false
+        self.switchBtn.setOn(self.switchBtn.isOn, animated: true)
 
+        
         
         //collectionView?.register(LessonCell.self, forCellWithReuseIdentifier: cellId)
         //  self.tableView.register(LessonCell.self, forCellReuseIdentifier: "cell")
@@ -369,7 +374,10 @@ class TodayController: UITableViewController, CBPeripheralManagerDelegate, CLLoc
     func turnoffbroad(){
         bluetoothPeripheralManager.stopAdvertising()
         isBroadcasting = false
-        self.broadcast.isHidden = true
+        self.broadcast.text = "NOT broadcasting"
+        self.broadcast.textColor = UIColor.green
+        self.switchBtn.isOn = false
+        self.switchBtn.setOn(self.switchBtn.isOn, animated: true)
     }
     
     func broadcasting(){
@@ -389,8 +397,11 @@ class TodayController: UITableViewController, CBPeripheralManagerDelegate, CLLoc
                 bluetoothPeripheralManager.startAdvertising(dataDictionary as? [String : Any])
              
                 isBroadcasting = true
-                self.broadcast.isHidden = false
-            
+                self.broadcast.text = "Is broadcasting"
+                self.broadcast.textColor = UIColor.red
+                self.switchBtn.isOn = true
+                self.switchBtn.setOn(self.switchBtn.isOn, animated: true)
+                
                 let date = Date().addingTimeInterval(TimeInterval(30))
                 
                 let timer = Timer(fireAt: date, interval: 0, target: self, selector: #selector(turnoffbroad), userInfo: nil, repeats: false)
@@ -398,7 +409,8 @@ class TodayController: UITableViewController, CBPeripheralManagerDelegate, CLLoc
             }
             else{
                 
-                self.broadcast.isHidden = true
+                self.broadcast.text = "NOT broadcasting"
+                self.broadcast.textColor = UIColor.green
 
                 let alert = UIAlertController(title: "Bluetooth Turn on Request", message: " ATK would like to turn on your bluetooth!", preferredStyle: UIAlertControllerStyle.alert)
                 
@@ -427,6 +439,25 @@ class TodayController: UITableViewController, CBPeripheralManagerDelegate, CLLoc
         
     }
 
+    @IBOutlet weak var switchBtn: UISwitch!
+    @IBAction func broadbyHand(_ sender: Any) {
+        if (self.switchBtn.isOn){
+            if (self.currentLesson == nil){
+                displayMyAlertMessage(title: "Notice", mess: "No lesson at the moment. You can only broadcast in lesson time.")
+                self.switchBtn.isOn = !self.switchBtn.isOn
+                self.switchBtn.setOn(self.switchBtn.isOn, animated: true)
+            }else{
+              
+                broadcasting() 
+            }
+            
+        }else{
+            
+            turnoffbroad()
+            
+        }
+    }
+    
     func turnOnBlt(){
         let bluetoothManager = BluetoothManagerHandler.sharedInstance()
         

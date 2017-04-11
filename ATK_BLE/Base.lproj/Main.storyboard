@@ -603,16 +603,44 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                        <label key="tableHeaderView" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Is broadcasting" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="I6W-KO-jt8">
-                            <rect key="frame" x="0.0" y="0.0" width="375" height="36"/>
+                        <view key="tableHeaderView" contentMode="scaleToFill" id="TB6-IT-q2S">
+                            <rect key="frame" x="0.0" y="0.0" width="375" height="92"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                            <fontDescription key="fontDescription" type="italicSystem" pointSize="17"/>
-                            <color key="textColor" red="1" green="0.2243081432" blue="0.033105715100000002" alpha="1" colorSpace="calibratedRGB"/>
-                            <nil key="highlightedColor"/>
-                        </label>
+                            <subviews>
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Is broadcasting" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="I6W-KO-jt8">
+                                    <rect key="frame" x="0.0" y="8" width="298" height="38"/>
+                                    <fontDescription key="fontDescription" name="HelveticaNeue-BoldItalic" family="Helvetica Neue" pointSize="18"/>
+                                    <color key="textColor" red="1" green="0.2243081432" blue="0.033105715100000002" alpha="1" colorSpace="calibratedRGB"/>
+                                    <nil key="highlightedColor"/>
+                                </label>
+                                <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="3nd-E2-M39">
+                                    <rect key="frame" x="318" y="12" width="51" height="31"/>
+                                    <connections>
+                                        <action selector="broadbyHand:" destination="hcI-3v-HIj" eventType="valueChanged" id="9XY-K1-YN6"/>
+                                    </connections>
+                                </switch>
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="It will broadcast twice each lesson.   You can broadcast by yourself." textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="10r-jR-fyC">
+                                    <rect key="frame" x="8" y="51" width="463" height="32"/>
+                                    <fontDescription key="fontDescription" type="system" weight="light" pointSize="14"/>
+                                    <nil key="textColor"/>
+                                    <nil key="highlightedColor"/>
+                                </label>
+                            </subviews>
+                            <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            <constraints>
+                                <constraint firstItem="I6W-KO-jt8" firstAttribute="top" secondItem="TB6-IT-q2S" secondAttribute="top" constant="20" id="1Uw-oe-9G9"/>
+                                <constraint firstItem="3nd-E2-M39" firstAttribute="top" secondItem="TB6-IT-q2S" secondAttribute="top" constant="20" id="Bw5-d0-wM3"/>
+                                <constraint firstAttribute="trailing" secondItem="3nd-E2-M39" secondAttribute="trailing" constant="10" id="NUK-q8-N0V"/>
+                                <constraint firstItem="10r-jR-fyC" firstAttribute="top" secondItem="I6W-KO-jt8" secondAttribute="bottom" constant="10" id="aEY-99-nkJ"/>
+                                <constraint firstItem="10r-jR-fyC" firstAttribute="leading" secondItem="TB6-IT-q2S" secondAttribute="leading" constant="20" id="cv9-Dj-MX2"/>
+                                <constraint firstItem="3nd-E2-M39" firstAttribute="leading" secondItem="I6W-KO-jt8" secondAttribute="trailing" constant="10" id="fs2-M5-6Rp"/>
+                                <constraint firstItem="I6W-KO-jt8" firstAttribute="leading" secondItem="TB6-IT-q2S" secondAttribute="leading" id="o5b-L7-a5a"/>
+                                <constraint firstItem="10r-jR-fyC" firstAttribute="trailing" secondItem="I6W-KO-jt8" secondAttribute="trailing" id="ssT-5V-Sg3"/>
+                            </constraints>
+                        </view>
                         <prototypes>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="cell" rowHeight="97" id="pUd-xU-zMU" customClass="LessonCell" customModule="ATK_BLE" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="64" width="375" height="97"/>
+                                <rect key="frame" x="0.0" y="120" width="375" height="97"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="pUd-xU-zMU" id="7Jm-5H-w4q">
                                     <rect key="frame" x="0.0" y="0.0" width="375" height="97"/>
@@ -640,6 +668,7 @@
                     </navigationItem>
                     <connections>
                         <outlet property="broadcast" destination="I6W-KO-jt8" id="83i-mi-QYk"/>
+                        <outlet property="switchBtn" destination="3nd-E2-M39" id="JIz-oK-tuN"/>
                         <segue destination="0ST-jD-N02" kind="show" identifier="lessonDetailSegue" id="mcY-eJ-gW5"/>
                         <segue destination="UgE-rv-2fZ" kind="show" identifier="currentLessonSegue" id="ieg-Vq-Lyk"/>
                     </connections>
