@@ -33,7 +33,9 @@ class TimetableController: UITableViewController {
         navigationItem.title = "Weekly Timetable"
         NotificationCenter.default.addObserver(self,selector: #selector(rload), name: NSNotification.Name(rawValue: "atksuccesfully"), object: nil)
 
-       
+        let syncBtn = UIBarButtonItem(title: "", style: UIBarButtonItemStyle.plain, target: self, action: #selector(TimetableController.setupData))
+        syncBtn.image = UIImage(named: "sync30")
+        self.navigationItem.rightBarButtonItem = syncBtn
     
     }
     
@@ -53,6 +55,7 @@ class TimetableController: UITableViewController {
        
         return  GlobalData.timetable.filter({$0.weekday == wdayInt[section]}).count
     }
+    
     
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat{
         return 120.0;
@@ -185,7 +188,7 @@ class TimetableController: UITableViewController {
                     }
                     
                     NotificationCenter.default.post(name: NSNotification.Name(rawValue: "updatedata"), object: nil)
-                    self.tableView.reloadData()   
+                    
                     print("*****TIMETABLE*****")
                     
                     let localdata = "timetable.txt"
@@ -205,6 +208,9 @@ class TimetableController: UITableViewController {
                         NSKeyedArchiver.archiveRootObject(GlobalData.timetable, toFile: filePath.path)
                         
                     }
+                    self.tableView.reloadData()
+                }else{
+                
                 }
  
                 

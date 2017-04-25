@@ -62,7 +62,8 @@ class TodayController: UITableViewController, CBPeripheralManagerDelegate, CLLoc
         mapBtn.image = UIImage(named: "Tick-30")
         self.navigationItem.rightBarButtonItem = mapBtn
         
-    
+        loadHistory()
+        
         NotificationCenter.default.addObserver(self,selector: #selector(rload), name: NSNotification.Name(rawValue: "atksuccesfully"), object: nil)
         
         NotificationCenter.default.addObserver(self,selector: #selector(syncnewdata), name: NSNotification.Name(rawValue: "updatedata"), object: nil)
@@ -74,7 +75,8 @@ class TodayController: UITableViewController, CBPeripheralManagerDelegate, CLLoc
             newDay()
             
         }
-        loadHistory()
+        
+        Constant.token = UserDefaults.standard.string(forKey: "token")!
         
     }
     
@@ -85,6 +87,7 @@ class TodayController: UITableViewController, CBPeripheralManagerDelegate, CLLoc
         GlobalData.today = GlobalData.timetable.filter({$0.ldate == GlobalData.currentDateStr})
         lessons = GlobalData.today
         
+        self.tableView.reloadData()
     }
     
     func changeDV(){
@@ -275,7 +278,7 @@ class TodayController: UITableViewController, CBPeripheralManagerDelegate, CLLoc
         
         detectClassmate()
         // broadcasting 2 times, 30 seconds / 1 time
-        var rand = Int(arc4random_uniform(2))
+        var rand = 1 + Int(arc4random_uniform(3))
         var x = rand * 60
         var date = Date().addingTimeInterval(TimeInterval(x))
         print("date \(date)")
@@ -283,7 +286,7 @@ class TodayController: UITableViewController, CBPeripheralManagerDelegate, CLLoc
         
         RunLoop.main.add(timer2, forMode: RunLoopMode.commonModes)
 
-        rand = 1 + Int(arc4random_uniform(3))
+        rand = 5 + Int(arc4random_uniform(3))
         x = rand * 60
         date = Date().addingTimeInterval(TimeInterval(x))
         print(date)
@@ -381,8 +384,9 @@ class TodayController: UITableViewController, CBPeripheralManagerDelegate, CLLoc
     }
     
     func broadcasting(){
+        print("NOTI")
         
-        noti(content: "Please open to take attendance")
+        NotificationCenter.default.post(name: NSNotification.Name(rawValue: "openapp"), object: nil)
         
         if !isBroadcasting {
             
@@ -601,6 +605,25 @@ class TodayController: UITableViewController, CBPeripheralManagerDelegate, CLLoc
             print("@2: did enter region!!!  \(region.identifier)" )
             
             //   noti(content: "ENTER  " + region.identifier)
+        }
+    }
+    
+    func loadattendance(){
+        print("load att ")
+        let headers: HTTPHeaders = [
+            "Authorization": "Bearer " + Constant.token
+            // "Accept": "application/json"
+        ]
+        
+        Alamofire.request(Constant.URLattendance, method: .get, parameters: nil, encoding: JSONEncoding.default, headers: headers).responseJSON { (response:DataResponse) in
+            
+            if let JSON = response.result.value as? [[String:Any]]{
+                for json in JSON{
+                    let id = (json["lesson_date_id"] as? Int)!
+                    GlobalData.attendance.append(id)
+                }
+            }
+            print("load atk success")
         }
     }
     

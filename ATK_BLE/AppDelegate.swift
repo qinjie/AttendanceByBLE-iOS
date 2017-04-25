@@ -48,7 +48,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
         self.locationManager = CLLocationManager()
         self.locationManager.delegate = self
         self.locationManager.requestAlwaysAuthorization()
+        
+        NotificationCenter.default.addObserver(self,selector: #selector(sendnoti), name: NSNotification.Name(rawValue: "openapp"), object: nil)
+        
         return true
+    }
+    
+    func sendnoti(){
+        noti(content: "Please open to take attendance")
     }
     
     func locationManager(_ manager: CLLocationManager, monitoringDidFailFor region: CLRegion?, withError error: Error) {
@@ -84,13 +91,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
             noti(content: "Please open to take attendance")
             
                   //take attendance
-                
+                Constant.token = UserDefaults.standard.string(forKey: "token")!
+                Constant.student_id = UserDefaults.standard.integer(forKey: "student_id")
+            
                 let para1: Parameters = [
                         "lesson_date_id": GlobalData.currentLesson.ldateid!,
                         "student_id_1": Constant.student_id,
                         "student_id_2": region.identifier,
-                        "status": 0
-                    ]
+                        ]
           
           
                 let parameters: [String: Any] = ["data": [para1]]

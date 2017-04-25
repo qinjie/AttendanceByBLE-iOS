@@ -23,7 +23,7 @@ struct Constant{
     static let URLclassmate = baseURL + "api/web/index.php/v1/timetable/get-student"
     static let URLallClassmate = baseURL + "api/web/index.php/v1/timetable/get-all-student"
     
-    static let URLatk = baseURL + "api/web/index.php/v1/beacon-attendance-student/student-list"
+    static let URLatk = baseURL + "api/web/index.php/v1/beacon-attendance-student/student-attendance"
     static let URLattendance = baseURL + "api/web/index.php/v1/attendance"
     
     static let URLchangepass = baseURL + "api/web/index.php/v1/user/change-password"

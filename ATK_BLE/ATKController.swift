@@ -37,9 +37,7 @@ class ATKController: UITableViewController , CLLocationManagerDelegate  {
         lecturername.text = lesson.lecturer
         acad.text = lesson.acad
         email.text = lesson.email
-        
-
-        
+  
     }
  
   

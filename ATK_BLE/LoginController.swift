@@ -1,5 +1,5 @@
 //
-//  ViewController.swift
+//  LoginController.swift
 //  ATK_BLE
 //
 //  Created by xuhelios on 3/3/17.
@@ -66,12 +66,12 @@ class LoginController: UIViewController{
     }
 
     func login(){
-       
+       let thisdevice = UIDevice.current.identifierForVendor?.uuidString
         let parameters: [String: Any] =
             [
                 "username": usernameTextField.text ,
                 "password": passTextField.text,
-                "device_hash":"f8:32:e4:5f:77:4fff"
+                "device_hash": thisdevice
                 
                 //"id" = "4"
                 
@@ -85,15 +85,9 @@ class LoginController: UIViewController{
         alertController.view.addSubview(spinnerIndicator)
         self.present(alertController, animated: false, completion: nil)
         
-        
-        
-        
-        let urlString = Constant.URLstudentlogin
-        
-        print("url \(urlString)")
-        //let urlString = Constants.baseURL + "/atk-ble/api/web/index.php/v1/timetable/today"
-        //let urlString = Constants.baseURL + "/atk-ble/api/web/index.php/v1/lecturer/login"
-        Alamofire.request(urlString, method: .post, parameters: parameters, encoding: JSONEncoding.default, headers: nil).responseJSON { (response:DataResponse) in
+       
+
+        Alamofire.request(Constant.URLstudentlogin, method: .post, parameters: parameters, encoding: JSONEncoding.default, headers: nil).responseJSON { (response:DataResponse) in
             let code = response.response?.statusCode
             if (code == 200){
  
@@ -128,23 +122,14 @@ class LoginController: UIViewController{
                     // constant major minor status token
                     
                     UserDefaults.standard.set(Constant.token, forKey: "token")
+                    self.loadAllClassmate()
                     UserDefaults.standard.set(Constant.major, forKey: "major")
                     UserDefaults.standard.set(Constant.minor, forKey: "minor")
                     UserDefaults.standard.set(Constant.username, forKey: "username")
-                    
-                    print("token \(Constant.token)")
-                    
-             
-                        self.loadAllClassmate()
-                    
-                  
+                    UserDefaults.standard.set(Constant.student_id, forKey: "student_id")
                     
                     
-                    DispatchQueue.main.async {
-                        self.loadattendance()
-                        
-                        self.loadUUID()
-                    }
+                    
                 }
             } else {
                 
@@ -156,7 +141,6 @@ class LoginController: UIViewController{
             
         }
         
-        NSLog("//======END TEST LOGIN1==========//")
         
         
     }
@@ -254,12 +238,17 @@ class LoginController: UIViewController{
                 }
             }
             
-
-            
+//
+//            DispatchQueue.main.async {
+//               
+//            }
             DispatchQueue.main.async(execute: {
                 //alertController.dismiss(animated: true, completion: nil)
                 OperationQueue.main.addOperation {
                     self.performSegue(withIdentifier: "loginSegue", sender: nil)
+                    self.loadattendance()
+                    
+                    self.loadUUID()
                 }
             })
 
