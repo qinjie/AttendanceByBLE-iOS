@@ -16,9 +16,9 @@ class TimetableController: UITableViewController {
     
    
     
-    let wday = ["Monday", "Tuesday", "Wednesday", "Thursday" , "Friday", "Saturday", "Sunday"]
+    let wday = ["Monday", "Tuesday", "Wednesday", "Thursday" , "Friday", "Saturday"]
     
-    let wdayInt = ["2", "3", "4", "5", "6", "7", "8"]
+    let wdayInt = ["2", "3", "4", "5", "6", "7"]
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -33,10 +33,12 @@ class TimetableController: UITableViewController {
         navigationItem.title = "Weekly Timetable"
         NotificationCenter.default.addObserver(self,selector: #selector(rload), name: NSNotification.Name(rawValue: "atksuccesfully"), object: nil)
 
-        let syncBtn = UIBarButtonItem(title: "", style: UIBarButtonItemStyle.plain, target: self, action: #selector(TimetableController.setupData))
-        syncBtn.image = UIImage(named: "sync30")
-        self.navigationItem.rightBarButtonItem = syncBtn
     
+    }
+    
+    
+    @IBAction func sync(_ sender: Any) {
+        setupData()
     }
     
     func rload(){
@@ -48,7 +50,7 @@ class TimetableController: UITableViewController {
     
     override func numberOfSections(in tableView: UITableView) -> Int{
       
-        return 6
+        return 5
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -173,15 +175,7 @@ class TimetableController: UITableViewController {
                             newLesson.location = (venue["location"] as? String)!
                             
                         }
-                        
-                        
-                        //                        newLesson.photo = (json["image_path"] as? String)!
-                        //                        newLesson.remark = (json["remark"] as? String)!
-                        //                        newLesson.nric = (json["nric"] as? String)!
-                        //                        newLesson.dob = (json["dob"] as? String)!
-                        
-                        
-                        
+                 
                         GlobalData.timetable.append(newLesson)
                         
                         

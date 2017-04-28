@@ -56,11 +56,7 @@ class TodayController: UITableViewController, CBPeripheralManagerDelegate, CLLoc
         locationManager.requestAlwaysAuthorization()
         bluetoothPeripheralManager = CBPeripheralManager(delegate: self, queue: nil, options: nil)
         
-        
-        
-        let mapBtn = UIBarButtonItem(title: "Tick-30", style: UIBarButtonItemStyle.plain, target: self, action: #selector(TodayController.checkLesson(sender:)))
-        mapBtn.image = UIImage(named: "Tick-30")
-        self.navigationItem.rightBarButtonItem = mapBtn
+        Constant.token = UserDefaults.standard.string(forKey: "token")!
         
         loadHistory()
         
@@ -68,15 +64,13 @@ class TodayController: UITableViewController, CBPeripheralManagerDelegate, CLLoc
         
         NotificationCenter.default.addObserver(self,selector: #selector(syncnewdata), name: NSNotification.Name(rawValue: "updatedata"), object: nil)
         
+        newDay()
+        
         if (Constant.change_device){
             changeDV()
-        } else{
-            
-            newDay()
-            
         }
         
-        Constant.token = UserDefaults.standard.string(forKey: "token")!
+        
         
     }
     
@@ -112,7 +106,7 @@ class TodayController: UITableViewController, CBPeripheralManagerDelegate, CLLoc
        
             Alamofire.request(Constant.URLchangedevice, method: .post, parameters: parameters, encoding: JSONEncoding.default, headers: headers).responseJSON { (response:DataResponse) in
                 if let data = response.result.value{
-                    print(data)
+                   // print(data)
                 }
             }
             
@@ -133,7 +127,8 @@ class TodayController: UITableViewController, CBPeripheralManagerDelegate, CLLoc
     }
     
   
-    func checkLesson(sender: UIBarButtonItem) {
+    @IBAction func checkLesson(_ sender: Any) {
+
         if (currentLesson != nil){
         
             self.performSegue(withIdentifier: "currentLessonSegue", sender: nil)
@@ -636,7 +631,8 @@ class TodayController: UITableViewController, CBPeripheralManagerDelegate, CLLoc
         ]
         
         Alamofire.request(Constant.URLhistory, method: .get, parameters: nil, encoding: JSONEncoding.default, headers: headers).responseJSON { (response:DataResponse) in
-            
+            let data = response.result.value
+           // print(data)
             if let JSON = response.result.value as? [[String:AnyObject]]{
                 
                 for json in JSON {

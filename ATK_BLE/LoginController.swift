@@ -99,14 +99,17 @@ class LoginController: UIViewController{
                 let thisdevice = UIDevice.current.identifierForVendor?.uuidString
                 
                 if let data = response.result.value{
-                    print(data)
+                   // print(data)
                 }
                 
                 if let JSON = response.result.value as? [String: AnyObject]{
                     
                     
                     Constant.name = JSON["name"] as! String
+                    
                     Constant.token = JSON["token"] as! String
+                    UserDefaults.standard.set(Constant.token, forKey: "token")
+                    
                     Constant.student_id = JSON["id"] as! Int
                     Constant.major = JSON["major"] as! Int
                     Constant.minor = JSON["minor"] as! Int
@@ -119,13 +122,11 @@ class LoginController: UIViewController{
                         
                     }
                 
-                    // constant major minor status token
-                    
-                    UserDefaults.standard.set(Constant.token, forKey: "token")
                     self.loadAllClassmate()
                     UserDefaults.standard.set(Constant.major, forKey: "major")
                     UserDefaults.standard.set(Constant.minor, forKey: "minor")
                     UserDefaults.standard.set(Constant.username, forKey: "username")
+                    UserDefaults.standard.set(Constant.name, forKey: "name")
                     UserDefaults.standard.set(Constant.student_id, forKey: "student_id")
                     
                     
@@ -152,7 +153,7 @@ class LoginController: UIViewController{
         
         let myCalendar = NSCalendar(calendarIdentifier: NSCalendar.Identifier.gregorian)!
         let myComponents = myCalendar.components(.weekday, from: today)
-        if (myComponents.weekday == 2) {
+      
         
         let headers: HTTPHeaders = [
             "Authorization": "Bearer " + Constant.token
@@ -236,34 +237,13 @@ class LoginController: UIViewController{
                     NSKeyedArchiver.archiveRootObject(GlobalData.timetable, toFile: filePath.path)
                     
                 }
+                self.loadUUID()
+                
             }
-            
-//
-//            DispatchQueue.main.async {
-//               
-//            }
-            DispatchQueue.main.async(execute: {
-                //alertController.dismiss(animated: true, completion: nil)
-                OperationQueue.main.addOperation {
-                    self.performSegue(withIdentifier: "loginSegue", sender: nil)
-                    self.loadattendance()
-                    
-                    self.loadUUID()
-                }
-            })
 
-           
       
             }
-            // self.collectionView!.reloadData()
-        }else{
-            DispatchQueue.main.async(execute: {
-                //alertController.dismiss(animated: true, completion: nil)
-                OperationQueue.main.addOperation {
-                    self.performSegue(withIdentifier: "loginSegue", sender: nil)
-                }
-            })
-        }
+      
     }
     
     func loadAllClassmate(){
@@ -356,6 +336,14 @@ class LoginController: UIViewController{
             
             if let JSON = response.result.value as? [[String:AnyObject]]{
                 
+                var dict = [Int:String]()
+                for json in JSON{
+                    let id = (json["lesson_id"] as? Int)!
+                    let uuid = (json["uuid"] as? String)!
+                    dict.updateValue(uuid, forKey: id)
+                }
+                GlobalData.lessonUUID = dict
+                
                 let localdata = "lessonUUID.json" //this is the file. we will write to and read from it
                 
                 
@@ -364,12 +352,21 @@ class LoginController: UIViewController{
                     let filePath = dir.appendingPathComponent(localdata)
                     
                     // write to file
-                    NSKeyedArchiver.archiveRootObject(JSON, toFile: filePath.path)
+                    NSKeyedArchiver.archiveRootObject(GlobalData.lessonUUID, toFile: filePath.path)
                     
                     
                 }
                 
                 print("load uuid success")
+                DispatchQueue.main.async(execute: {
+                    //alertController.dismiss(animated: true, completion: nil)
+                    OperationQueue.main.addOperation {
+                        self.performSegue(withIdentifier: "loginSegue", sender: nil)
+                        self.loadattendance()
+                        
+                        
+                    }
+                })
             }
         }
     }

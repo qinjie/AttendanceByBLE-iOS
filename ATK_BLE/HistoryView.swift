@@ -24,9 +24,7 @@ class HistoryView: UITableViewController {
         
         histories = GlobalData.history
         
-        let syncBtn = UIBarButtonItem(title: "", style: UIBarButtonItemStyle.plain, target: self, action: #selector(HistoryView.loadHistory))
-        syncBtn.image = UIImage(named: "sync30")
-        self.navigationItem.rightBarButtonItem = syncBtn
+     
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -57,7 +55,8 @@ class HistoryView: UITableViewController {
         
     }
     
-    func loadHistory(){
+    @IBAction func loadHistory(_ sender: Any) {
+    
         let token = UserDefaults.standard.string(forKey: "token")
         
         let headers: HTTPHeaders = [
