@@ -52,7 +52,7 @@ class LoginController: UIViewController{
     
     func loadAbc() {
         Alamofire.request("http://api.apixu.com/v1/current.json?key=3bf1a27308204a7a94e90405161911&q=Paris").responseJSON { response in
-            guard let responseJSON = response.result.value as? [String: AnyObject] else {
+            guard (response.result.value as? [String: AnyObject]) != nil else {
                 print("Parse error")
                 return
             }
@@ -69,9 +69,9 @@ class LoginController: UIViewController{
        let thisdevice = UIDevice.current.identifierForVendor?.uuidString
         let parameters: [String: Any] =
             [
-                "username": usernameTextField.text ,
-                "password": passTextField.text,
-                "device_hash": thisdevice
+                "username": usernameTextField.text! ,
+                "password": passTextField.text!,
+                "device_hash": thisdevice!
                 
                 //"id" = "4"
                 
@@ -98,9 +98,9 @@ class LoginController: UIViewController{
                 
                 let thisdevice = UIDevice.current.identifierForVendor?.uuidString
                 
-                if let data = response.result.value{
-                   // print(data)
-                }
+                /*if let data = response.result.value{
+                   print(data)
+                }*/
                 
                 if let JSON = response.result.value as? [String: AnyObject]{
                     
@@ -149,10 +149,10 @@ class LoginController: UIViewController{
     
     func setupData(){
         
-        var today = Date()
+        let today = Date()
         
         let myCalendar = NSCalendar(calendarIdentifier: NSCalendar.Identifier.gregorian)!
-        let myComponents = myCalendar.components(.weekday, from: today)
+        //let myComponents = myCalendar.components(.weekday, from: today)
       
         
         let headers: HTTPHeaders = [

@@ -51,7 +51,7 @@ class HistoryView: UITableViewController {
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
  
-        guard let cell = tableView.cellForRow(at: indexPath) as? LessonCell else { return }
+        guard (tableView.cellForRow(at: indexPath) as? LessonCell) != nil else { return }
         
     }
     

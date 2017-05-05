@@ -58,8 +58,8 @@ class ChangePassController: UIViewController {
                     ]
                     
                     let parameters: [String: Any] = [
-                        "oldPassword": currentPass.text ,
-                        "newPassword":newPass.text
+                        "oldPassword": currentPass.text! ,
+                        "newPassword":newPass.text!
                         ]
                     
                     Alamofire.request(Constant.URLchangepass, method: .post, parameters: parameters, encoding: JSONEncoding.default, headers: headers).responseJSON { (response:DataResponse) in
@@ -73,9 +73,9 @@ class ChangePassController: UIViewController {
                             self.retypePass.text = ""
                             self.mess.isHidden = false
                         }
-                        let JSON = response.result.value
-                        print(JSON)
-
+                        if let JSON = response.result.value{
+                            print(JSON)
+                        }
                     }
                     
                 }else{
@@ -106,7 +106,7 @@ extension UIViewController {
     
     func displayMyAlertMessage(title: String, mess : String){
         
-        var myAlert = UIAlertController(title: title, message: mess, preferredStyle: UIAlertControllerStyle.alert)
+        let myAlert = UIAlertController(title: title, message: mess, preferredStyle: UIAlertControllerStyle.alert)
         
         let okAction = UIAlertAction(title: "OK!!", style: UIAlertActionStyle.default, handler: nil)
         

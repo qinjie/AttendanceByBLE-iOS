@@ -92,7 +92,7 @@ class TimetableController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
-        guard let cell = tableView.cellForRow(at: indexPath) as? LessonCell else { return }
+        guard (tableView.cellForRow(at: indexPath) as? LessonCell) != nil else { return }
         
         self.performSegue(withIdentifier: "lessonDetailSegue2", sender: nil)
     }
@@ -122,10 +122,10 @@ class TimetableController: UITableViewController {
     
     func setupData(){
         
-        var today = Date()
+        let today = Date()
         
         let myCalendar = NSCalendar(calendarIdentifier: NSCalendar.Identifier.gregorian)!
-        let myComponents = myCalendar.components(.weekday, from: today)
+        //let myComponents = myCalendar.components(.weekday, from: today)
         
             
             let headers: HTTPHeaders = [

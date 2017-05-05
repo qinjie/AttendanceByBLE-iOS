@@ -105,9 +105,9 @@ class TodayController: UITableViewController, CBPeripheralManagerDelegate, CLLoc
                                              "device_hash": thisdevice!]
        
             Alamofire.request(Constant.URLchangedevice, method: .post, parameters: parameters, encoding: JSONEncoding.default, headers: headers).responseJSON { (response:DataResponse) in
-                if let data = response.result.value{
-                   // print(data)
-                }
+                /*if let data = response.result.value{
+                   print(data)
+                }*/
             }
             
             
@@ -206,7 +206,7 @@ class TodayController: UITableViewController, CBPeripheralManagerDelegate, CLLoc
         
         let tomorrow = dateFormatter.date(from: tomorrowStr)
         
-        print("tomorrow \(tomorrow)")
+        print("tomorrow \(String(describing: tomorrow))")
         
         let timer = Timer(fireAt: tomorrow!, interval: 0, target: self, selector: #selector(newDay), userInfo: nil, repeats: false)
         RunLoop.main.add(timer, forMode: RunLoopMode.commonModes)
@@ -235,16 +235,16 @@ class TodayController: UITableViewController, CBPeripheralManagerDelegate, CLLoc
         nextLesson = GlobalData.today.first(where: {$0.start_time! > currentTimeStr})
         
         if (currentLesson != nil){
-            print("Current lesson id \(currentLesson.lesson_id)")
+            print("Current lesson id \(String(describing: currentLesson.lesson_id))")
             self.classmate = GlobalData.classmates.first(where : {($0.lesson_id! == currentLesson.lesson_id!)})!
-            print("Self.classmates \(self.classmate.student_id?.count)")
+            print("Self.classmates \(String(describing: self.classmate.student_id?.count))")
             GlobalData.currentLesson = self.currentLesson
             
             ATK()
         }
         
         if (nextLesson != nil){
-            print("next Lesson id \(nextLesson.lesson_id)")
+            print("next Lesson id \(String(describing: nextLesson.lesson_id))")
             dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
             
             let x = GlobalData.currentDateStr + " " + nextLesson.start_time!
@@ -296,7 +296,7 @@ class TodayController: UITableViewController, CBPeripheralManagerDelegate, CLLoc
     
     func detectClassmate(){
         
-        uuid = NSUUID(uuidString: GlobalData.lessonUUID[currentLesson.lesson_id!]!) as! UUID
+        uuid = NSUUID(uuidString: GlobalData.lessonUUID[currentLesson.lesson_id!]!) as UUID?
         print("Current Lesson : \(uuid)")
         
         if ((classmate.student_id?.count)! > 20){
@@ -320,7 +320,7 @@ class TodayController: UITableViewController, CBPeripheralManagerDelegate, CLLoc
     
     func getCurrentLesson(){
         
-        let today = Date()
+       // let today = Date()
         let dateFormatter = DateFormatter()
         
         dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
@@ -356,7 +356,7 @@ class TodayController: UITableViewController, CBPeripheralManagerDelegate, CLLoc
         currentLesson = GlobalData.today.first(where: {$0.lesson_id == id})
         
         // start monitor other vitual beacon
-        uuid = NSUUID(uuidString: GlobalData.lessonUUID[id]!) as! UUID
+        uuid = NSUUID(uuidString: GlobalData.lessonUUID[id]!) as UUID?
         
         let lectureRegion = CLBeaconRegion(proximityUUID: uuid, major: UInt16(lecturerMajor) as CLBeaconMajorValue, minor: UInt16(lecturerMinor) as CLBeaconMinorValue, identifier: GlobalData.currentLecturerId.description)
         
@@ -583,8 +583,6 @@ class TodayController: UITableViewController, CBPeripheralManagerDelegate, CLLoc
             
         case .unknown:
             print(" -____- Unknown");
-        default:
-            print(" -____-  default");
         }
     }
     
@@ -631,8 +629,8 @@ class TodayController: UITableViewController, CBPeripheralManagerDelegate, CLLoc
         ]
         
         Alamofire.request(Constant.URLhistory, method: .get, parameters: nil, encoding: JSONEncoding.default, headers: headers).responseJSON { (response:DataResponse) in
-            let data = response.result.value
-           // print(data)
+            /*let data = response.result.value
+            print(data)*/
             if let JSON = response.result.value as? [[String:AnyObject]]{
                 
                 for json in JSON {
