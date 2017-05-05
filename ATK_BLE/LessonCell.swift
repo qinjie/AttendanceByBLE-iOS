@@ -21,12 +21,10 @@ class LessonCell: UITableViewCell {
     var lesson: Lesson?{
         didSet {
             
-            subjectLabel.text = lesson?.name
-            idLabel.text = lesson?.lesson_id?.description
+            subjectLabel.text = (lesson?.subject)! + " " + (lesson?.catalog)!
+            lecturer.text = lesson?.lecturer
             start_time.text = lesson?.start_time
             end_time.text = lesson?.end_time
-            //let url = Constant.photoURL + (lesson?.photo)!
-        
             venue.text = lesson?.venueName
         }
     }
@@ -44,10 +42,11 @@ class LessonCell: UITableViewCell {
         
     }()
     
-    let idLabel: UILabel = {
+    let lecturer: UILabel = {
         let label = UILabel()
-        label.text = "0000"
-        label.font = UIFont.systemFont(ofSize: 16)
+        label.text = "ABC"
+        label.textColor = UIColor(red:0.10, green:0.31, blue:0.17, alpha:1.0)
+        label.font = UIFont.systemFont(ofSize: 15)
         return label
     }()
     
@@ -71,8 +70,7 @@ class LessonCell: UITableViewCell {
     let start_time: UILabel = {
         let label = UILabel()
         label.text = "starttime"
-       
-        label.font = UIFont.systemFont(ofSize: 16)
+        label.font = UIFont.systemFont(ofSize: 15)
         return label
     }()
     
@@ -80,7 +78,7 @@ class LessonCell: UITableViewCell {
         let label = UILabel()
         label.text = "endtime"
       
-        label.font = UIFont.systemFont(ofSize: 16)
+        label.font = UIFont.systemFont(ofSize: 15)
         return label
     }()
     
@@ -120,7 +118,7 @@ class LessonCell: UITableViewCell {
 //        contentView.addSubview(subjectLabel)
 //        contentView.addSubview(start_time)
 //        contentView.addSubview(end_time)
-        contentView.addSubview(dividerLineView)
+       // contentView.addSubview(dividerLineView)
  
         
 //        //   statusImage.image = UIImage(named: "dol")
@@ -133,8 +131,8 @@ class LessonCell: UITableViewCell {
 ////        
 ////        addConstraint(NSLayoutConstraint(item: lessonPhoto, attribute: .centerY, relatedBy: .equal, toItem: self, attribute: .centerY, multiplier: 1, constant: 0))
 //        
-        contentView.addConstraintsWithFormat("H:|-10-[v0]-10-|", views: dividerLineView)
-        contentView.addConstraintsWithFormat("V:[v0(1)]|", views: dividerLineView)
+//        contentView.addConstraintsWithFormat("H:|-10-[v0]-10-|", views: dividerLineView)
+//        contentView.addConstraintsWithFormat("V:[v0(1)]|", views: dividerLineView)
     }
     
     fileprivate func setupContainerView() {
@@ -150,14 +148,15 @@ class LessonCell: UITableViewCell {
         containerView.addSubview(subjectLabel)
         containerView.addSubview(start_time)
         containerView.addSubview(end_time)
+        containerView.addSubview(lecturer)
         
         containerView.addConstraintsWithFormat("H:|-20-[v0][v1(70)]-12-|", views: subjectLabel, start_time)
         
         containerView.addConstraintsWithFormat("H:|-20-[v0][v1(70)]-12-|", views: venue, end_time)
+        containerView.addConstraintsWithFormat("H:|-20-[v0]", views: lecturer)
+        containerView.addConstraintsWithFormat("V:|-15-[v0]-30-[v1]-15-|", views: start_time, end_time)
         
-        containerView.addConstraintsWithFormat("V:|-15-[v0]-15-[v1]-15-|", views: start_time, end_time)
-        
-        containerView.addConstraintsWithFormat("V:|-15-[v0]-15-[v1]-15-|", views: subjectLabel, venue)
+        containerView.addConstraintsWithFormat("V:|-10-[v0]-12-[v1]-12-[v2]-7-|", views: subjectLabel,lecturer, venue)
     }
     
 }

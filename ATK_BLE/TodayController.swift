@@ -14,8 +14,10 @@ class TodayController: UITableViewController, CBPeripheralManagerDelegate, CLLoc
     
     fileprivate let cellId = "cell"
     
+    @IBOutlet weak var broadcast: UILabel!
+    
     var lessons : [Lesson]!
-    var classmate = [BeaconUser]()
+    var classmate = Classmate()
     var nextLesson : Lesson!
     var currentLesson : Lesson!
     
@@ -33,6 +35,14 @@ class TodayController: UITableViewController, CBPeripheralManagerDelegate, CLLoc
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        self.broadcast.text = "NOT broadcasting"
+        self.broadcast.textColor = UIColor.green
+        
+        self.switchBtn.isOn = false
+        self.switchBtn.setOn(self.switchBtn.isOn, animated: true)
+
+        
+        
         //collectionView?.register(LessonCell.self, forCellWithReuseIdentifier: cellId)
         //  self.tableView.register(LessonCell.self, forCellReuseIdentifier: "cell")
         navigationItem.title = "Today Timetable"
@@ -46,10 +56,132 @@ class TodayController: UITableViewController, CBPeripheralManagerDelegate, CLLoc
         locationManager.requestAlwaysAuthorization()
         bluetoothPeripheralManager = CBPeripheralManager(delegate: self, queue: nil, options: nil)
         
+        Constant.token = UserDefaults.standard.string(forKey: "token")!
+        
+        loadHistory()
+        
+        NotificationCenter.default.addObserver(self,selector: #selector(rload), name: NSNotification.Name(rawValue: "atksuccesfully"), object: nil)
+        
+        NotificationCenter.default.addObserver(self,selector: #selector(syncnewdata), name: NSNotification.Name(rawValue: "updatedata"), object: nil)
+        
         newDay()
+        
+        if (Constant.change_device){
+            changeDV()
+        }
+        
         
         
     }
+    
+    func syncnewdata(){
+        
+       
+        
+        GlobalData.today = GlobalData.timetable.filter({$0.ldate == GlobalData.currentDateStr})
+        lessons = GlobalData.today
+        
+        self.tableView.reloadData()
+    }
+    
+    func changeDV(){
+        
+        let alert = UIAlertController(title: "NEW DEVICE", message: "You are loging in new device. Do you want to register new device?\n1. Accept: You have to wait until tomorrow to take attendance on this device.\n2. Decline: You can only view your timetable on this device.", preferredStyle: UIAlertControllerStyle.alert)
+        
+        
+        
+        alert.addAction(UIAlertAction(title: "Accept", style: UIAlertActionStyle.default, handler: { action in
+            
+            // register new device
+            
+            let headers: HTTPHeaders = [
+                 "Content-Type": "application/json"
+            ]
+            
+            let thisdevice = UIDevice.current.identifierForVendor?.uuidString
+            
+            let parameters: [String: Any] = ["username":Constant.username,
+                                             "password":Constant.password,
+                                             "device_hash": thisdevice!]
+       
+            Alamofire.request(Constant.URLchangedevice, method: .post, parameters: parameters, encoding: JSONEncoding.default, headers: headers).responseJSON { (response:DataResponse) in
+                if let data = response.result.value{
+                   // print(data)
+                }
+            }
+            
+            
+        }))
+        alert.addAction(UIAlertAction(title: "Decline", style: UIAlertActionStyle.cancel, handler: { action in
+            
+            Constant.change_device = true
+            
+            
+        }))
+           
+        self.present(alert, animated: true, completion: nil)
+    }
+    func rload(){
+        displayMyAlertMessage(title: "Successfull Attendance", mess: "You had taken attendance for \(currentLesson.catalog!)")
+    
+    }
+    
+  
+    @IBAction func checkLesson(_ sender: Any) {
+
+        if (currentLesson != nil){
+        
+            self.performSegue(withIdentifier: "currentLessonSegue", sender: nil)
+        
+        }else{
+        
+            displayMyAlertMessage(title: "Check", mess: "No lesson at the moment")
+        }
+    }
+
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        
+        if (segue.identifier! == "currentLessonSegue"){
+            // retrieve selected cell & fruit
+            let atkController = segue.destination as! ATKController
+            if currentLesson != nil {
+                
+                
+                atkController.lesson = currentLesson
+                atkController.uuids = self.uuid.description
+            }else{
+                atkController.lesson = Lesson()
+            }
+        }else{
+            
+            if let indexPath = getIndexPathForSelectedCell() {
+                let x = lessons?[indexPath.item]
+                let detailPage = segue.destination as! LessonDetailView
+                detailPage.lesson = x!
+            }
+        }
+        
+    }
+
+   
+    func getIndexPathForSelectedCell() -> IndexPath? {
+        
+        var indexPath:IndexPath?
+        
+        if (tableView.indexPathsForSelectedRows?.count)! > 0 {
+            indexPath = tableView.indexPathsForSelectedRows![0]
+        }
+        return indexPath
+    }
+
+    
+        //    func maps(sender: UIBarButtonItem) {
+    //        // Perform your custom actions
+    //        // ...
+    //         self.performSegue(withIdentifier: "mapSegue", sender: nil)
+    //       
+    //    }
+
     
     var today = Date()
     var dateFormatter = DateFormatter()
@@ -91,38 +223,44 @@ class TodayController: UITableViewController, CBPeripheralManagerDelegate, CLLoc
 
     func updateLesson(){
         
+        today = Date()
+        
         currentLesson = nextLesson
         
         dateFormatter.dateFormat = "HH:mm:ss"
         
         currentTimeStr = dateFormatter.string(from: today)
         
+        print("current time \(currentTimeStr)")
         nextLesson = GlobalData.today.first(where: {$0.start_time! > currentTimeStr})
         
         if (currentLesson != nil){
+            print("Current lesson id \(currentLesson.lesson_id)")
+            self.classmate = GlobalData.classmates.first(where : {($0.lesson_id! == currentLesson.lesson_id!)})!
+            print("Self.classmates \(self.classmate.student_id?.count)")
+            GlobalData.currentLesson = self.currentLesson
             
             ATK()
-           
-            if (nextLesson != nil){
-                
-                dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
-                
-                let x = GlobalData.currentDateStr + " " + nextLesson.start_time!
-                
-                let y = dateFormatter.date(from: x)
-                
-                let date = y?.addingTimeInterval(10)
-                let timer = Timer(fireAt: date!, interval: 0, target: self, selector: #selector(updateLesson), userInfo: nil, repeats: false)
-                RunLoop.main.add(timer, forMode: RunLoopMode.commonModes)
-
-            }else{
+        }
+        
+        if (nextLesson != nil){
+            print("next Lesson id \(nextLesson.lesson_id)")
+            dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
             
-            }
+            let x = GlobalData.currentDateStr + " " + nextLesson.start_time!
             
+            let y = dateFormatter.date(from: x)
+            
+            let date = y?.addingTimeInterval(10)
+            let timer = Timer(fireAt: date!, interval: 0, target: self, selector: #selector(updateLesson), userInfo: nil, repeats: false)
+            RunLoop.main.add(timer, forMode: RunLoopMode.commonModes)
             
         }else{
             
         }
+        
+        
+        
         
       //  ATK()
         
@@ -133,43 +271,26 @@ class TodayController: UITableViewController, CBPeripheralManagerDelegate, CLLoc
     
     func ATK(){
         
-        // get classmate major minor
+        detectClassmate()
+        // broadcasting 2 times, 30 seconds / 1 time
+        var rand = 1 + Int(arc4random_uniform(3))
+        var x = rand * 60
+        var date = Date().addingTimeInterval(TimeInterval(x))
+        print("date \(date)")
+        var timer2 = Timer(fireAt: date, interval: 0, target: self, selector: #selector(broadcasting), userInfo: nil, repeats: false)
         
-        let headers: HTTPHeaders = [
-            "Authorization": "Bearer " + Constant.token,
-            "Content-Type": "application/json"
-        ]
+        RunLoop.main.add(timer2, forMode: RunLoopMode.commonModes)
+
+        rand = 5 + Int(arc4random_uniform(3))
+        x = rand * 60
+        date = Date().addingTimeInterval(TimeInterval(x))
+        print(date)
+        timer2 = Timer(fireAt: date, interval: 0, target: self, selector: #selector(broadcasting), userInfo: nil, repeats: false)
+        date = Date().addingTimeInterval(TimeInterval(x+30))
+
+        RunLoop.main.add(timer2, forMode: RunLoopMode.commonModes)
+     
         
-        let parameters: [String: Any] = ["lesson_id": 29]
-        
-        Alamofire.request(Constant.URLclassmate, method: .post, parameters: parameters, encoding: JSONEncoding.default, headers: headers).responseJSON { (response:DataResponse) in
-            
-            if let JSON = response.result.value as? [[String: AnyObject]]{
-                
-                print(JSON)
-                for json in JSON{
-                    let x = BeaconUser()
-                    x.id = json["user_id"] as! Int
-                    
-                    if (x.id != Constant.user_id){
-                        
-                        if let beacon = json["beacon_user"] as? [String: AnyObject]{
-                            x.major = beacon["major"] as! Int
-                            x.minor = beacon["minor"] as! Int
-                            self.classmate.append(x)
-                        }
-                        
-                    }
-                    
-                }
-                self.detectClassmate()
-               
-            }else {
-                print("Parse error")
-                return
-            }
-        
-        }
         
     }
     
@@ -178,20 +299,21 @@ class TodayController: UITableViewController, CBPeripheralManagerDelegate, CLLoc
         uuid = NSUUID(uuidString: GlobalData.lessonUUID[currentLesson.lesson_id!]!) as! UUID
         print("Current Lesson : \(uuid)")
         
-        if (classmate.count > 20){
+        if ((classmate.student_id?.count)! > 20){
             for i in 0 ..< 20 {
                 
-               let newRegion = CLBeaconRegion(proximityUUID: uuid , major: UInt16(classmate[i].major) as CLBeaconMajorValue, minor: UInt16(classmate[i].minor) as CLBeaconMinorValue, identifier: classmate[i].id.description)
+               let newRegion = CLBeaconRegion(proximityUUID: uuid , major: UInt16(classmate.major![i]) as CLBeaconMajorValue, minor: UInt16((classmate.minor?[i])!) as CLBeaconMinorValue, identifier: (classmate.student_id?[i].description)!)
                 
                locationManager.startMonitoring(for: newRegion)
             }
         }else{
-            for cm in classmate {
+            for i in 0 ..< (classmate.student_id?.count)!  {
                 
-                let newRegion = CLBeaconRegion(proximityUUID: uuid , major: UInt16(cm.major) as CLBeaconMajorValue, minor: UInt16(cm.minor) as CLBeaconMinorValue, identifier: cm.id.description)
+                let newRegion = CLBeaconRegion(proximityUUID: uuid , major: UInt16(classmate.major![i]) as CLBeaconMajorValue, minor: UInt16((classmate.minor?[i])!) as CLBeaconMinorValue, identifier: (classmate.student_id?[i].description)!)
                 
                 locationManager.startMonitoring(for: newRegion)
             }
+
         }
         
     }
@@ -236,10 +358,8 @@ class TodayController: UITableViewController, CBPeripheralManagerDelegate, CLLoc
         // start monitor other vitual beacon
         uuid = NSUUID(uuidString: GlobalData.lessonUUID[id]!) as! UUID
         
-        let newRegion = CLBeaconRegion(proximityUUID: uuid, identifier: currentLesson.name!)
         let lectureRegion = CLBeaconRegion(proximityUUID: uuid, major: UInt16(lecturerMajor) as CLBeaconMajorValue, minor: UInt16(lecturerMinor) as CLBeaconMinorValue, identifier: GlobalData.currentLecturerId.description)
         
-        self.locationManager.startMonitoring(for: newRegion)
         self.locationManager.startMonitoring(for: lectureRegion)
         
         broadcasting()
@@ -249,7 +369,19 @@ class TodayController: UITableViewController, CBPeripheralManagerDelegate, CLLoc
     
     
     
+    func turnoffbroad(){
+        bluetoothPeripheralManager.stopAdvertising()
+        isBroadcasting = false
+        self.broadcast.text = "NOT broadcasting"
+        self.broadcast.textColor = UIColor.green
+        self.switchBtn.isOn = false
+        self.switchBtn.setOn(self.switchBtn.isOn, animated: true)
+    }
+    
     func broadcasting(){
+        print("NOTI")
+        
+        NotificationCenter.default.post(name: NSNotification.Name(rawValue: "openapp"), object: nil)
         
         if !isBroadcasting {
             
@@ -264,13 +396,28 @@ class TodayController: UITableViewController, CBPeripheralManagerDelegate, CLLoc
                 bluetoothPeripheralManager.startAdvertising(dataDictionary as? [String : Any])
              
                 isBroadcasting = true
+                self.broadcast.text = "Is broadcasting"
+                self.broadcast.textColor = UIColor.red
+                self.switchBtn.isOn = true
+                self.switchBtn.setOn(self.switchBtn.isOn, animated: true)
+                
+                let date = Date().addingTimeInterval(TimeInterval(30))
+                
+                let timer = Timer(fireAt: date, interval: 0, target: self, selector: #selector(turnoffbroad), userInfo: nil, repeats: false)
+                RunLoop.main.add(timer, forMode: RunLoopMode.commonModes)
             }
             else{
+                
+                self.broadcast.text = "NOT broadcasting"
+                self.broadcast.textColor = UIColor.green
+
                 let alert = UIAlertController(title: "Bluetooth Turn on Request", message: " ATK would like to turn on your bluetooth!", preferredStyle: UIAlertControllerStyle.alert)
                 
                 // add the actions (buttons)
                 alert.addAction(UIAlertAction(title: "Allow", style: UIAlertActionStyle.default, handler: { action in
                     self.turnOnBlt()
+                    self.turnOnBlt()
+                    self.broadcasting()
                 }))
                 alert.addAction(UIAlertAction(title: "Cancel", style: UIAlertActionStyle.cancel, handler: nil))
                 
@@ -291,24 +438,36 @@ class TodayController: UITableViewController, CBPeripheralManagerDelegate, CLLoc
         
     }
 
+    @IBOutlet weak var switchBtn: UISwitch!
+    @IBAction func broadbyHand(_ sender: Any) {
+        if (self.switchBtn.isOn){
+            if (self.currentLesson == nil){
+                displayMyAlertMessage(title: "Notice", mess: "No lesson at the moment. You can only broadcast in lesson time.")
+                self.switchBtn.isOn = !self.switchBtn.isOn
+                self.switchBtn.setOn(self.switchBtn.isOn, animated: true)
+            }else{
+              
+                broadcasting() 
+            }
+            
+        }else{
+            
+            turnoffbroad()
+            
+        }
+    }
+    
     func turnOnBlt(){
         let bluetoothManager = BluetoothManagerHandler.sharedInstance()
         
         bluetoothManager?.setPower(true)
     }
 
-    @IBAction func checkLesson(_ sender: Any) {
-        self.performSegue(withIdentifier: "currentLessonSegue", sender: nil)
-    }
+//    @IBAction func checkLesson(_ sender: Any) {
+//        
+//        self.performSegue(withIdentifier: "currentLessonSegue", sender: nil)
+//    }
     
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        
-        let detailPage = segue.destination as! ATKController
-        
-        detailPage.currentLesson = self.currentLesson
-     
-        
-    }
     
     
     // MARK: CBPeripheralManagerDelegate method implementation
@@ -349,12 +508,12 @@ class TodayController: UITableViewController, CBPeripheralManagerDelegate, CLLoc
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
     
-            print("count \(lessons.count)")
+            //print("count \(lessons.count)")
             return lessons.count
     }
     
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat{
-        return 100.0;
+        return 120.0;
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -379,9 +538,14 @@ class TodayController: UITableViewController, CBPeripheralManagerDelegate, CLLoc
         // 1
         guard let cell = tableView.cellForRow(at: indexPath) as? LessonCell else { return }
         
-        print(cell.lesson?.name)
+        print(cell.lesson?.catalog)
+        
+        self.performSegue(withIdentifier: "lessonDetailSegue", sender: nil)
+        
     }
     
+    
+
     
     func locationManager(_ manager: CLLocationManager, didStartMonitoringFor region: CLRegion) {
         print("Started monitoring \(region.identifier) region")
@@ -436,6 +600,50 @@ class TodayController: UITableViewController, CBPeripheralManagerDelegate, CLLoc
             print("@2: did enter region!!!  \(region.identifier)" )
             
             //   noti(content: "ENTER  " + region.identifier)
+        }
+    }
+    
+    func loadattendance(){
+        print("load att ")
+        let headers: HTTPHeaders = [
+            "Authorization": "Bearer " + Constant.token
+            // "Accept": "application/json"
+        ]
+        
+        Alamofire.request(Constant.URLattendance, method: .get, parameters: nil, encoding: JSONEncoding.default, headers: headers).responseJSON { (response:DataResponse) in
+            
+            if let JSON = response.result.value as? [[String:Any]]{
+                for json in JSON{
+                    let id = (json["lesson_date_id"] as? Int)!
+                    GlobalData.attendance.append(id)
+                }
+            }
+            print("load atk success")
+        }
+    }
+    
+    func loadHistory(){
+        let token = UserDefaults.standard.string(forKey: "token")
+        
+        let headers: HTTPHeaders = [
+            "Authorization": "Bearer " + token!
+            // "Accept": "application/json"
+        ]
+        
+        Alamofire.request(Constant.URLhistory, method: .get, parameters: nil, encoding: JSONEncoding.default, headers: headers).responseJSON { (response:DataResponse) in
+            let data = response.result.value
+           // print(data)
+            if let JSON = response.result.value as? [[String:AnyObject]]{
+                
+                for json in JSON {
+                    let x = History()
+                    x.name = json["lesson_name"] as! String
+                    x.total = json["total"] as! Int
+                    x.absent = json["absented"] as! Int
+                    x.present = json["presented"] as! Int
+                    GlobalData.history.append(x)
+                }
+            }
         }
     }
 }

@@ -7,6 +7,8 @@
 //
 import UIKit
 import CoreLocation
+import Alamofire
+import SwiftyJSON
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate {
@@ -15,23 +17,27 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
     var locationManager: CLLocationManager!
     var foundLecturer = false
     var foundClassmate = false
+    var numofdetected = 0
+    var id1 = ""
+    var id2 = ""
+    
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         
         let mainStoryboard = UIStoryboard(name: "Main", bundle: nil)
-                var loginController: LoginController? = (mainStoryboard.instantiateViewController(withIdentifier: "LoginPage") as? LoginController)
-                 self.window?.rootViewController = loginController
-//        if (UserDefaults.standard.string(forKey: "username") == nil) {
-//            
-//            let loginController: LoginController? = (mainStoryboard.instantiateViewController(withIdentifier: "LoginPage") as? LoginController)
-//            
-//            self.window?.rootViewController = loginController
-//        }else{
-//            
-//            let mainViewController: TabbarController? = (mainStoryboard.instantiateViewController(withIdentifier: "Home") as? TabbarController)
-//            
-//            self.window?.rootViewController = mainViewController
-//        }
+//                var loginController: LoginController? = (mainStoryboard.instantiateViewController(withIdentifier: "LoginPage") as? LoginController)
+//                 self.window?.rootViewController = loginController
+        if (UserDefaults.standard.string(forKey: "username") == nil) {
+            
+            let loginController: LoginController? = (mainStoryboard.instantiateViewController(withIdentifier: "LoginPage") as? LoginController)
+            
+            self.window?.rootViewController = loginController
+        }else{
+            
+            let mainViewController: TabbarController? = (mainStoryboard.instantiateViewController(withIdentifier: "Home") as? TabbarController)
+            
+            self.window?.rootViewController = mainViewController
+        }
         
 
         
@@ -42,7 +48,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
         self.locationManager = CLLocationManager()
         self.locationManager.delegate = self
         self.locationManager.requestAlwaysAuthorization()
+        
+        NotificationCenter.default.addObserver(self,selector: #selector(sendnoti), name: NSNotification.Name(rawValue: "openapp"), object: nil)
+        
         return true
+    }
+    
+    func sendnoti(){
+        noti(content: "Please open to take attendance")
     }
     
     func locationManager(_ manager: CLLocationManager, monitoringDidFailFor region: CLRegion?, withError error: Error) {
@@ -73,16 +86,51 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
         print("@3: -____- state \(region.identifier)" )
         switch state {
         case .inside:
-            print(" -____- Inside \(region.identifier)");
+            print(" >>>> bg Inside \(region.identifier)");
             
-            noti(content: "found  " + region.identifier)
+            noti(content: "Please open to take attendance")
             
-            if (region.identifier == GlobalData.currentLecturerId.description){
-                foundLecturer = true
-            }else{
-                foundClassmate = true
-            }
+                  //take attendance
+                Constant.token = UserDefaults.standard.string(forKey: "token")!
+                Constant.student_id = UserDefaults.standard.integer(forKey: "student_id")
             
+                let para1: Parameters = [
+                        "lesson_date_id": GlobalData.currentLesson.ldateid!,
+                        "student_id_1": Constant.student_id,
+                        "student_id_2": region.identifier,
+                        ]
+          
+          
+                let parameters: [String: Any] = ["data": [para1]]
+                
+                print(parameters)
+                let headers: HTTPHeaders = [
+                    "Authorization": "Bearer " + Constant.token,
+                    "Content-Type": "application/json"
+                ]
+
+                Alamofire.request(Constant.URLatk, method: .post, parameters: parameters, encoding: JSONEncoding.default, headers: headers).responseJSON { (response:DataResponse) in
+                    
+                        let statusCode = response.response?.statusCode
+                    if (statusCode == 200){
+                        GlobalData.attendance.append(GlobalData.currentLesson.ldateid!)
+                        NotificationCenter.default.post(name: NSNotification.Name(rawValue: "atksuccesfully"), object: nil)
+                                                
+                    }
+                        if let data = response.result.value{
+                            print(data)
+                        }
+                        
+                }
+                
+         
+            
+//            if (region.identifier == GlobalData.currentLecturerId.description){
+//                foundLecturer = true
+//            }else{
+//                foundClassmate = true
+//            }
+//            
         //report(region: CLRegion)
         case .outside:
             print(" -____- Outside");
@@ -103,7 +151,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
         
         if (region is CLBeaconRegion) {
          
-            print("@2: did enter region!!!  \(region.identifier)" )
+            print(">>>> bg enter region!!!  \(region.identifier)" )
             
             //   noti(content: "ENTER  " + region.identifier)
         }
@@ -115,14 +163,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
         
         if (region is CLBeaconRegion) {
             print("@2: did exit region!!!   \(region.identifier)")
-            noti(content: "ATK-EXIT " + region.identifier)
+            //noti(content: "ATK-EXIT " + region.identifier)
         }
     }
     
     
     func resetAppToFirstController() {
         let mainStoryboard = UIStoryboard(name: "Main", bundle: nil)
-        let loginController: LoginController? = (mainStoryboard.instantiateViewController(withIdentifier: "Login") as? LoginController)
+        let loginController: LoginController? = (mainStoryboard.instantiateViewController(withIdentifier: "LoginPage") as? LoginController)
         self.window?.rootViewController = loginController
     }
     

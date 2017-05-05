@@ -33,17 +33,21 @@ class TabbarController: UITabBarController {
             
             filePath = dir.appendingPathComponent(localdata)
             
-            if let JSON = NSKeyedUnarchiver.unarchiveObject(withFile: filePath.path) as? [[String: Any]]{
-                print(JSON)
-                var dict = [Int:String]()
-                for json in JSON{
-                    let id = (json["lesson_id"] as? Int)!
-                    let uuid = (json["uuid"] as? String)!
-                    dict.updateValue(uuid, forKey: id)
-                }
+            if let  dict = NSKeyedUnarchiver.unarchiveObject(withFile: filePath.path) as? [Int:String]{
+              //  print(JSON)
                 GlobalData.lessonUUID = dict
             }
             
+            
+            localdata = "classmate.json"
+            
+            filePath = dir.appendingPathComponent(localdata)
+            
+            if let dict = NSKeyedUnarchiver.unarchiveObject(withFile: filePath.path) as? [Classmate]{
+                
+                GlobalData.classmates = dict
+                
+            }
             
         }
         
@@ -60,6 +64,8 @@ class TabbarController: UITabBarController {
         Constant.major = UserDefaults.standard.integer(forKey: "major")
         Constant.minor = UserDefaults.standard.integer(forKey: "minor")
         Constant.username = UserDefaults.standard.string(forKey: "username")!
+        
+        
         
     }
     
