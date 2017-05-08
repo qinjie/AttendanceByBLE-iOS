@@ -9,6 +9,7 @@ import CoreBluetooth
 import CoreLocation
 import Alamofire
 import UIKit
+import UserNotifications
 
 class TodayController: UITableViewController, CBPeripheralManagerDelegate, CLLocationManagerDelegate{
     
@@ -538,7 +539,7 @@ class TodayController: UITableViewController, CBPeripheralManagerDelegate, CLLoc
         // 1
         guard let cell = tableView.cellForRow(at: indexPath) as? LessonCell else { return }
         
-        print(cell.lesson?.catalog)
+        print(cell.lesson?.catalog ?? "")
         
         self.performSegue(withIdentifier: "lessonDetailSegue", sender: nil)
         
@@ -559,6 +560,7 @@ class TodayController: UITableViewController, CBPeripheralManagerDelegate, CLLoc
         notification.alertBody = content
         notification.soundName = "Default"
         UIApplication.shared.presentLocalNotificationNow(notification)
+    
     }
     
     func locationManager(_ manager: CLLocationManager, didStopMonitoringFor region: CLRegion) {

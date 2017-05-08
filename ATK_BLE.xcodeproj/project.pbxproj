@@ -29,6 +29,7 @@
 		38E26DFA1E694E30003B009D /* Lesson.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38E26DF91E694E30003B009D /* Lesson.swift */; };
 		38E26DFC1E69595C003B009D /* TimetableController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38E26DFB1E69595C003B009D /* TimetableController.swift */; };
 		3CE89EF5A7A07C1622FF4DCA /* Pods_ATK_BLE.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8730CE69BF02DA57AF883CE4 /* Pods_ATK_BLE.framework */; };
+		E17D99441EC04A680018AF52 /* RegisterController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E17D99431EC04A680018AF52 /* RegisterController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -63,6 +64,7 @@
 		38E26DFB1E69595C003B009D /* TimetableController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TimetableController.swift; sourceTree = "<group>"; };
 		8730CE69BF02DA57AF883CE4 /* Pods_ATK_BLE.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ATK_BLE.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		A480AF68145EB8C64A5ACCB4 /* Pods-ATK_BLE.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ATK_BLE.release.xcconfig"; path = "Pods/Target Support Files/Pods-ATK_BLE/Pods-ATK_BLE.release.xcconfig"; sourceTree = "<group>"; };
+		E17D99431EC04A680018AF52 /* RegisterController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RegisterController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -127,6 +129,7 @@
 				38841AAA1E690C0E004EF33D /* Assets.xcassets */,
 				386FEFF11E8CED1F00BD549C /* Main.storyboard */,
 				38841AAC1E690C0E004EF33D /* LaunchScreen.storyboard */,
+				E17D99431EC04A680018AF52 /* RegisterController.swift */,
 				38841AAF1E690C0E004EF33D /* Info.plist */,
 			);
 			path = ATK_BLE;
@@ -294,6 +297,7 @@
 				38841AA61E690C0E004EF33D /* LoginController.swift in Sources */,
 				38841AA41E690C0E004EF33D /* AppDelegate.swift in Sources */,
 				38E26DF61E691001003B009D /* ATKController.swift in Sources */,
+				E17D99441EC04A680018AF52 /* RegisterController.swift in Sources */,
 				38E26DFC1E69595C003B009D /* TimetableController.swift in Sources */,
 				3815A27A1E6D609400301CE2 /* SettingController.swift in Sources */,
 				38DDE0CF1E8DFFAC00C7AA81 /* HistoryCell.swift in Sources */,

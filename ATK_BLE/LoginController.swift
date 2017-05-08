@@ -149,9 +149,9 @@ class LoginController: UIViewController{
     
     func setupData(){
         
-        let today = Date()
+        //let today = Date()
         
-        let myCalendar = NSCalendar(calendarIdentifier: NSCalendar.Identifier.gregorian)!
+        //let myCalendar = NSCalendar(calendarIdentifier: NSCalendar.Identifier.gregorian)!
         //let myComponents = myCalendar.components(.weekday, from: today)
       
         
