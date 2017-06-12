@@ -10,7 +10,7 @@ import UIKit
 
 import Alamofire
 
-class LoginController: UIViewController{
+class LoginController: BaseViewController{
     
 
     @IBOutlet weak var usernameTextField: UITextField!
@@ -19,7 +19,8 @@ class LoginController: UIViewController{
     override func viewDidLoad() {
         super.viewDidLoad()
         self.hideKeyboardWhenTappedAround()
-        
+//        self.setBorderTxf(txf: usernameTextField)
+//        self.setBorderTxf(txf: passTextField)
         
         
         

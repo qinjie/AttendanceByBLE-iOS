@@ -8,7 +8,7 @@
 import Alamofire
 import UIKit
 
-class TimetableController: UITableViewController {
+class TimetableController: BaseTableViewController {
 
     fileprivate let cellId = "cell"
     
@@ -19,6 +19,8 @@ class TimetableController: UITableViewController {
     let wday = ["Monday", "Tuesday", "Wednesday", "Thursday" , "Friday", "Saturday"]
     
     let wdayInt = ["2", "3", "4", "5", "6", "7"]
+    let cellID = "LessonTableViewCell"
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -28,11 +30,17 @@ class TimetableController: UITableViewController {
       //  self.tableView.register(LessonCell.self, forCellReuseIdentifier: "cell")
         
         tableView.rowHeight = UITableViewAutomaticDimension
-        tableView.estimatedRowHeight = 300
+        tableView.estimatedRowHeight = 100
+        tableView.register(UINib.init(nibName: cellID, bundle: nil), forCellReuseIdentifier: cellID)
+        tableView.tableFooterView = UIView.init(frame: CGRect.zero)
+        tableView.separatorColor = UIColor.seperatorApp
         
         navigationItem.title = "Weekly Timetable"
         NotificationCenter.default.addObserver(self,selector: #selector(rload), name: NSNotification.Name(rawValue: "atksuccesfully"), object: nil)
-
+        refreshControl = UIRefreshControl()
+        refreshControl?.tintColor = UIColor.mainApp
+        refreshControl?.addTarget(self, action: #selector(TimetableController.setupData), for: .valueChanged)
+        tableView.addSubview(refreshControl!)
     
     }
     
@@ -48,55 +56,6 @@ class TimetableController: UITableViewController {
     
     // MARK: - Table view data source
     
-    override func numberOfSections(in tableView: UITableView) -> Int{
-      
-        return 5
-    }
-    
-    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-       
-        return  GlobalData.timetable.filter({$0.weekday == wdayInt[section]}).count
-    }
-    
-    
-    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat{
-        return 120.0;
-    }
-    
-    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-    let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! LessonCell
-    
-    // Configure the cell...
-        let lessonInDay = GlobalData.timetable.filter({$0.weekday == wdayInt[indexPath.section]})
-
-        let lesson = lessonInDay[indexPath.row]
-        cell.lesson = lesson
-
-        if (GlobalData.attendance.contains((cell.lesson?.ldateid)!)){
-            cell.backgroundColor = UIColor(red:0.84, green:1.00, blue:0.95, alpha:1.0)
-        }else{
-            cell.backgroundColor = UIColor.white
-        }
-            //   print("cell \(cell.subjectLabel.text)")
-//        cell.idLabel.text = lesson.lesson_id?.description
-//        cell.start_time.text = lesson.start_time
-//        cell.end_time.text = lesson.end_time
-        
-        return cell
-    }
-    
-    override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String {
-    
-        return wday[section]
-    }
-    
-    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        
-        guard let cell = tableView.cellForRow(at: indexPath) as? LessonCell else { return }
-        
-        self.performSegue(withIdentifier: "lessonDetailSegue2", sender: nil)
-    }
-
     override func prepare(for segue: UIStoryboardSegue, sender: Any? ) {
         
         let indexPath = getIndexPathForSelectedCell()
@@ -109,7 +68,6 @@ class TimetableController: UITableViewController {
         
         
     }
-    
     
     func getIndexPathForSelectedCell() -> IndexPath? {
         
@@ -134,6 +92,7 @@ class TimetableController: UITableViewController {
             ]
             
             Alamofire.request(Constant.URLtimetable, method: .get, parameters: nil, encoding: JSONEncoding.default, headers: headers).responseJSON { (response:DataResponse) in
+                self.refreshControl?.endRefreshing()
                 print("load setup success")
                 if let JSON = response.result.value as? [AnyObject]{
                     GlobalData.timetable.removeAll()
@@ -202,7 +161,9 @@ class TimetableController: UITableViewController {
                         NSKeyedArchiver.archiveRootObject(GlobalData.timetable, toFile: filePath.path)
                         
                     }
-                    self.tableView.reloadData()
+                    DispatchQueue.main.async {
+                        self.tableView.reloadData()
+                    }
                 }else{
                 
                 }
@@ -213,4 +174,50 @@ class TimetableController: UITableViewController {
         
     }
 
+}
+extension TimetableController {
+    override func numberOfSections(in tableView: UITableView) -> Int{
+        
+        return 5
+    }
+    
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        
+        return  GlobalData.timetable.filter({$0.weekday == wdayInt[section]}).count
+    }
+    
+    
+    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat{
+        return 120.0;
+    }
+    
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: cellID, for: indexPath) as! LessonTableViewCell
+        
+        // Configure the cell...
+        let lessonInDay = GlobalData.timetable.filter({$0.weekday == wdayInt[indexPath.section]})
+        
+        let lesson = lessonInDay[indexPath.row]
+        cell.setData(lesson: lesson)
+        
+        if (GlobalData.attendance.contains((lesson.ldateid)!)){
+            cell.backgroundColor = UIColor(red:0.84, green:1.00, blue:0.95, alpha:1.0)
+        }else{
+            cell.backgroundColor = UIColor.white
+        }
+        
+        return cell
+    }
+    
+    override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String {
+        
+        return wday[section]
+    }
+    
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        
+        guard let cell = tableView.cellForRow(at: indexPath) as? LessonCell else { return }
+        
+        self.performSegue(withIdentifier: "lessonDetailSegue2", sender: nil)
+    }
 }

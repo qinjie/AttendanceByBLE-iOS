@@ -10,13 +10,13 @@ import CoreLocation
 import Alamofire
 import UIKit
 
-class TodayController: UITableViewController, CBPeripheralManagerDelegate, CLLocationManagerDelegate{
+class TodayController: BaseTableViewController{
     
     fileprivate let cellId = "cell"
     
     @IBOutlet weak var broadcast: UILabel!
     
-    var lessons : [Lesson]!
+    var lessons = [Lesson]()
     var classmate = Classmate()
     var nextLesson : Lesson!
     var currentLesson : Lesson!
@@ -31,12 +31,12 @@ class TodayController: UITableViewController, CBPeripheralManagerDelegate, CLLoc
     var lecturerMajor : Int!
     var lecturerMinor : Int!
     var lecturerName : String!
-    
+    let cellReuse = "LessonTableViewCell"
     override func viewDidLoad() {
         super.viewDidLoad()
         
         self.broadcast.text = "NOT broadcasting"
-        self.broadcast.textColor = UIColor.green
+        self.broadcast.textColor = UIColor.greenApp
         
         self.switchBtn.isOn = false
         self.switchBtn.setOn(self.switchBtn.isOn, animated: true)
@@ -46,9 +46,12 @@ class TodayController: UITableViewController, CBPeripheralManagerDelegate, CLLoc
         //collectionView?.register(LessonCell.self, forCellWithReuseIdentifier: cellId)
         //  self.tableView.register(LessonCell.self, forCellReuseIdentifier: "cell")
         navigationItem.title = "Today Timetable"
+        tableView.delegate = self
+        tableView.register(UINib.init(nibName: cellReuse, bundle: nil), forCellReuseIdentifier: cellReuse)
         
         tableView.rowHeight = UITableViewAutomaticDimension
-        tableView.estimatedRowHeight = 300
+        tableView.estimatedRowHeight = 50
+        tableView.separatorColor = UIColor.seperatorApp
         
         lessons = GlobalData.today
         
@@ -155,9 +158,9 @@ class TodayController: UITableViewController, CBPeripheralManagerDelegate, CLLoc
         }else{
             
             if let indexPath = getIndexPathForSelectedCell() {
-                let x = lessons?[indexPath.item]
+                let x = lessons[indexPath.item]
                 let detailPage = segue.destination as! LessonDetailView
-                detailPage.lesson = x!
+                detailPage.lesson = x
             }
         }
         
@@ -373,7 +376,7 @@ class TodayController: UITableViewController, CBPeripheralManagerDelegate, CLLoc
         bluetoothPeripheralManager.stopAdvertising()
         isBroadcasting = false
         self.broadcast.text = "NOT broadcasting"
-        self.broadcast.textColor = UIColor.green
+        self.broadcast.textColor = UIColor.greenApp
         self.switchBtn.isOn = false
         self.switchBtn.setOn(self.switchBtn.isOn, animated: true)
     }
@@ -397,7 +400,7 @@ class TodayController: UITableViewController, CBPeripheralManagerDelegate, CLLoc
              
                 isBroadcasting = true
                 self.broadcast.text = "Is broadcasting"
-                self.broadcast.textColor = UIColor.red
+                self.broadcast.textColor = UIColor.redApp
                 self.switchBtn.isOn = true
                 self.switchBtn.setOn(self.switchBtn.isOn, animated: true)
                 
@@ -409,15 +412,14 @@ class TodayController: UITableViewController, CBPeripheralManagerDelegate, CLLoc
             else{
                 
                 self.broadcast.text = "NOT broadcasting"
-                self.broadcast.textColor = UIColor.green
+                self.broadcast.textColor = UIColor.greenApp
 
                 let alert = UIAlertController(title: "Bluetooth Turn on Request", message: " ATK would like to turn on your bluetooth!", preferredStyle: UIAlertControllerStyle.alert)
                 
                 // add the actions (buttons)
                 alert.addAction(UIAlertAction(title: "Allow", style: UIAlertActionStyle.default, handler: { action in
                     self.turnOnBlt()
-                    self.turnOnBlt()
-                    self.broadcasting()
+                    //self.broadcasting()
                 }))
                 alert.addAction(UIAlertAction(title: "Cancel", style: UIAlertActionStyle.cancel, handler: nil))
                 
@@ -463,146 +465,6 @@ class TodayController: UITableViewController, CBPeripheralManagerDelegate, CLLoc
         bluetoothManager?.setPower(true)
     }
 
-//    @IBAction func checkLesson(_ sender: Any) {
-//        
-//        self.performSegue(withIdentifier: "currentLessonSegue", sender: nil)
-//    }
-    
-    
-    
-    // MARK: CBPeripheralManagerDelegate method implementation
-
-    func peripheralManagerDidUpdateState(_ peripheral: CBPeripheralManager) {
-        var statusMessage = ""
-        
-        switch peripheral.state {
-        case .poweredOn:
-            statusMessage = "Bluetooth Status: \n Turned On"
-            
-        case .poweredOff:
-            if isBroadcasting {
-             //   switchBroadcastingState(self)
-            }
-            statusMessage = "Bluetooth Status: \n Turned Off"
-            
-        case .resetting:
-            statusMessage = "Bluetooth Status: \n Resetting"
-            
-        case .unauthorized:
-            statusMessage = "Bluetooth Status: \n Not Authorized"
-            
-        case .unsupported:
-            statusMessage = "Bluetooth Status: \n Not Supported"
-            
-        default:
-            statusMessage = "Bluetooth Status: \n Unknown"
-        }
-        
-      
-    }
-
-    
-    
-    // MARK: - Table view data source
-    
-    
-    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-    
-            //print("count \(lessons.count)")
-            return lessons.count
-    }
-    
-    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat{
-        return 120.0;
-    }
-    
-    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! LessonCell
-        
-        cell.lesson = lessons[indexPath.row]
-        //        // Configure the cell...
-        //        let lessonInDay = GlobalData.timetable.filter({$0.weekday == wdayInt[indexPath.section]})
-        //
-        //        let lesson = lessonInDay[indexPath.row]
-        //        cell.lesson = lesson
-        //   print("cell \(cell.subjectLabel.text)")
-        //        cell.idLabel.text = lesson.lesson_id?.description
-        //        cell.start_time.text = lesson.start_time
-        //        cell.end_time.text = lesson.end_time
-        
-        return cell
-    }
-    
-    
-    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        // 1
-        guard let cell = tableView.cellForRow(at: indexPath) as? LessonCell else { return }
-        
-        print(cell.lesson?.catalog)
-        
-        self.performSegue(withIdentifier: "lessonDetailSegue", sender: nil)
-        
-    }
-    
-    
-
-    
-    func locationManager(_ manager: CLLocationManager, didStartMonitoringFor region: CLRegion) {
-        print("Started monitoring \(region.identifier) region")
-        
-        //noti(content: "start " + region.identifier)
-        
-    }
-    
-    func noti(content : String){
-        let notification = UILocalNotification()
-        notification.alertBody = content
-        notification.soundName = "Default"
-        UIApplication.shared.presentLocalNotificationNow(notification)
-    }
-    
-    func locationManager(_ manager: CLLocationManager, didStopMonitoringFor region: CLRegion) {
-        print("Stop monitoring \(region.identifier) region")
-    }
-    
-    func locationManager(_ manager: CLLocationManager, didDetermineState state: CLRegionState, for region: CLRegion){
-        
-        print("@3: -____- state \(region.identifier)" )
-        switch state {
-        case .inside:
-            print(" -____- Inside \(region.identifier)");
-            
-            noti(content: "found  " + region.identifier)
-     
-            
-        //report(region: CLRegion)
-        case .outside:
-            print(" -____- Outside");
-            
-            // noti(content: "OUTSIDE  " + region.identifier)
-            
-        case .unknown:
-            print(" -____- Unknown");
-        default:
-            print(" -____-  default");
-        }
-    }
-    
-    
-    
-    
-    func locationManager(_ manager: CLLocationManager, didEnterRegion region: CLRegion) {
-        
-        //print("@1: did enter region!!!")
-        
-        if (region is CLBeaconRegion) {
-            
-            print("@2: did enter region!!!  \(region.identifier)" )
-            
-            //   noti(content: "ENTER  " + region.identifier)
-        }
-    }
-    
     func loadattendance(){
         print("load att ")
         let headers: HTTPHeaders = [
@@ -646,4 +508,121 @@ class TodayController: UITableViewController, CBPeripheralManagerDelegate, CLLoc
             }
         }
     }
+}
+extension TodayController{
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        
+        //print("count \(lessons.count)")
+        return lessons.count
+    }
+    
+    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat{
+        return 120.0;
+    }
+    
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: cellReuse, for: indexPath) as! LessonTableViewCell
+        cell.setData(lesson: lessons[indexPath.row])
+        //cell.lesson = lessons[indexPath.row]
+        return cell
+    }
+    
+    
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        // 1        
+        self.performSegue(withIdentifier: "lessonDetailSegue", sender: nil)
+        
+    }
+}
+extension TodayController: CLLocationManagerDelegate {
+    
+    func locationManager(_ manager: CLLocationManager, didStartMonitoringFor region: CLRegion) {
+        print("Started monitoring \(region.identifier) region")
+        
+        //noti(content: "start " + region.identifier)
+        
+    }
+    
+    func noti(content : String){
+        let notification = UILocalNotification()
+        notification.alertBody = content
+        notification.soundName = "Default"
+        UIApplication.shared.presentLocalNotificationNow(notification)
+    }
+    
+    func locationManager(_ manager: CLLocationManager, didStopMonitoringFor region: CLRegion) {
+        print("Stop monitoring \(region.identifier) region")
+    }
+    
+    func locationManager(_ manager: CLLocationManager, didDetermineState state: CLRegionState, for region: CLRegion){
+        
+        print("@3: -____- state \(region.identifier)" )
+        switch state {
+        case .inside:
+            print(" -____- Inside \(region.identifier)");
+            
+            noti(content: "found  " + region.identifier)
+            
+            
+        //report(region: CLRegion)
+        case .outside:
+            print(" -____- Outside");
+            
+            // noti(content: "OUTSIDE  " + region.identifier)
+            
+        case .unknown:
+            print(" -____- Unknown");
+        default:
+            print(" -____-  default");
+        }
+    }
+    
+    
+    
+    
+    func locationManager(_ manager: CLLocationManager, didEnterRegion region: CLRegion) {
+        
+        //print("@1: did enter region!!!")
+        
+        if (region is CLBeaconRegion) {
+            
+            print("@2: did enter region!!!  \(region.identifier)" )
+            
+            //   noti(content: "ENTER  " + region.identifier)
+        }
+    }
+
+}
+extension TodayController : CBPeripheralManagerDelegate {
+    func peripheralManagerDidUpdateState(_ peripheral: CBPeripheralManager) {
+        var statusMessage = ""
+        
+        switch peripheral.state {
+        case .poweredOn:
+            statusMessage = "Bluetooth Status: \n Turned On"
+            
+        case .poweredOff:
+            if isBroadcasting {
+                //   switchBroadcastingState(self)
+            }
+            statusMessage = "Bluetooth Status: \n Turned Off"
+            
+        case .resetting:
+            statusMessage = "Bluetooth Status: \n Resetting"
+            
+        case .unauthorized:
+            statusMessage = "Bluetooth Status: \n Not Authorized"
+            
+        case .unsupported:
+            statusMessage = "Bluetooth Status: \n Not Supported"
+            
+        default:
+            statusMessage = "Bluetooth Status: \n Unknown"
+        }
+        
+        
+    }
+    
+    
+    
 }

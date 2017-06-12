@@ -65,6 +65,26 @@ class TabbarController: UITabBarController {
         Constant.minor = UserDefaults.standard.integer(forKey: "minor")
         Constant.username = UserDefaults.standard.string(forKey: "username")!
         
+        tabBar.isTranslucent = false
+        
+        let topBorder = CALayer()
+        topBorder.frame = CGRect(x: 0, y: 0, width: 1000, height: 0.5)
+        topBorder.backgroundColor = UIColor(red:0.90, green:0.91, blue:0.92, alpha:1.0).cgColor
+        
+        
+        tabBar.layer.addSublayer(topBorder)
+        tabBar.clipsToBounds = true
+        
+        let selectedColor   = UIColor.selected
+        let unselectedColor = UIColor.unselected
+        
+        tabBar.unselectedItemTintColor = unselectedColor
+        
+        UITabBarItem.appearance().setTitleTextAttributes([NSForegroundColorAttributeName: unselectedColor], for: .normal)
+        
+        UITabBarItem.appearance().setTitleTextAttributes([NSForegroundColorAttributeName: selectedColor], for: .selected)
+        
+        
         
         
     }

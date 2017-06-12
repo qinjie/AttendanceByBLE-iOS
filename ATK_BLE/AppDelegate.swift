@@ -10,6 +10,7 @@ import CoreLocation
 import Alamofire
 import SwiftyJSON
 
+
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate {
     
@@ -23,6 +24,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
     
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
+        
+        UIApplication.shared.statusBarStyle = .lightContent
         
         let mainStoryboard = UIStoryboard(name: "Main", bundle: nil)
 //                var loginController: LoginController? = (mainStoryboard.instantiateViewController(withIdentifier: "LoginPage") as? LoginController)

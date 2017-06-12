@@ -7,18 +7,43 @@
 //
 
 import UIKit
+import Alamofire
+import SwiftyJSON
 
-class SettingController: UITableViewController {
+class SettingController: BaseTableViewController {
 
     @IBOutlet weak var name: UILabel!
     
+    let alertController = UIAlertController(title: nil, message: "Please wait...\n\n", preferredStyle: UIAlertControllerStyle.alert)
+    
+    let spinnerIndicator: UIActivityIndicatorView = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.whiteLarge)
+    
     @IBAction func logout(_ sender: Any) {
         
-        UserDefaults.standard.removeObject(forKey: "username")
+
+        spinnerIndicator.center = CGPoint(x: 135.0, y: 65.5)
+        spinnerIndicator.color = UIColor.black
+        spinnerIndicator.startAnimating()
+        alertController.view.addSubview(spinnerIndicator)
+        self.present(alertController, animated: false, completion: nil)
         
+        let httpHeaders : [String : String] = ["Authorization": "Bearer " + Constant.token]
         
-        let appDelegate = UIApplication.shared.delegate as! AppDelegate
-        appDelegate.resetAppToFirstController()
+        Alamofire.request(Constant.URLLogOut, method: .get, parameters: nil, headers: httpHeaders).responseJSON { (response) in
+            self.alertController.dismiss(animated: true, completion: {
+                
+            })
+            if (response.data != nil){
+                let json = JSON.init(data: response.data!)
+                NSLog("Logout  \(json)")
+                
+                UserDefaults.standard.removeObject(forKey: "username")
+                let appDelegate = UIApplication.shared.delegate as! AppDelegate
+                appDelegate.resetAppToFirstController()
+            } else {
+                self.displayMyAlertMessage(title: "Warning", mess: "No internet connection")
+            }
+        }
         
     }
     

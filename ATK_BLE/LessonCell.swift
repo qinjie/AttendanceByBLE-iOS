@@ -29,18 +29,6 @@ class LessonCell: UITableViewCell {
         }
     }
     
-    let lessonPhoto: UIImageView = {
-        
-        let imageView = UIImageView()
-        imageView.contentMode = .scaleAspectFill
-        
-        imageView.image = UIImage(named: "yoo2")
-        
-        imageView.layer.cornerRadius = 34
-        imageView.layer.masksToBounds = true
-        return imageView
-        
-    }()
     
     let lecturer: UILabel = {
         let label = UILabel()
@@ -50,14 +38,6 @@ class LessonCell: UITableViewCell {
         return label
     }()
     
-    
-    
-    let dividerLineView: UIView = {
-        let view = UIView()
-        view.backgroundColor = UIColor(red:0.00, green:0.36, blue:0.16, alpha:0.5)
-        // view.backgroundColor = UIColor(red:0, green:0.92, blue:0.41, alpha:0.5)
-        return view
-    }()
     
     let subjectLabel: UILabel = {
         let label = UILabel()
@@ -90,25 +70,7 @@ class LessonCell: UITableViewCell {
         return label
     }()
     
-    let lastseen: UILabel = {
-        let label = UILabel()
-        label.text = "......"
-        label.textColor = UIColor(red:0.10, green:0.31, blue:0.17, alpha:1.0)
-        //  label.backgroundColor = UIColor(red:0.51, green:0.83, blue:0.93, alpha:0.5)
-        label.textColor = UIColor.darkGray
-        label.font = UIFont.systemFont(ofSize: 14)
-        return label
-    }()
-    
-    
-    let statusImage: UIImageView = {
-        let imageView = UIImageView()
-        imageView.contentMode = .scaleAspectFill
-        imageView.layer.cornerRadius = 10
-        imageView.layer.masksToBounds = true
-        return imageView
-    }()
-    
+        
     override func awakeFromNib() {
         super.awakeFromNib()
         
@@ -157,24 +119,6 @@ class LessonCell: UITableViewCell {
         containerView.addConstraintsWithFormat("V:|-15-[v0]-30-[v1]-15-|", views: start_time, end_time)
         
         containerView.addConstraintsWithFormat("V:|-10-[v0]-12-[v1]-12-[v2]-7-|", views: subjectLabel,lecturer, venue)
-    }
-    
-}
-
-
-
-extension UIView {
-    
-    func addConstraintsWithFormat(_ format: String, views: UIView...) {
-        
-        var viewsDictionary = [String: UIView]()
-        for (index, view) in views.enumerated() {
-            let key = "v\(index)"
-            viewsDictionary[key] = view
-            view.translatesAutoresizingMaskIntoConstraints = false
-        }
-        
-        addConstraints(NSLayoutConstraint.constraints(withVisualFormat: format, options: NSLayoutFormatOptions(), metrics: nil, views: viewsDictionary))
     }
     
 }

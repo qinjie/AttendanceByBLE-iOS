@@ -10,7 +10,7 @@ import UIKit
 import CoreLocation
 
 
-class ATKController: UITableViewController , CLLocationManagerDelegate  {
+class ATKController: BaseTableViewController , CLLocationManagerDelegate  {
 
     @IBOutlet weak var catalog: UILabel!
     @IBOutlet weak var starttime: UILabel!

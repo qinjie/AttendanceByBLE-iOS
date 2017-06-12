@@ -5,4 +5,5 @@ use_frameworks!
 target ‘ATK_BLE’ do
     pod 'Alamofire'
     pod ‘SwiftyJSON’
+    pod 'IQKeyboardManagerSwift'
 end

@@ -8,7 +8,7 @@
 
 import UIKit
 
-class LessonDetailView: UITableViewController {
+class LessonDetailView: BaseTableViewController {
     
     @IBOutlet weak var catalog: UILabel!
     @IBOutlet weak var starttime: UILabel!
@@ -37,6 +37,9 @@ class LessonDetailView: UITableViewController {
         email.text = lesson.email
 
         
+    }
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: false)
     }
     
    
