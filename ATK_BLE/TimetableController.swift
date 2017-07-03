@@ -1,20 +1,20 @@
 //
 //  TimetableController.swift
-//  ATK_BLE
+//  Attandence Taking System
 //
-//  Created by xuhelios on 3/3/17.
-//  Copyright © 2017 beacon. All rights reserved.
+//  Created by KyawLin on 5/21/17.
+//  Copyright © 2017 KyawLin. All rights reserved.
 //
-import Alamofire
+
 import UIKit
+import Alamofire
 
 class TimetableController: UITableViewController {
 
-    fileprivate let cellId = "cell"
+    let today = Date()
+    let dateFormatter = DateFormatter()
     
     var JSON : [[String:Any]]!
-    
-   
     
     let wday = ["Monday", "Tuesday", "Wednesday", "Thursday" , "Friday", "Saturday"]
     
@@ -22,102 +22,59 @@ class TimetableController: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        print("check 1")
-        //collectionView?.register(LessonCell.self, forCellWithReuseIdentifier: cellId)
-      //  self.tableView.register(LessonCell.self, forCellReuseIdentifier: "cell")
-        
         tableView.rowHeight = UITableViewAutomaticDimension
-        tableView.estimatedRowHeight = 300
         
-        navigationItem.title = "Weekly Timetable"
-        NotificationCenter.default.addObserver(self,selector: #selector(rload), name: NSNotification.Name(rawValue: "atksuccesfully"), object: nil)
+        dateFormatter.dateFormat = "MMM dd (E)"
+        let title = dateFormatter.string(from: today)
+        navigationItem.title = "Timetable \(title)"
 
-    
-    }
-    
-    
-    @IBAction func sync(_ sender: Any) {
-        setupData()
-    }
-    
-    func rload(){
-        displayMyAlertMessage(title: "Successfull Attendance", mess: "You had taken attendance for \(GlobalData.currentLesson.catalog!)")
-        self.tableView.reloadData()                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                
-    }
-    
-    // MARK: - Table view data source
-    
-    override func numberOfSections(in tableView: UITableView) -> Int{
-      
-        return 5
-    }
-    
-    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-       
-        return  GlobalData.timetable.filter({$0.weekday == wdayInt[section]}).count
-    }
-    
-    
-    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat{
-        return 120.0;
-    }
-    
-    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-    let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! LessonCell
-    
-    // Configure the cell...
-        let lessonInDay = GlobalData.timetable.filter({$0.weekday == wdayInt[indexPath.section]})
-
-        let lesson = lessonInDay[indexPath.row]
-        cell.lesson = lesson
-
-        if (GlobalData.attendance.contains((cell.lesson?.ldateid)!)){
-            cell.backgroundColor = UIColor(red:0.84, green:1.00, blue:0.95, alpha:1.0)
-        }else{
-            cell.backgroundColor = UIColor.white
-        }
-            //   print("cell \(cell.subjectLabel.text)")
-//        cell.idLabel.text = lesson.lesson_id?.description
-//        cell.start_time.text = lesson.start_time
-//        cell.end_time.text = lesson.end_time
-        
-        return cell
-    }
-    
-    override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String {
-    
-        return wday[section]
+        // Do any additional setup after loading the view.
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        guard let cell = tableView.cellForRow(at: indexPath) as? LessonCell  else{ return }
         
-        guard (tableView.cellForRow(at: indexPath) as? LessonCell) != nil else { return }
+        self.performSegue(withIdentifier: "lesson detail", sender: cell.lesson)
+    }
+    
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return GlobalData.timetable.filter({$0.weekday == wdayInt[section]}).count
+    }
+    
+    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 80.0
+    }
+    
+    override func numberOfSections(in tableView: UITableView) -> Int {
+        return 5
+    }
+    
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! LessonCell
         
-        self.performSegue(withIdentifier: "lessonDetailSegue2", sender: nil)
+        let lessonInDay = GlobalData.timetable.filter({$0.weekday == wdayInt[indexPath.section]})
+        
+        let lesson = lessonInDay[indexPath.row]
+        cell.lesson = lesson
+        if GlobalData.currentLesson.ldateid == lesson.ldateid{
+            cell.backgroundColor = UIColor(red: 0.84, green: 1.00, blue: 0.95, alpha: 1.0)
+        }else{
+            cell.backgroundColor = UIColor.white
+        }
+        return cell
+    }
+    
+    override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        return wday[section]
     }
 
-    override func prepare(for segue: UIStoryboardSegue, sender: Any? ) {
-        
-        let indexPath = getIndexPathForSelectedCell()
-        
-                guard let cell = tableView.cellForRow(at: indexPath!) as? LessonCell else { return }
-                let x = cell.lesson
-                let detailPage = segue.destination as! LessonDetailView
-                detailPage.lesson = x!
-       
-        
-        
+    @IBAction func RefreshButtonPressed(_ sender: UIBarButtonItem) {
+        setupData()
     }
     
-    
-    func getIndexPathForSelectedCell() -> IndexPath? {
-        
-        var indexPath:IndexPath?
-        
-            indexPath = tableView.indexPathForSelectedRow
-    
-        return indexPath
+    override func didReceiveMemoryWarning() {
+        super.didReceiveMemoryWarning()
+        // Dispose of any resources that can be recreated.
     }
     
     func setupData(){
@@ -127,90 +84,77 @@ class TimetableController: UITableViewController {
         //let myCalendar = NSCalendar(calendarIdentifier: NSCalendar.Identifier.gregorian)!
         //let myComponents = myCalendar.components(.weekday, from: today)
         
-            
-            let headers: HTTPHeaders = [
-                "Authorization": "Bearer " + Constant.token
-                // "Accept": "application/json"
-            ]
-            
-            Alamofire.request(Constant.URLtimetable, method: .get, parameters: nil, encoding: JSONEncoding.default, headers: headers).responseJSON { (response:DataResponse) in
-                print("load setup success")
-                if let JSON = response.result.value as? [AnyObject]{
-                    GlobalData.timetable.removeAll()
-                    for json in JSON {
+        
+        let headers: HTTPHeaders = [
+            "Authorization": "Bearer " + Constant.token
+            // "Accept": "application/json"
+        ]
+        
+        Alamofire.request(Constant.URLtimetable, method: .get, parameters: nil, encoding: JSONEncoding.default, headers: headers).responseJSON { (response:DataResponse) in
+            print("load setup success")
+            if let JSON = response.result.value as? [AnyObject]{
+                GlobalData.timetable.removeAll()
+                for json in JSON {
+                    
+                    let newLesson = Lesson()
+                    
+                    if let lesson = json["lesson"] as? [String: Any]{
                         
-                        let newLesson = Lesson()
+                        newLesson.lesson_id = (lesson["id"] as? Int)!
+                        newLesson.catalog = (lesson["catalog_number"] as? String)!
+                        newLesson.subject = (lesson["subject_area"] as? String)!
+                        newLesson.start_time = (lesson["start_time"] as? String)!
+                        newLesson.end_time = (lesson["end_time"] as? String)!
+                        newLesson.weekday = (lesson["weekday"] as? String)!
+                    }
+                    
+                    if let lecturer = json["lecturers"] as? [String: Any]{
                         
-                        if let lesson = json["lesson"] as? [String: Any]{
-                            
-                            newLesson.lesson_id = (lesson["id"] as? Int)!
-                            newLesson.catalog = (lesson["catalog_number"] as? String)!
-                            newLesson.subject = (lesson["subject_area"] as? String)!
-                            newLesson.start_time = (lesson["start_time"] as? String)!
-                            newLesson.end_time = (lesson["end_time"] as? String)!
-                            newLesson.weekday = (lesson["weekday"] as? String)!
-                        }
+                        newLesson.lecturer = lecturer["name"] as? String
+                        newLesson.lecAcad = lecturer["acad"] as? String
+                        newLesson.lecEmail = lecturer["email"] as? String
+                        newLesson.lecOffice = lecturer["office"] as? String
+                        newLesson.lecPhone = lecturer["phone"] as? String
+                        //   print(newLesson.lecturer)
+                    }
+                    
+                    
+                    if let lesson_date = json["lesson_date"] as? [String: Any]{
                         
-                        if let lecturer = json["lecturers"] as? [String: Any]{
-                            
-                            newLesson.lecturer = (lecturer["name"] as? String)!
-                            newLesson.acad = (lecturer["acad"] as? String)!
-                            newLesson.email = (lecturer["email"] as? String)!
-                            //   print(newLesson.lecturer)
-                        }
-                        
-                        
-                        if let lesson_date = json["lesson_date"] as? [String: Any]{
-                            
-                            newLesson.ldateid = (lesson_date["id"] as? Int)!
-                            newLesson.ldate = (lesson_date["ldate"] as? String)!
-                            
-                        }
-                        
-                        if let venue = json["venue"] as? [String: Any]{
-                            
-                            newLesson.major = (venue["major"] as? Int32)!
-                            newLesson.minor = (venue["minor"] as? Int32)!
-                            newLesson.venueName = (venue["name"] as? String)!
-                            newLesson.location = (venue["location"] as? String)!
-                            
-                        }
-                 
-                        GlobalData.timetable.append(newLesson)
-                        
+                        newLesson.ldateid = (lesson_date["id"] as? Int)!
+                        newLesson.ldate = (lesson_date["ldate"] as? String)!
                         
                     }
                     
-                    NotificationCenter.default.post(name: NSNotification.Name(rawValue: "updatedata"), object: nil)
-                    
-                    print("*****TIMETABLE*****")
-                    
-                    let localdata = "timetable.txt"
-                    
-                    if let dir = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first {
+                    if let venue = json["venue"] as? [String: Any]{
                         
-                        let filePath = dir.appendingPathComponent(localdata)
-                        
-                        let str = ""
-                        
-                        do {
-                            try str.write(to: filePath, atomically: true, encoding: String.Encoding.utf8)
-                        } catch {
-                        
-                        }
-                        
-                        NSKeyedArchiver.archiveRootObject(GlobalData.timetable, toFile: filePath.path)
+                        newLesson.major = (venue["major"] as? Int32)!
+                        newLesson.minor = (venue["minor"] as? Int32)!
+                        newLesson.venueName = (venue["name"] as? String)!
+                        newLesson.location = (venue["location"] as? String)!
                         
                     }
-                    self.tableView.reloadData()
-                }else{
-                
+                    
+                    GlobalData.timetable.append(newLesson)
                 }
- 
+                self.tableView.reloadData()
+            }else{
                 
             }
-            // self.collectionView!.reloadData()
+            
+            
+        }
         
+    }
+
+
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        // Get the new view controller using segue.destinationViewController.
+        let destination = segue.destination as! LessonDetailController
+        // Pass the selected object to the new view controller.
+        if let lesson = sender as? Lesson{
+            destination.lesson = lesson
+        }
     }
 
 }

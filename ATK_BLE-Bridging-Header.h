@@ -1,13 +1,13 @@
 //
-//  Use this file to import your target's public headers that you would like to expose to Swift.
+//  ATK_BLE-Bridging-Header.h
+//  ATK_BLE
 //
-
+//  Created by KyawLin on 7/3/17.
+//  Copyright © 2017 beacon. All rights reserved.
+//
 
 #ifndef ATK_BLE_Bridging_Header_h
 #define ATK_BLE_Bridging_Header_h
 
 
-#import "BluetoothManagerHandler.h"
-#import "BluetoothDeviceHandler.h"
-
-#endif /* WeTrack_Bridging_Header_h */
+#endif /* ATK_BLE_Bridging_Header_h */

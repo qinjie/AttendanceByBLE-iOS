@@ -7,64 +7,46 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		3815A2721E6CF1CF00301CE2 /* LessonCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3815A2711E6CF1CF00301CE2 /* LessonCell.swift */; };
-		3815A2741E6D030F00301CE2 /* TableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3815A2731E6D030F00301CE2 /* TableViewCell.swift */; };
-		3815A2781E6D405800301CE2 /* TodayController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3815A2771E6D405800301CE2 /* TodayController.swift */; };
-		3815A27A1E6D609400301CE2 /* SettingController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3815A2791E6D609400301CE2 /* SettingController.swift */; };
-		382F77731E85122C005A4E1A /* ChangePassController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 382F77721E85122C005A4E1A /* ChangePassController.swift */; };
-		3849C6DD1E6E93D300097B17 /* TabbarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3849C6DC1E6E93D300097B17 /* TabbarController.swift */; };
-		386688CC1E7FC2FF00DFA4C7 /* TableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 386688CB1E7FC2FF00DFA4C7 /* TableViewController.swift */; };
-		386875CA1E8B614100FB45C4 /* LessonDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 386875C91E8B614100FB45C4 /* LessonDetailView.swift */; };
-		386FEFF31E8CED1F00BD549C /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 386FEFF11E8CED1F00BD549C /* Main.storyboard */; };
-		38841AA41E690C0E004EF33D /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38841AA31E690C0E004EF33D /* AppDelegate.swift */; };
-		38841AA61E690C0E004EF33D /* LoginController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38841AA51E690C0E004EF33D /* LoginController.swift */; };
-		38841AAB1E690C0E004EF33D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 38841AAA1E690C0E004EF33D /* Assets.xcassets */; };
-		38841AAE1E690C0E004EF33D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 38841AAC1E690C0E004EF33D /* LaunchScreen.storyboard */; };
-		38851CE21E6FF0EE001DC32C /* BluetoothDeviceHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = 38851CDE1E6FF0EE001DC32C /* BluetoothDeviceHandler.m */; };
-		38851CE31E6FF0EE001DC32C /* BluetoothManagerHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = 38851CE11E6FF0EE001DC32C /* BluetoothManagerHandler.m */; };
-		38DDE0CD1E8DFEE500C7AA81 /* HistoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38DDE0CC1E8DFEE500C7AA81 /* HistoryView.swift */; };
-		38DDE0CF1E8DFFAC00C7AA81 /* HistoryCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38DDE0CE1E8DFFAC00C7AA81 /* HistoryCell.swift */; };
-		38E26DF61E691001003B009D /* ATKController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38E26DF51E691001003B009D /* ATKController.swift */; };
-		38E26DF81E6910A4003B009D /* Items.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38E26DF71E6910A4003B009D /* Items.swift */; };
-		38E26DFA1E694E30003B009D /* Lesson.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38E26DF91E694E30003B009D /* Lesson.swift */; };
-		38E26DFC1E69595C003B009D /* TimetableController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38E26DFB1E69595C003B009D /* TimetableController.swift */; };
 		3CE89EF5A7A07C1622FF4DCA /* Pods_ATK_BLE.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8730CE69BF02DA57AF883CE4 /* Pods_ATK_BLE.framework */; };
-		E17D99441EC04A680018AF52 /* RegisterController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E17D99431EC04A680018AF52 /* RegisterController.swift */; };
+		E1A979261F09DFAC0050431A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1A979181F09DFAC0050431A /* AppDelegate.swift */; };
+		E1A979271F09DFAC0050431A /* Items.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1A979191F09DFAC0050431A /* Items.swift */; };
+		E1A979281F09DFAC0050431A /* Lesson.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1A9791A1F09DFAC0050431A /* Lesson.swift */; };
+		E1A979291F09DFAC0050431A /* NowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1A9791B1F09DFAC0050431A /* NowController.swift */; };
+		E1A9792A1F09DFAC0050431A /* TimetableController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1A9791C1F09DFAC0050431A /* TimetableController.swift */; };
+		E1A9792B1F09DFAC0050431A /* HistoryController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1A9791D1F09DFAC0050431A /* HistoryController.swift */; };
+		E1A9792C1F09DFAC0050431A /* ChangePasswordController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1A9791E1F09DFAC0050431A /* ChangePasswordController.swift */; };
+		E1A9792D1F09DFAC0050431A /* LessonDetailController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1A9791F1F09DFAC0050431A /* LessonDetailController.swift */; };
+		E1A9792E1F09DFAC0050431A /* LoginController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1A979201F09DFAC0050431A /* LoginController.swift */; };
+		E1A9792F1F09DFAC0050431A /* MoreController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1A979211F09DFAC0050431A /* MoreController.swift */; };
+		E1A979301F09DFAC0050431A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E1A979221F09DFAC0050431A /* Assets.xcassets */; };
+		E1A979311F09DFAC0050431A /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E1A979231F09DFAC0050431A /* Main.storyboard */; };
+		E1A979321F09DFAC0050431A /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E1A979241F09DFAC0050431A /* LaunchScreen.storyboard */; };
+		E1A9793A1F09E2400050431A /* LessonCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1A979381F09E2400050431A /* LessonCell.swift */; };
+		E1A9793B1F09E2400050431A /* HistoryCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1A979391F09E2400050431A /* HistoryCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		2F04FDBD21813133A02CD771 /* Pods-ATK_BLE.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ATK_BLE.debug.xcconfig"; path = "Pods/Target Support Files/Pods-ATK_BLE/Pods-ATK_BLE.debug.xcconfig"; sourceTree = "<group>"; };
-		3815A2711E6CF1CF00301CE2 /* LessonCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LessonCell.swift; sourceTree = "<group>"; };
-		3815A2731E6D030F00301CE2 /* TableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TableViewCell.swift; sourceTree = "<group>"; };
-		3815A2771E6D405800301CE2 /* TodayController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TodayController.swift; sourceTree = "<group>"; };
-		3815A2791E6D609400301CE2 /* SettingController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingController.swift; sourceTree = "<group>"; };
-		382F77721E85122C005A4E1A /* ChangePassController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChangePassController.swift; sourceTree = "<group>"; };
-		3849C6DC1E6E93D300097B17 /* TabbarController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TabbarController.swift; sourceTree = "<group>"; };
-		386688CB1E7FC2FF00DFA4C7 /* TableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TableViewController.swift; sourceTree = "<group>"; };
-		386875C91E8B614100FB45C4 /* LessonDetailView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LessonDetailView.swift; sourceTree = "<group>"; };
-		386FEFF21E8CED1F00BD549C /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		38841AA01E690C0E004EF33D /* ATK_BLE.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ATK_BLE.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		38841AA31E690C0E004EF33D /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		38841AA51E690C0E004EF33D /* LoginController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginController.swift; sourceTree = "<group>"; };
-		38841AAA1E690C0E004EF33D /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		38841AAD1E690C0E004EF33D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		38841AAF1E690C0E004EF33D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		38851CDB1E6FF0ED001DC32C /* ATK_BLE-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "ATK_BLE-Bridging-Header.h"; sourceTree = "<group>"; };
-		38851CDC1E6FF0EE001DC32C /* BluetoothDevice.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BluetoothDevice.h; path = ATK_BLE/BluetoothDevice.h; sourceTree = "<group>"; };
-		38851CDD1E6FF0EE001DC32C /* BluetoothDeviceHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BluetoothDeviceHandler.h; path = ATK_BLE/BluetoothDeviceHandler.h; sourceTree = "<group>"; };
-		38851CDE1E6FF0EE001DC32C /* BluetoothDeviceHandler.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = BluetoothDeviceHandler.m; path = ATK_BLE/BluetoothDeviceHandler.m; sourceTree = "<group>"; };
-		38851CDF1E6FF0EE001DC32C /* BluetoothManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BluetoothManager.h; path = ATK_BLE/BluetoothManager.h; sourceTree = "<group>"; };
-		38851CE01E6FF0EE001DC32C /* BluetoothManagerHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BluetoothManagerHandler.h; path = ATK_BLE/BluetoothManagerHandler.h; sourceTree = "<group>"; };
-		38851CE11E6FF0EE001DC32C /* BluetoothManagerHandler.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = BluetoothManagerHandler.m; path = ATK_BLE/BluetoothManagerHandler.m; sourceTree = "<group>"; };
-		38DDE0CC1E8DFEE500C7AA81 /* HistoryView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HistoryView.swift; sourceTree = "<group>"; };
-		38DDE0CE1E8DFFAC00C7AA81 /* HistoryCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HistoryCell.swift; sourceTree = "<group>"; };
-		38E26DF51E691001003B009D /* ATKController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ATKController.swift; sourceTree = "<group>"; };
-		38E26DF71E6910A4003B009D /* Items.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Items.swift; sourceTree = "<group>"; };
-		38E26DF91E694E30003B009D /* Lesson.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Lesson.swift; sourceTree = "<group>"; };
-		38E26DFB1E69595C003B009D /* TimetableController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TimetableController.swift; sourceTree = "<group>"; };
 		8730CE69BF02DA57AF883CE4 /* Pods_ATK_BLE.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ATK_BLE.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		A480AF68145EB8C64A5ACCB4 /* Pods-ATK_BLE.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ATK_BLE.release.xcconfig"; path = "Pods/Target Support Files/Pods-ATK_BLE/Pods-ATK_BLE.release.xcconfig"; sourceTree = "<group>"; };
-		E17D99431EC04A680018AF52 /* RegisterController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RegisterController.swift; sourceTree = "<group>"; };
+		E1A979181F09DFAC0050431A /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		E1A979191F09DFAC0050431A /* Items.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Items.swift; sourceTree = "<group>"; };
+		E1A9791A1F09DFAC0050431A /* Lesson.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Lesson.swift; sourceTree = "<group>"; };
+		E1A9791B1F09DFAC0050431A /* NowController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NowController.swift; sourceTree = "<group>"; };
+		E1A9791C1F09DFAC0050431A /* TimetableController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TimetableController.swift; sourceTree = "<group>"; };
+		E1A9791D1F09DFAC0050431A /* HistoryController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HistoryController.swift; sourceTree = "<group>"; };
+		E1A9791E1F09DFAC0050431A /* ChangePasswordController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChangePasswordController.swift; sourceTree = "<group>"; };
+		E1A9791F1F09DFAC0050431A /* LessonDetailController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LessonDetailController.swift; sourceTree = "<group>"; };
+		E1A979201F09DFAC0050431A /* LoginController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginController.swift; sourceTree = "<group>"; };
+		E1A979211F09DFAC0050431A /* MoreController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MoreController.swift; sourceTree = "<group>"; };
+		E1A979221F09DFAC0050431A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		E1A979231F09DFAC0050431A /* Main.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Main.storyboard; sourceTree = "<group>"; };
+		E1A979241F09DFAC0050431A /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
+		E1A979351F09E1ED0050431A /* ATK_BLE-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "ATK_BLE-Bridging-Header.h"; sourceTree = "<group>"; };
+		E1A979381F09E2400050431A /* LessonCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LessonCell.swift; sourceTree = "<group>"; };
+		E1A979391F09E2400050431A /* HistoryCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HistoryCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -90,12 +72,11 @@
 		38841A971E690C0E004EF33D = {
 			isa = PBXGroup;
 			children = (
-				38851CE41E6FF0F3001DC32C /* Objective-C */,
+				E1A979351F09E1ED0050431A /* ATK_BLE-Bridging-Header.h */,
 				38841AA21E690C0E004EF33D /* ATK_BLE */,
 				38841AA11E690C0E004EF33D /* Products */,
 				C7EBCFCC2957C30BAF3A18D5 /* Pods */,
 				384D65599B2822FAEDA21118 /* Frameworks */,
-				38851CDB1E6FF0ED001DC32C /* ATK_BLE-Bridging-Header.h */,
 			);
 			sourceTree = "<group>";
 		};
@@ -110,42 +91,23 @@
 		38841AA21E690C0E004EF33D /* ATK_BLE */ = {
 			isa = PBXGroup;
 			children = (
-				38841AA31E690C0E004EF33D /* AppDelegate.swift */,
-				38E26DFB1E69595C003B009D /* TimetableController.swift */,
-				38E26DF71E6910A4003B009D /* Items.swift */,
-				3815A2731E6D030F00301CE2 /* TableViewCell.swift */,
-				382F77721E85122C005A4E1A /* ChangePassController.swift */,
-				386688CB1E7FC2FF00DFA4C7 /* TableViewController.swift */,
-				38E26DF91E694E30003B009D /* Lesson.swift */,
-				38DDE0CE1E8DFFAC00C7AA81 /* HistoryCell.swift */,
-				3815A2791E6D609400301CE2 /* SettingController.swift */,
-				38DDE0CC1E8DFEE500C7AA81 /* HistoryView.swift */,
-				386875C91E8B614100FB45C4 /* LessonDetailView.swift */,
-				3849C6DC1E6E93D300097B17 /* TabbarController.swift */,
-				3815A2711E6CF1CF00301CE2 /* LessonCell.swift */,
-				3815A2771E6D405800301CE2 /* TodayController.swift */,
-				38E26DF51E691001003B009D /* ATKController.swift */,
-				38841AA51E690C0E004EF33D /* LoginController.swift */,
-				38841AAA1E690C0E004EF33D /* Assets.xcassets */,
-				386FEFF11E8CED1F00BD549C /* Main.storyboard */,
-				38841AAC1E690C0E004EF33D /* LaunchScreen.storyboard */,
-				E17D99431EC04A680018AF52 /* RegisterController.swift */,
+				E1A9793C1F09E24A0050431A /* TableViewCell */,
+				E1A979181F09DFAC0050431A /* AppDelegate.swift */,
+				E1A979191F09DFAC0050431A /* Items.swift */,
+				E1A9791A1F09DFAC0050431A /* Lesson.swift */,
+				E1A9791B1F09DFAC0050431A /* NowController.swift */,
+				E1A9791C1F09DFAC0050431A /* TimetableController.swift */,
+				E1A9791D1F09DFAC0050431A /* HistoryController.swift */,
+				E1A9791E1F09DFAC0050431A /* ChangePasswordController.swift */,
+				E1A9791F1F09DFAC0050431A /* LessonDetailController.swift */,
+				E1A979201F09DFAC0050431A /* LoginController.swift */,
+				E1A979211F09DFAC0050431A /* MoreController.swift */,
+				E1A979221F09DFAC0050431A /* Assets.xcassets */,
+				E1A979231F09DFAC0050431A /* Main.storyboard */,
+				E1A979241F09DFAC0050431A /* LaunchScreen.storyboard */,
 				38841AAF1E690C0E004EF33D /* Info.plist */,
 			);
 			path = ATK_BLE;
-			sourceTree = "<group>";
-		};
-		38851CE41E6FF0F3001DC32C /* Objective-C */ = {
-			isa = PBXGroup;
-			children = (
-				38851CDC1E6FF0EE001DC32C /* BluetoothDevice.h */,
-				38851CDD1E6FF0EE001DC32C /* BluetoothDeviceHandler.h */,
-				38851CDE1E6FF0EE001DC32C /* BluetoothDeviceHandler.m */,
-				38851CDF1E6FF0EE001DC32C /* BluetoothManager.h */,
-				38851CE01E6FF0EE001DC32C /* BluetoothManagerHandler.h */,
-				38851CE11E6FF0EE001DC32C /* BluetoothManagerHandler.m */,
-			);
-			name = "Objective-C";
 			sourceTree = "<group>";
 		};
 		C7EBCFCC2957C30BAF3A18D5 /* Pods */ = {
@@ -155,6 +117,15 @@
 				A480AF68145EB8C64A5ACCB4 /* Pods-ATK_BLE.release.xcconfig */,
 			);
 			name = Pods;
+			sourceTree = "<group>";
+		};
+		E1A9793C1F09E24A0050431A /* TableViewCell */ = {
+			isa = PBXGroup;
+			children = (
+				E1A979381F09E2400050431A /* LessonCell.swift */,
+				E1A979391F09E2400050431A /* HistoryCell.swift */,
+			);
+			name = TableViewCell;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -226,9 +197,9 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				386FEFF31E8CED1F00BD549C /* Main.storyboard in Resources */,
-				38841AAE1E690C0E004EF33D /* LaunchScreen.storyboard in Resources */,
-				38841AAB1E690C0E004EF33D /* Assets.xcassets in Resources */,
+				E1A979311F09DFAC0050431A /* Main.storyboard in Resources */,
+				E1A979321F09DFAC0050431A /* LaunchScreen.storyboard in Resources */,
+				E1A979301F09DFAC0050431A /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -287,48 +258,22 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				38E26DFA1E694E30003B009D /* Lesson.swift in Sources */,
-				386688CC1E7FC2FF00DFA4C7 /* TableViewController.swift in Sources */,
-				3849C6DD1E6E93D300097B17 /* TabbarController.swift in Sources */,
-				386875CA1E8B614100FB45C4 /* LessonDetailView.swift in Sources */,
-				38E26DF81E6910A4003B009D /* Items.swift in Sources */,
-				38851CE21E6FF0EE001DC32C /* BluetoothDeviceHandler.m in Sources */,
-				3815A2741E6D030F00301CE2 /* TableViewCell.swift in Sources */,
-				38841AA61E690C0E004EF33D /* LoginController.swift in Sources */,
-				38841AA41E690C0E004EF33D /* AppDelegate.swift in Sources */,
-				38E26DF61E691001003B009D /* ATKController.swift in Sources */,
-				E17D99441EC04A680018AF52 /* RegisterController.swift in Sources */,
-				38E26DFC1E69595C003B009D /* TimetableController.swift in Sources */,
-				3815A27A1E6D609400301CE2 /* SettingController.swift in Sources */,
-				38DDE0CF1E8DFFAC00C7AA81 /* HistoryCell.swift in Sources */,
-				38851CE31E6FF0EE001DC32C /* BluetoothManagerHandler.m in Sources */,
-				3815A2721E6CF1CF00301CE2 /* LessonCell.swift in Sources */,
-				3815A2781E6D405800301CE2 /* TodayController.swift in Sources */,
-				38DDE0CD1E8DFEE500C7AA81 /* HistoryView.swift in Sources */,
-				382F77731E85122C005A4E1A /* ChangePassController.swift in Sources */,
+				E1A9792F1F09DFAC0050431A /* MoreController.swift in Sources */,
+				E1A979281F09DFAC0050431A /* Lesson.swift in Sources */,
+				E1A979271F09DFAC0050431A /* Items.swift in Sources */,
+				E1A9792D1F09DFAC0050431A /* LessonDetailController.swift in Sources */,
+				E1A9792A1F09DFAC0050431A /* TimetableController.swift in Sources */,
+				E1A9793A1F09E2400050431A /* LessonCell.swift in Sources */,
+				E1A9793B1F09E2400050431A /* HistoryCell.swift in Sources */,
+				E1A9792E1F09DFAC0050431A /* LoginController.swift in Sources */,
+				E1A979291F09DFAC0050431A /* NowController.swift in Sources */,
+				E1A9792C1F09DFAC0050431A /* ChangePasswordController.swift in Sources */,
+				E1A9792B1F09DFAC0050431A /* HistoryController.swift in Sources */,
+				E1A979261F09DFAC0050431A /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
-
-/* Begin PBXVariantGroup section */
-		386FEFF11E8CED1F00BD549C /* Main.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				386FEFF21E8CED1F00BD549C /* Base */,
-			);
-			name = Main.storyboard;
-			sourceTree = "<group>";
-		};
-		38841AAC1E690C0E004EF33D /* LaunchScreen.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				38841AAD1E690C0E004EF33D /* Base */,
-			);
-			name = LaunchScreen.storyboard;
-			sourceTree = "<group>";
-		};
-/* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
 		38841AB01E690C0E004EF33D /* Debug */ = {

@@ -1,395 +1,342 @@
 //
 //  LoginController.swift
-//  ATK_BLE
+//  Attandence Taking System
 //
-//  Created by xuhelios on 3/3/17.
-//  Copyright © 2017 beacon. All rights reserved.
+//  Created by KyawLin on 5/21/17.
+//  Copyright © 2017 KyawLin. All rights reserved.
 //
 
 import UIKit
-
 import Alamofire
+import UserNotifications
 
-class LoginController: UIViewController{
-    
+class LoginController: UIViewController {
 
-    @IBOutlet weak var usernameTextField: UITextField!
-    @IBOutlet weak var passTextField: UITextField!
+    @IBOutlet weak var usernameTxt: UITextField!
+    @IBOutlet weak var passwordTxt: UITextField!
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.hideKeyboardWhenTappedAround()
-        
-        
-        
-        
-        // Do any additional setup after loading the view, typically from a nib.
+        hideKeyboardWhenTappedAround()
+        /*if (UserDefaults.standard.value(forKey: "username") != nil){
+            loadData()
+            DispatchQueue.main.async {
+                self.performSegue(withIdentifier: "sign in", sender: nil)
+            }
+        }*/
+
+        // Do any additional setup after loading the view.
     }
-    
+
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
     
-    @IBAction func LoginButtonTapped(_ sender: Any) {
-
+    @IBAction func LoginPressed(_ sender: UIButton) {
         
-        if ((usernameTextField.text == "") || (passTextField.text == "")) {
+        if usernameTxt.text == "" || passwordTxt.text == ""{
             
-            displayMyAlertMessage(title: "Alert",mess: "All fields are required")
-    
+            displayAlert(title: "Missing infomations", message: "Both username and password are required")
+            
         }else{
-            
-        
-            login()
-        //   setupData()
-           
-        
+                self.login()
         }
-     
+        
     }
     
-    
-    func loadAbc() {
-        Alamofire.request("http://api.apixu.com/v1/current.json?key=3bf1a27308204a7a94e90405161911&q=Paris").responseJSON { response in
-            guard (response.result.value as? [String: AnyObject]) != nil else {
-                print("Parse error")
-                return
-            }
-//            let json = JSON(responseJSON)
-//            let location = json["location"]
-//            let name = location["name"].stringValue
-//            let region = location["region"].stringValue
-//            NSLog("\(name) +   \(region)"  )
-            
-        }
-    }
-
-    func login(){
-       let thisdevice = UIDevice.current.identifierForVendor?.uuidString
-        let parameters: [String: Any] =
-            [
-                "username": usernameTextField.text! ,
-                "password": passTextField.text!,
-                "device_hash": thisdevice!
-                
-                //"id" = "4"
-                
+    private func login(){
+        let this_device = UIDevice.current.identifierForVendor?.uuidString
+        let parameters:[String:Any] = [
+            "username" : usernameTxt.text!,
+            "password" : passwordTxt.text!,
+            "device_hash" : this_device!
         ]
         
-        let alertController = UIAlertController(title: nil, message: "Please wait...\n\n", preferredStyle: UIAlertControllerStyle.alert)
-        let spinnerIndicator: UIActivityIndicatorView = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.whiteLarge)
-        spinnerIndicator.center = CGPoint(x: 135.0, y: 65.5)
+        //Set up SpinnerView
+        let alertController = UIAlertController(title: "Loging in", message: "Please wait...\n\n", preferredStyle: .alert)
+        let spinnerIndicator = UIActivityIndicatorView(activityIndicatorStyle: .whiteLarge)
+        spinnerIndicator.center = CGPoint(x: 135.0, y: 80.0)
         spinnerIndicator.color = UIColor.black
         spinnerIndicator.startAnimating()
         alertController.view.addSubview(spinnerIndicator)
         self.present(alertController, animated: false, completion: nil)
         
-       
-
-        Alamofire.request(Constant.URLstudentlogin, method: .post, parameters: parameters, encoding: JSONEncoding.default, headers: nil).responseJSON { (response:DataResponse) in
+        //Use the api to login
+        Alamofire.request(Constant.URLstudentlogin, method: .post, parameters: parameters, encoding: JSONEncoding.default, headers: nil).responseJSON(completionHandler: { (response:DataResponse) in
+            
+            //Check the status code return from the api
             let code = response.response?.statusCode
-            if (code == 200){
- 
-                UserDefaults.standard.set(self.usernameTextField.text, forKey: "username")
-                UserDefaults.standard.set(self.passTextField.text, forKey: "password")
-                Constant.password = self.passTextField.text!
-                Constant.username = self.usernameTextField.text!
+            if code == 200{
                 
-                let thisdevice = UIDevice.current.identifierForVendor?.uuidString
+                UserDefaults.standard.set(self.usernameTxt.text, forKey: "username")
+                UserDefaults.standard.set(self.passwordTxt.text, forKey: "password")
+                Constant.password = self.passwordTxt.text!
+                Constant.username = self.usernameTxt.text!
                 
-                /*if let data = response.result.value{
-                   print(data)
-                }*/
-                
+                //retrieve JSON data
                 if let JSON = response.result.value as? [String: AnyObject]{
                     
-                    
                     Constant.name = JSON["name"] as! String
-                    
                     Constant.token = JSON["token"] as! String
                     UserDefaults.standard.set(Constant.token, forKey: "token")
-                    
-                    Constant.student_id = JSON["id"] as! Int
+                    Constant.student_id = JSON[ "id"] as! Int
                     Constant.major = JSON["major"] as! Int
                     Constant.minor = JSON["minor"] as! Int
-                    
                     Constant.device_hash = JSON["device_hash"] as! String
                     
-                    if (Constant.device_hash != thisdevice){
-                        
+                    //Check if the device is new
+                    if Constant.device_hash != this_device{
                         Constant.change_device = true
-                        
                     }
-                
-                    self.loadAllClassmate()
+                    self.setupData()
                     UserDefaults.standard.set(Constant.major, forKey: "major")
                     UserDefaults.standard.set(Constant.minor, forKey: "minor")
-                    UserDefaults.standard.set(Constant.username, forKey: "username")
                     UserDefaults.standard.set(Constant.name, forKey: "name")
                     UserDefaults.standard.set(Constant.student_id, forKey: "student_id")
-                    
-                    
-                    
                 }
-            } else {
-                
-                alertController.dismiss(animated: true, completion: nil)
-                self.displayMyAlertMessage(title: "LOGIN FAILED",mess: "Username or password is invalid!! ")
-                
+            }else{
+                alertController.dismiss(animated: false, completion: nil)
+                self.displayAlert(title: "LOGIN FAILED", message: "Username or password incorrect!")
             }
-            
-            
-        }
-        
-        
-        
+        })
+
     }
     
-    
-    func setupData(){
+    private func setupData(){
         
-        //let today = Date()
-        
-        //let myCalendar = NSCalendar(calendarIdentifier: NSCalendar.Identifier.gregorian)!
-        //let myComponents = myCalendar.components(.weekday, from: today)
-      
-        
-        let headers: HTTPHeaders = [
-            "Authorization": "Bearer " + Constant.token
-            // "Accept": "application/json"
+        //Load all classmates
+        let token = UserDefaults.standard.string(forKey: "token")
+        //Load timetable, lecturer and lesson...
+        let headersTimetable:HTTPHeaders = [
+            "Authorization" : "Bearer " + token!
         ]
-    
-        Alamofire.request(Constant.URLtimetable, method: .get, parameters: nil, encoding: JSONEncoding.default, headers: headers).responseJSON { (response:DataResponse) in
-            print("load setup success")
+        
+        Alamofire.request(Constant.URLtimetable, method: .get, parameters: nil, encoding: JSONEncoding.default, headers: headersTimetable).responseJSON { (response:DataResponse) in
             if let JSON = response.result.value as? [AnyObject]{
                 
                 GlobalData.timetable.removeAll()
                 
-                for json in JSON {
-                    
+                for json in JSON{
                     let newLesson = Lesson()
                     
-                    if let lesson = json["lesson"] as? [String: Any]{
-                        
-                        newLesson.lesson_id = (lesson["id"] as? Int)!
-                        newLesson.catalog = (lesson["catalog_number"] as? String)!
-                        newLesson.subject = (lesson["subject_area"] as? String)!
-                        newLesson.start_time = (lesson["start_time"] as? String)!
-                        newLesson.end_time = (lesson["end_time"] as? String)!
-                        newLesson.weekday = (lesson["weekday"] as? String)!
+                    if let lesson = json["lesson"] as? [String:Any]{
+                        newLesson.lesson_id = lesson["id"] as? Int
+                        newLesson.catalog = lesson["catalog_number"] as? String
+                        newLesson.subject = lesson["subject_area"] as? String
+                        newLesson.start_time = lesson["start_time"] as? String
+                        newLesson.end_time = lesson["end_time"] as? String
+                        newLesson.weekday = lesson["weekday"] as? String
+                        newLesson.class_section = lesson["class_section"] as? String
                     }
                     
-                    if let lecturer = json["lecturers"] as? [String: Any]{
-           
-                        newLesson.lecturer = (lecturer["name"] as? String)!
-                        newLesson.acad = (lecturer["acad"] as? String)!
-                        newLesson.email = (lecturer["email"] as? String)!
-                     //   print(newLesson.lecturer)
-                    }
-
-                    
-                    if let lesson_date = json["lesson_date"] as? [String: Any]{
+                    if let lecturer = json["lecturers"] as? [String:Any]{
                         
-                        newLesson.ldateid = (lesson_date["id"] as? Int)!
-                        newLesson.ldate = (lesson_date["ldate"] as? String)!
-                        
+                        newLesson.lecturer = lecturer["name"] as? String
+                        newLesson.lecAcad = lecturer["acad"] as? String
+                        newLesson.lecEmail = lecturer["email"] as? String
+                        newLesson.lecOffice = lecturer["office"] as? String
+                        newLesson.lecPhone = lecturer["phone"] as? String
                     }
                     
-                    if let venue = json["venue"] as? [String: Any]{
+                    if let lesson_date = json["lesson_date"] as? [String:Any]{
                         
-                        newLesson.major = (venue["major"] as? Int32)!
-                        newLesson.minor = (venue["minor"] as? Int32)!
-                        newLesson.venueName = (venue["name"] as? String)!
-                        newLesson.location = (venue["location"] as? String)!
-                        
+                        newLesson.ldateid = lesson_date["id"] as? Int
+                        GlobalData.attendance.append((lesson_date["id"] as? Int)!)
+                        newLesson.ldate = lesson_date["ldate"] as? String
                     }
-                        
-                        
-//                        newLesson.photo = (json["image_path"] as? String)!
-//                        newLesson.remark = (json["remark"] as? String)!
-//                        newLesson.nric = (json["nric"] as? String)!
-//                        newLesson.dob = (json["dob"] as? String)!
                     
-
-                    
+                    if let venue = json["venue"] as? [String:Any]{
+                        
+                        newLesson.major = venue["major"] as? Int32
+                        newLesson.minor = venue["minor"] as? Int32
+                        newLesson.venueName = venue["name"] as? String
+                        newLesson.location = venue["location"] as? String
+                    }
                     GlobalData.timetable.append(newLesson)
-                    
-                    
                 }
+                //Write timetable to the local directory
+                NSKeyedArchiver.archiveRootObject(GlobalData.timetable, toFile: filePath.timetablePath)
                 
-                
-                print("*****TIMETABLE*****")
-               
-                let localdata = "timetable.txt"
-                
-                if let dir = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first {
-                    
-                    let filePath = dir.appendingPathComponent(localdata)
-                    let str = ""
-                    
-                    do {
-                        try str.write(to: filePath, atomically: true, encoding: String.Encoding.utf8)
-                    } catch {
-                        
+                print("Done loading timetable")
+                self.performSegue(withIdentifier: "sign in", sender: nil)
+                DispatchQueue.global().async {
+                    self.loadUUID()
+                    self.loadClassmate()
+                    self.loadHistory()
+                }
+                /*DispatchQueue.main.async {
+                    OperationQueue.main.addOperation {
+                        self.performSegue(withIdentifier: "sign in", sender: nil)
+                        self.loadUUID()
+                        self.loadClassmate()
                     }
-
-                    NSKeyedArchiver.archiveRootObject(GlobalData.timetable, toFile: filePath.path)
-                    
-                }
-                self.loadUUID()
-                
+                }*/
             }
-
-      
-            }
-      
+            
+        }
     }
     
-    func loadAllClassmate(){
+    private func loadClassmate(){
         
         let token = UserDefaults.standard.string(forKey: "token")
-        
         let headers: HTTPHeaders = [
             "Authorization": "Bearer " + token!,
-            "Content-Type": "application/json"
+            "Content-Type" : "application/json"
         ]
         
-        let parameters: [String: Any] =
-            [
-                "student_id": Constant.student_id
+        let parameters: [String: Any] = [
+            "student_id":Constant.student_id
         ]
-        
         
         Alamofire.request(Constant.URLallClassmate, method: .post, parameters: parameters, encoding: JSONEncoding.default, headers: headers).responseJSON { (response:DataResponse) in
-            print("load classmate success")
-            if let JSON = response.result.value as? [[String:AnyObject]]{
+            print("start load clssmates")
+            if let JSON = response.result.value as? [[String: AnyObject]]{
+                
                 GlobalData.classmates.removeAll()
                 for json in JSON{
                     let classmates = Classmate()
-                    classmates.lesson_id = json["lesson_id"] as? Int!
+                    classmates.lesson_id = json["lesson_id"] as? Int
                     classmates.major = [Int]()
-                    classmates.student_id = [Int]()
                     classmates.minor = [Int]()
+                    classmates.student_id = [Int]()
                     
                     if let list = json["students"] as? [[String:AnyObject]]{
                         for x in list{
-                            let newId = x["id"] as? Int!
-                            if (newId != Constant.student_id){
-                                classmates.student_id?.append(newId!)
-                                //print(x["beacon_user"])
+                            let newId = x["id"] as! Int
+                            if newId != Constant.student_id{
+                                classmates.student_id?.append(newId)
                                 if let y = x["beacon_user"] as? [String:AnyObject]{
-                                   // print(y)
-                                    let newmajor = y["major"] as? Int!
-                                    classmates.major?.append(newmajor!)
-                                    let newminor = y["minor"] as? Int!
-                                    classmates.minor?.append(newminor!)
+                                    let newmajor = y["major"] as! Int
+                                    classmates.major?.append(newmajor)
+                                    let newminor = y["minor"] as! Int
+                                    classmates.minor?.append(newminor)
                                 }
                             }
                         }
                     }
                     
                     GlobalData.classmates.append(classmates)
-                    
                 }
+                //Write classmates to local directory
+                NSKeyedArchiver.archiveRootObject(GlobalData.classmates, toFile: filePath.classmatePath)
                 
-                let localdata = "classmate.json"
-                
-                if let dir = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first {
-                    
-                    let filePath = dir.appendingPathComponent(localdata)
-                    
-                    let str = ""
-                    
-                    do {
-                        try str.write(to: filePath, atomically: true, encoding: String.Encoding.utf8)
-                    } catch {
-                        
-                    }
-                    
-                    // write to file
-                    NSKeyedArchiver.archiveRootObject(GlobalData.classmates, toFile: filePath.path)
-                    
-                    
-                }
-                
-                print("load all classmate ")
-                 self.setupData()
-                
+                print("Done loading classmates")
                 
             }else{
-                print("all classmate parser error")
+                print("load classmates parser error")
             }
         }
+
+        
     }
     
-    func loadUUID(){
-
+    private func loadUUID(){
+        //Load UUID
         let token = UserDefaults.standard.string(forKey: "token")
-        
-        let headers: HTTPHeaders = [
-            "Authorization": "Bearer " + token!
-            // "Accept": "application/json"
+        let headers:HTTPHeaders = [
+            "Authorization" : "Bearer " + token!
         ]
         
-        Alamofire.request(Constant.URLlessonUUID, method: .get, parameters: nil, encoding: JSONEncoding.default, headers: headers).responseJSON { (response:DataResponse) in
+        Alamofire.request(Constant.URLlessonUUID, method: .get, parameters: nil, encoding: JSONEncoding.default, headers: headers).responseJSON(completionHandler: { (response:DataResponse) in
             
             if let JSON = response.result.value as? [[String:AnyObject]]{
                 
-                var dict = [Int:String]()
+                var  dict = [Int:String]()
                 for json in JSON{
-                    let id = (json["lesson_id"] as? Int)!
-                    let uuid = (json["uuid"] as? String)!
+                    let id = json["lesson_id"] as! Int
+                    let uuid = json["uuid"] as! String
                     dict.updateValue(uuid, forKey: id)
                 }
                 GlobalData.lessonUUID = dict
-                
-                let localdata = "lessonUUID.json" //this is the file. we will write to and read from it
-                
-                
-                if let dir = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first {
-                    
-                    let filePath = dir.appendingPathComponent(localdata)
-                    
-                    // write to file
-                    NSKeyedArchiver.archiveRootObject(GlobalData.lessonUUID, toFile: filePath.path)
-                    
-                    
+                NSKeyedArchiver.archiveRootObject(GlobalData.lessonUUID, toFile: filePath.lessonuuidPath)
+            }
+            
+        })
+        //Load Attendance
+        /*Alamofire.request(Constant.URLattendance, method: .get, parameters: nil, encoding: JSONEncoding.default, headers: headers).responseJSON(completionHandler: { (response:DataResponse) in
+            if let JSON = response.result.value as? [[String:Any]]{
+                for json in JSON{
+                    let id = json["lesson_date_id"] as! Int
+                    GlobalData.attendance.append(id)
                 }
+            }
+        })*/
+        print("Done setup data")
+    }
+    
+    private func loadHistory(){
+        
+        let token = UserDefaults.standard.string(forKey: "token")!
+        let headers:HTTPHeaders = [
+            "Authorization" : "Bearer " + token
+        ]
+        
+        Alamofire.request(Constant.URLhistory, method: .get, parameters: nil, encoding: JSONEncoding.default, headers: headers).responseJSON { (response:DataResponse) in
+            
+            if let JSON = response.result.value as? [AnyObject]{
                 
-                print("load uuid success")
-                DispatchQueue.main.async(execute: {
-                    //alertController.dismiss(animated: true, completion: nil)
-                    OperationQueue.main.addOperation {
-                        self.performSegue(withIdentifier: "loginSegue", sender: nil)
-                        self.loadattendance()
-                        
-                        
-                    }
-                })
+                for json in JSON{
+                    let newHistory = History()
+                    newHistory.name = json["lesson_name"] as? String
+                    newHistory.absent = json["absented"] as? Int
+                    newHistory.present = json["presented"] as? Int
+                    newHistory.total = json["total"] as? Int
+                    newHistory.late = json["late"] as? Int
+                    GlobalData.history.append(newHistory)
+                }
+                NSKeyedArchiver.archiveRootObject(GlobalData.history, toFile: filePath.historyPath)
+                print("Done writing file")
+            }
+            
+        }
+        
+    }
+    
+    
+    /*
+    // MARK: - Navigation
+
+    // In a storyboard-based application, you will often want to do a little preparation before navigation
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        // Get the new view controller using segue.destinationViewController.
+        // Pass the selected object to the new view controller.
+    }
+    */
+
+}
+extension UIViewController {
+    
+    func hideKeyboardWhenTappedAround() {
+        let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(UIViewController.dismissKeyboard))
+        view.addGestureRecognizer(tap)
+    }
+    
+    func dismissKeyboard() {
+        view.endEditing(true)
+    }
+    
+    func notiContent(title: String, body: String) -> UNMutableNotificationContent {
+        let content = UNMutableNotificationContent()
+        content.title = title
+        content.body = body
+        return content
+    }
+    func addNotification(trigger: UNNotificationTrigger?, content:UNMutableNotificationContent, identifier: String) {
+        let request = UNNotificationRequest(identifier: identifier, content: content, trigger: trigger)
+        UNUserNotificationCenter.current().add(request) {
+            (error) in
+            if error != nil {
+                print("error adding notigicaion: \(error!.localizedDescription)")
             }
         }
     }
-    
-
-    func loadattendance(){
-        print("load att ")
-        let headers: HTTPHeaders = [
-            "Authorization": "Bearer " + Constant.token
-            // "Accept": "application/json"
-        ]
+    func displayAlert(title:String,message:String){
         
-        Alamofire.request(Constant.URLattendance, method: .get, parameters: nil, encoding: JSONEncoding.default, headers: headers).responseJSON { (response:DataResponse) in
-            
-            if let JSON = response.result.value as? [[String:Any]]{
-                for json in JSON{
-                   let id = (json["lesson_date_id"] as? Int)!
-                   GlobalData.attendance.append(id)
-                }
-            }
-             print("load atk success")
-        }
+        let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        alertController.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+        self.present(alertController, animated: true, completion: nil)
+        
     }
     
 }
-

@@ -13,6 +13,7 @@ import Foundation
 struct Constant{
     static let baseURL = "http://188.166.247.154/atk-ble/"
     // static let URLlogin = baseURL + "api/web/index.php/v1/user/login"
+    static let URLlogout = baseURL + "api/web/index.php/v1/user/logout"
     static let URLstudentlogin = baseURL + "api/web/index.php/v1/student/login"
     static let URLtimetable = baseURL + "api/web/index.php/v1/timetable?expand=lesson,lesson_date,lecturers,venue"
     static let URLlessonUUID = baseURL + "api/web/index.php/v1/beacon-lesson/uuid"
@@ -46,7 +47,6 @@ struct Constant{
     static var isLogin = false
     static var device_hash = ""
     static var change_device = false
-    
     
 }
 
