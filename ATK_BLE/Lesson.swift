@@ -117,7 +117,7 @@ class Venue{
     var minor:Int32 = 0
 }
 
-class History: NSObject, NSCoding{
+class HistoryOA: NSObject, NSCoding{
     
     var name: String?
     var total: Int?
@@ -134,11 +134,11 @@ class History: NSObject, NSCoding{
     }
     
     required init(coder aDecoder: NSCoder) {
-        name = aDecoder.decodeObject(forKey: "name") as? String
-        total = aDecoder.decodeObject(forKey: "total") as? Int
-        absent = aDecoder.decodeObject(forKey: "absent") as? Int
-        present = aDecoder.decodeObject(forKey: "present") as? Int
-        late = aDecoder.decodeObject(forKey: "late") as? Int
+        name = aDecoder.decodeObject(forKey: "name") as! String?
+        total = aDecoder.decodeObject(forKey: "total") as! Int?
+        absent = aDecoder.decodeObject(forKey: "absent") as! Int?
+        present = aDecoder.decodeObject(forKey: "present") as! Int?
+        late = aDecoder.decodeObject(forKey: "late") as! Int?
     }
     
     func encode(with aCoder: NSCoder) {
@@ -150,16 +150,57 @@ class History: NSObject, NSCoding{
     }
 }
 
+class HistoryDT: NSObject, NSCoding{
+    
+    var lesson_date_id: Int?
+    var lecturer_id: Int?
+    var status: Int?
+    var lesson_id: Int?
+    var ldate: String?
+    //var updated_by: Int?
+    var created_at: String?
+    
+    override init() {
+        lesson_date_id = 0
+        lecturer_id = 0
+        status = 0
+        lesson_id = 0
+        ldate = ""
+        //updated_by = 0
+        created_at = ""
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        lesson_date_id = aDecoder.decodeObject(forKey: "lesson_date_id") as! Int?
+        lecturer_id = aDecoder.decodeObject(forKey: "lecturer_id") as! Int?
+        status = aDecoder.decodeObject(forKey: "status") as! Int?
+        lesson_id = aDecoder.decodeObject(forKey: "lesson_id") as! Int?
+        ldate = aDecoder.decodeObject(forKey: "ldate") as! String?
+        //updated_by = aDecoder.decodeObject(forKey: "update_by") as! Int?
+        created_at = aDecoder.decodeObject(forKey: "created_at") as! String?
+    }
+    
+    func encode(with aCoder: NSCoder) {
+        aCoder.encode(lesson_date_id, forKey: "lesson_date_id")
+        aCoder.encode(lecturer_id, forKey: "lecturer_id")
+        aCoder.encode(status, forKey: "status")
+        aCoder.encode(lesson_id, forKey: "lesson_id")
+        aCoder.encode(ldate, forKey: "ldate")
+        //aCoder.encode(updated_by, forKey: "updated_by")
+        aCoder.encode(created_at, forKey: "created_at")
+    }
+}
+
 class Classmate: NSObject, NSCoding{
     
     var lesson_id:Int?
-    var student_id:[Int]?
+    var id:[Int]?
     var major:[Int]?
     var minor:[Int]?
     
     override init(){
         lesson_id = 0
-        student_id = []
+        id = []
         major = []
         minor = []
     }
@@ -167,7 +208,7 @@ class Classmate: NSObject, NSCoding{
     required init?(coder aDecoder: NSCoder) {
         
         lesson_id = aDecoder.decodeObject(forKey: "lesson_id") as? Int
-        student_id = aDecoder.decodeObject(forKey: "student_id") as? [Int]
+        id = aDecoder.decodeObject(forKey: "id") as? [Int]
         major = aDecoder.decodeObject(forKey: "major") as? [Int]
         minor = aDecoder.decodeObject(forKey: "minor") as? [Int]
         
@@ -176,7 +217,7 @@ class Classmate: NSObject, NSCoding{
     func encode(with aCoder: NSCoder) {
         
         aCoder.encode(lesson_id, forKey: "lesson_id")
-        aCoder.encode(student_id, forKey: "student_id")
+        aCoder.encode(id, forKey: "id")
         aCoder.encode(major, forKey: "major")
         aCoder.encode(minor, forKey: "minor")
         

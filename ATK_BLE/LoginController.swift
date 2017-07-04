@@ -80,7 +80,7 @@ class LoginController: UIViewController {
                     Constant.name = JSON["name"] as! String
                     Constant.token = JSON["token"] as! String
                     UserDefaults.standard.set(Constant.token, forKey: "token")
-                    Constant.student_id = JSON[ "id"] as! Int
+                    Constant.id = JSON[ "id"] as! Int
                     Constant.major = JSON["major"] as! Int
                     Constant.minor = JSON["minor"] as! Int
                     Constant.device_hash = JSON["device_hash"] as! String
@@ -93,7 +93,7 @@ class LoginController: UIViewController {
                     UserDefaults.standard.set(Constant.major, forKey: "major")
                     UserDefaults.standard.set(Constant.minor, forKey: "minor")
                     UserDefaults.standard.set(Constant.name, forKey: "name")
-                    UserDefaults.standard.set(Constant.student_id, forKey: "student_id")
+                    UserDefaults.standard.set(Constant.id, forKey: "student_id")
                 }
             }else{
                 alertController.dismiss(animated: false, completion: nil)
@@ -142,7 +142,6 @@ class LoginController: UIViewController {
                     if let lesson_date = json["lesson_date"] as? [String:Any]{
                         
                         newLesson.ldateid = lesson_date["id"] as? Int
-                        GlobalData.attendance.append((lesson_date["id"] as? Int)!)
                         newLesson.ldate = lesson_date["ldate"] as? String
                     }
                     
@@ -165,13 +164,6 @@ class LoginController: UIViewController {
                     self.loadClassmate()
                     self.loadHistory()
                 }
-                /*DispatchQueue.main.async {
-                    OperationQueue.main.addOperation {
-                        self.performSegue(withIdentifier: "sign in", sender: nil)
-                        self.loadUUID()
-                        self.loadClassmate()
-                    }
-                }*/
             }
             
         }
@@ -186,7 +178,7 @@ class LoginController: UIViewController {
         ]
         
         let parameters: [String: Any] = [
-            "student_id":Constant.student_id
+            "student_id":Constant.id
         ]
         
         Alamofire.request(Constant.URLallClassmate, method: .post, parameters: parameters, encoding: JSONEncoding.default, headers: headers).responseJSON { (response:DataResponse) in
@@ -199,13 +191,13 @@ class LoginController: UIViewController {
                     classmates.lesson_id = json["lesson_id"] as? Int
                     classmates.major = [Int]()
                     classmates.minor = [Int]()
-                    classmates.student_id = [Int]()
+                    classmates.id = [Int]()
                     
                     if let list = json["students"] as? [[String:AnyObject]]{
                         for x in list{
                             let newId = x["id"] as! Int
-                            if newId != Constant.student_id{
-                                classmates.student_id?.append(newId)
+                            if newId != Constant.id{
+                                classmates.id?.append(newId)
                                 if let y = x["beacon_user"] as? [String:AnyObject]{
                                     let newmajor = y["major"] as! Int
                                     classmates.major?.append(newmajor)
@@ -254,14 +246,25 @@ class LoginController: UIViewController {
             
         })
         //Load Attendance
-        /*Alamofire.request(Constant.URLattendance, method: .get, parameters: nil, encoding: JSONEncoding.default, headers: headers).responseJSON(completionHandler: { (response:DataResponse) in
+        Alamofire.request(Constant.URLattendance, method: .get, parameters: nil, encoding: JSONEncoding.default, headers: headers).responseJSON(completionHandler: { (response:DataResponse) in
             if let JSON = response.result.value as? [[String:Any]]{
+                GlobalData.attendance.removeAll()
                 for json in JSON{
-                    let id = json["lesson_date_id"] as! Int
-                    GlobalData.attendance.append(id)
+                    let history = HistoryDT()
+                    history.lesson_date_id = json["lesson_date_id"] as? Int
+                    history.lecturer_id = json["lecturer_id"] as? Int
+                    history.status = json["status"] as? Int
+                    let time = Format.Format(date: Format.Format(string: (json["created_at"] as? String)!, format: "yyyy-MM-dd HH:mm:ss"), format: "HH:mm")
+                    let lesson = (json["lesson_date"] as? [String:AnyObject])!
+                    history.lesson_id = lesson["lesson_id"] as? Int
+                    history.ldate = lesson["ldate"] as? String
+                    //history.updated_by = lesson["updated_by"] as? Int
+                    history.created_at = time
+                    GlobalData.attendance.append(history)
                 }
+                NSKeyedArchiver.archiveRootObject(GlobalData.attendance, toFile: filePath.historyDTPath)
             }
-        })*/
+        })
         print("Done setup data")
     }
     
@@ -271,13 +274,11 @@ class LoginController: UIViewController {
         let headers:HTTPHeaders = [
             "Authorization" : "Bearer " + token
         ]
-        
         Alamofire.request(Constant.URLhistory, method: .get, parameters: nil, encoding: JSONEncoding.default, headers: headers).responseJSON { (response:DataResponse) in
-            
+            GlobalData.history.removeAll()
             if let JSON = response.result.value as? [AnyObject]{
-                
                 for json in JSON{
-                    let newHistory = History()
+                    let newHistory = HistoryOA()
                     newHistory.name = json["lesson_name"] as? String
                     newHistory.absent = json["absented"] as? Int
                     newHistory.present = json["presented"] as? Int
@@ -286,7 +287,6 @@ class LoginController: UIViewController {
                     GlobalData.history.append(newHistory)
                 }
                 NSKeyedArchiver.archiveRootObject(GlobalData.history, toFile: filePath.historyPath)
-                print("Done writing file")
             }
             
         }

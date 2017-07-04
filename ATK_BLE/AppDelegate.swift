@@ -147,8 +147,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
         if let lessonuuid = NSKeyedUnarchiver.unarchiveObject(withFile: filePath.lessonuuidPath) as? [Int : String]{
             GlobalData.lessonUUID = lessonuuid
         }
-        if let history = NSKeyedUnarchiver.unarchiveObject(withFile: filePath.historyPath) as? [History]{
+        if let history = NSKeyedUnarchiver.unarchiveObject(withFile: filePath.historyPath) as? [HistoryOA]{
             GlobalData.history = history
+        }
+        
+        if let historyDT = NSKeyedUnarchiver.unarchiveObject(withFile: filePath.historyDTPath) as? [HistoryDT]{
+            GlobalData.attendance = historyDT
         }
         
     }
@@ -176,6 +180,11 @@ struct filePath{
         let manager = FileManager.default
         let url = manager.urls(for: .documentDirectory, in: .userDomainMask).first
         return url!.appendingPathComponent("history").path
+    }
+    static var historyDTPath: String{
+        let manager = FileManager.default
+        let url = manager.urls(for: .documentDirectory, in: .userDomainMask).first
+        return url!.appendingPathComponent("historyDT").path
     }
 }
 

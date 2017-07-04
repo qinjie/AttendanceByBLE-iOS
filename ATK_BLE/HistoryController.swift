@@ -10,6 +10,19 @@ import UIKit
 
 class HistoryController: UITableViewController {
 
+    let wday = ["Monday", "Tuesday", "Wednesday", "Thursday" , "Friday", "Saturday"]
+    
+    let wdayInt = ["2", "3", "4", "5", "6", "7"]
+    
+    let wdayDict: [String: Any] = [
+        "2" : "Monday",
+        "3" : "Tuesday",
+        "4" : "Wednesday",
+        "5" : "Thursday",
+        "6" : "Friday",
+        "7" : "Saturday"
+    ]
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
@@ -20,31 +33,60 @@ class HistoryController: UITableViewController {
         // Dispose of any resources that can be recreated.
     }
     
-    /*override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        <#code#>
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return GlobalData.timetable.filter({$0.weekday == wdayInt[section]}).count
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        <#code#>
+        let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! LessonCell
+        
+        let lessonInDay = GlobalData.timetable.filter({$0.weekday == wdayInt[indexPath.section]})
+        
+        let lesson = lessonInDay[indexPath.row]
+        cell.lesson = lesson
+        let history = GlobalData.attendance.filter({$0.lesson_date_id == lesson.ldateid}).first
+        cell.venue.isHidden = true
+        if history != nil {
+            cell.iconView.image = #imageLiteral(resourceName: "green")
+            cell.arrivingtimeLabel.text = history?.created_at
+            cell.arrivingtimeLabel.isHidden = false
+            
+        }else{
+            
+            cell.iconView.image = #imageLiteral(resourceName: "red")
+            cell.arrivingtimeLabel.text = "00:00"
+            cell.arrivingtimeLabel.isHidden = true
+            
+        }
+        
+        return cell
     }
     
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        <#code#>
+        return 70
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        <#code#>
-    }*/
+        guard let cell = tableView.cellForRow(at: indexPath) as? LessonCell  else{ return }
+        
+        self.performSegue(withIdentifier: "lesson detail", sender: cell.lesson)
+    }
     
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
+    override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        return wday[section]
+    }
+    
+    override func numberOfSections(in tableView: UITableView) -> Int {
+        return 5
+    }
+    
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         // Get the new view controller using segue.destinationViewController.
+        let destination = segue.destination as! LessonDetailController
         // Pass the selected object to the new view controller.
+        if let lesson = sender as? Lesson{
+            destination.lesson = lesson
+        }
     }
-    */
 
 }

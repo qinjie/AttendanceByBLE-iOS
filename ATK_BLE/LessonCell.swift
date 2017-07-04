@@ -18,6 +18,8 @@ class LessonCell: UITableViewCell {
             end_time.text = displayTime.display(time: (lesson?.end_time)!)
             venue.text = lesson?.venueName
             classNumber.text = lesson?.class_section
+            arrivingtimeLabel.isHidden = true
+            iconView.isHidden = true
         }
     }
     
@@ -84,6 +86,18 @@ class LessonCell: UITableViewCell {
         return label
     }()
     
+    let arrivingtimeLabel:UILabel = {
+       let label = UILabel()
+        label.text = "00:00"
+        label.font = UIFont.systemFont(ofSize: 15)
+        return label
+    }()
+    
+    let iconView:UIImageView = {
+        let imageView = UIImageView(frame: CGRect(x: 0, y: 0, width: 50, height: 50))
+        return imageView
+    }()
+    
     /*let statusImage: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFill
@@ -117,13 +131,18 @@ class LessonCell: UITableViewCell {
         containerView.addSubview(start_time)
         containerView.addSubview(end_time)
         containerView.addSubview(classNumber)
+        containerView.addSubview(arrivingtimeLabel)
+        containerView.addSubview(iconView)
         
         containerView.addConstraintsWithFormat("H:|-20-[v0]-15-[v1]", views: start_time,subjectLabel)
         containerView.addConstraintsWithFormat("H:|-20-[v0]-20-[v1]", views: end_time,classNumber)
         containerView.addConstraintsWithFormat("H:[v0]-20-|", views: venue)
+        containerView.addConstraintsWithFormat("H:|-290-[v0]-15-[v1]", views: arrivingtimeLabel,iconView)
         containerView.addConstraintsWithFormat("V:|-15-[v0]-15-[v1]", views: start_time,end_time)
         containerView.addConstraintsWithFormat("V:|-15-[v0]-15-[v1]", views: subjectLabel,classNumber)
-        containerView.addConstraintsWithFormat("V:[v0]-20-|", views: venue)
+        containerView.addConstraintsWithFormat("V:[v0]-25-|", views: venue)
+        containerView.addConstraintsWithFormat("V:[v0]-25-|", views: arrivingtimeLabel)
+        containerView.addConstraintsWithFormat("V:[v0]-25-|", views: iconView)
     }
 
 }

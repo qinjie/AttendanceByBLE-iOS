@@ -38,7 +38,7 @@ struct Constant{
     static var password = ""
     static var major : Int = 0
     static var minor : Int = 0
-    static var student_id : Int = 0
+    static var id : Int = 0
     static var email = "np@gmail.com"
     static var noti = true
     static var isScanning = true
@@ -57,14 +57,28 @@ struct GlobalData{
     static var lessonUUID = [Int:String]()
     static var currentLesson = Lesson()
     static var classmates = [Classmate]()
-    static var history = [History]()
+    static var history = [HistoryOA]()
     
-    static var attendance = [Int]()
+    static var attendance = [HistoryDT]()
     static var currentDateStr = ""
     static var currentLecturerMajor = 0
     static var currentLecturerMinor = 0
     static var currentLecturerId = 0
  
+}
+
+class Format{
+    static func Format(date: Date, format:String) -> String{
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = format
+        return dateFormatter.string(from: date)
+    }
+    
+    static func Format(string: String, format: String) -> Date{
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = format
+        return dateFormatter.date(from: string)!
+    }
 }
 
 

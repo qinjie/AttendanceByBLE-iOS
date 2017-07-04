@@ -34,10 +34,11 @@ class LessonDetailController: UIViewController {
     ]
     
     var lesson:Lesson!
-    var history:History!
+    var history:HistoryOA!
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        //print(lesson.catalog)
         history = GlobalData.history.filter({$0.name == lesson.catalog}).first
         setupLabels()
         // Do any additional setup after loading the view.
@@ -60,7 +61,12 @@ class LessonDetailController: UIViewController {
     private func setupLabels(){
         
         let finishedLessons = history.present! + history.late! + history.absent!
-        let presentPer = Double(history.present!)/Double((finishedLessons))*100
+        var presentPer = 0.0
+        if finishedLessons != 0{
+            presentPer = Double(history.present!)/Double((finishedLessons))*100
+        }else{
+            presentPer = 0
+        }
         subjectLabel.text = lesson.subject! + " " + lesson.catalog!
         subjectnameLabel.text = lesson.catalog
         creditLabel.text = String(credit)

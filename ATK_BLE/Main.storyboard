@@ -14,7 +14,7 @@
         <!--Login Controller-->
         <scene sceneID="tne-QT-ifu">
             <objects>
-                <viewController storyboardIdentifier="sign in" id="BYZ-38-t0r" customClass="LoginController" customModule="Attandance_Taking_System" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="sign in" id="BYZ-38-t0r" customClass="LoginController" customModule="ATK_BLE" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="y3c-jy-aDJ"/>
                         <viewControllerLayoutGuide type="bottom" id="wfy-db-euE"/>
@@ -66,7 +66,7 @@
                                     <action selector="LoginPressed:" destination="BYZ-38-t0r" eventType="touchUpInside" id="2hg-M4-IBz"/>
                                 </connections>
                             </button>
-                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="canhnht" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" clearButtonMode="always" translatesAutoresizingMaskIntoConstraints="NO" id="qke-HN-XDi">
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="Kyawlin" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" clearButtonMode="always" translatesAutoresizingMaskIntoConstraints="NO" id="qke-HN-XDi">
                                 <rect key="frame" x="16" y="314" width="343" height="30"/>
                                 <nil key="textColor"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
@@ -147,7 +147,7 @@
         <!--Lesson Details-->
         <scene sceneID="LUp-m7-AfK">
             <objects>
-                <viewController id="fOK-Fq-zyH" customClass="LessonDetailController" customModule="Attandance_Taking_System" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="fOK-Fq-zyH" customClass="LessonDetailController" customModule="ATK_BLE" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="MCv-zm-0dw"/>
                         <viewControllerLayoutGuide type="bottom" id="RFC-5V-hSJ"/>
@@ -397,13 +397,13 @@
         <!--History-->
         <scene sceneID="i8x-Ko-4c1">
             <objects>
-                <tableViewController id="H64-7B-rfA" customClass="HistoryController" customModule="Attandance_Taking_System" customModuleProvider="target" sceneMemberID="viewController">
+                <tableViewController id="H64-7B-rfA" customClass="HistoryController" customModule="ATK_BLE" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" id="FPa-0A-U1U">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <prototypes>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="cell" id="ULR-7m-iGD">
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" restorationIdentifier="cell" selectionStyle="default" indentationWidth="10" reuseIdentifier="cell" id="ULR-7m-iGD" customClass="LessonCell" customModule="ATK_BLE" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="28" width="375" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="ULR-7m-iGD" id="FQ6-OH-gpm">
@@ -429,13 +429,13 @@
         <!--Timetable - May 9 (Tue)-->
         <scene sceneID="5x3-cD-Y8h">
             <objects>
-                <tableViewController id="4yp-nV-qaW" customClass="TimetableController" customModule="Attandance_Taking_System" customModuleProvider="target" sceneMemberID="viewController">
+                <tableViewController id="4yp-nV-qaW" customClass="TimetableController" customModule="ATK_BLE" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" id="n5r-Hs-Jii">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <prototypes>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="cell" id="wmv-dB-wxk" customClass="LessonCell" customModule="Attandance_Taking_System" customModuleProvider="target">
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="cell" id="wmv-dB-wxk" customClass="LessonCell" customModule="ATK_BLE" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="28" width="375" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="wmv-dB-wxk" id="f4s-Sy-Xjm">
@@ -467,7 +467,7 @@
         <!--Now-->
         <scene sceneID="6UB-w8-uhf">
             <objects>
-                <viewController id="nzh-T6-xa7" customClass="NowController" customModule="Attandance_Taking_System" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="nzh-T6-xa7" customClass="NowController" customModule="ATK_BLE" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="Wdg-H4-6o8"/>
                         <viewControllerLayoutGuide type="bottom" id="WPd-I9-cjv"/>
@@ -525,8 +525,8 @@
                                     <action selector="broadcastWifi:" destination="nzh-T6-xa7" eventType="touchUpInside" id="K1m-nX-sLM"/>
                                 </connections>
                             </button>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="09:03" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="BOi-lA-5Zq">
-                                <rect key="frame" x="159.5" y="321.5" width="55" height="24"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="time" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="BOi-lA-5Zq">
+                                <rect key="frame" x="167.5" y="321.5" width="40" height="24"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="20"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
@@ -613,7 +613,7 @@
         <!--Change Password Controller-->
         <scene sceneID="Wd5-kp-6bq">
             <objects>
-                <viewController id="Ucb-le-PL6" customClass="ChangePasswordController" customModule="Attandance_Taking_System" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="Ucb-le-PL6" customClass="ChangePasswordController" customModule="ATK_BLE" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="oKy-3A-KGv"/>
                         <viewControllerLayoutGuide type="bottom" id="xf6-3T-Mhp"/>
@@ -714,7 +714,7 @@
         <!--More Controller-->
         <scene sceneID="HMY-7x-oxS">
             <objects>
-                <viewController id="nYD-5n-sHE" customClass="MoreController" customModule="Attandance_Taking_System" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="nYD-5n-sHE" customClass="MoreController" customModule="ATK_BLE" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="m9o-i3-Ius"/>
                         <viewControllerLayoutGuide type="bottom" id="Adi-AE-LcT"/>
@@ -886,6 +886,6 @@
         <image name="wifi_off" width="225" height="225"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="HYY-RO-uON"/>
+        <segue reference="zG7-cK-laq"/>
     </inferredMetricsTieBreakers>
 </document>

@@ -26,7 +26,7 @@ class MoreController: UIViewController {
     @IBAction func signOut(_ sender: UIButton) {
         UserDefaults.standard.removeObject(forKey: "student_id")
         let headers: HTTPHeaders = [
-            "Authorization" : "Bearer " + Constant.token
+            "Authorization" : "Bearer " + UserDefaults.standard.string(forKey: "token")!
         ]
         
         let spinnerIndicator = UIActivityIndicatorView(activityIndicatorStyle: .whiteLarge)

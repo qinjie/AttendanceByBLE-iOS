@@ -22,7 +22,6 @@
 		E1A979311F09DFAC0050431A /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E1A979231F09DFAC0050431A /* Main.storyboard */; };
 		E1A979321F09DFAC0050431A /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E1A979241F09DFAC0050431A /* LaunchScreen.storyboard */; };
 		E1A9793A1F09E2400050431A /* LessonCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1A979381F09E2400050431A /* LessonCell.swift */; };
-		E1A9793B1F09E2400050431A /* HistoryCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1A979391F09E2400050431A /* HistoryCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -46,7 +45,6 @@
 		E1A979241F09DFAC0050431A /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
 		E1A979351F09E1ED0050431A /* ATK_BLE-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "ATK_BLE-Bridging-Header.h"; sourceTree = "<group>"; };
 		E1A979381F09E2400050431A /* LessonCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LessonCell.swift; sourceTree = "<group>"; };
-		E1A979391F09E2400050431A /* HistoryCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HistoryCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -92,16 +90,9 @@
 			isa = PBXGroup;
 			children = (
 				E1A9793C1F09E24A0050431A /* TableViewCell */,
+				E12AB71D1F0A08A700ADA79E /* Entity */,
+				E12AB71C1F0A070F00ADA79E /* Controllers */,
 				E1A979181F09DFAC0050431A /* AppDelegate.swift */,
-				E1A979191F09DFAC0050431A /* Items.swift */,
-				E1A9791A1F09DFAC0050431A /* Lesson.swift */,
-				E1A9791B1F09DFAC0050431A /* NowController.swift */,
-				E1A9791C1F09DFAC0050431A /* TimetableController.swift */,
-				E1A9791D1F09DFAC0050431A /* HistoryController.swift */,
-				E1A9791E1F09DFAC0050431A /* ChangePasswordController.swift */,
-				E1A9791F1F09DFAC0050431A /* LessonDetailController.swift */,
-				E1A979201F09DFAC0050431A /* LoginController.swift */,
-				E1A979211F09DFAC0050431A /* MoreController.swift */,
 				E1A979221F09DFAC0050431A /* Assets.xcassets */,
 				E1A979231F09DFAC0050431A /* Main.storyboard */,
 				E1A979241F09DFAC0050431A /* LaunchScreen.storyboard */,
@@ -119,11 +110,33 @@
 			name = Pods;
 			sourceTree = "<group>";
 		};
+		E12AB71C1F0A070F00ADA79E /* Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				E1A9791B1F09DFAC0050431A /* NowController.swift */,
+				E1A9791C1F09DFAC0050431A /* TimetableController.swift */,
+				E1A9791D1F09DFAC0050431A /* HistoryController.swift */,
+				E1A9791E1F09DFAC0050431A /* ChangePasswordController.swift */,
+				E1A9791F1F09DFAC0050431A /* LessonDetailController.swift */,
+				E1A979201F09DFAC0050431A /* LoginController.swift */,
+				E1A979211F09DFAC0050431A /* MoreController.swift */,
+			);
+			name = Controllers;
+			sourceTree = "<group>";
+		};
+		E12AB71D1F0A08A700ADA79E /* Entity */ = {
+			isa = PBXGroup;
+			children = (
+				E1A979191F09DFAC0050431A /* Items.swift */,
+				E1A9791A1F09DFAC0050431A /* Lesson.swift */,
+			);
+			name = Entity;
+			sourceTree = "<group>";
+		};
 		E1A9793C1F09E24A0050431A /* TableViewCell */ = {
 			isa = PBXGroup;
 			children = (
 				E1A979381F09E2400050431A /* LessonCell.swift */,
-				E1A979391F09E2400050431A /* HistoryCell.swift */,
 			);
 			name = TableViewCell;
 			sourceTree = "<group>";
@@ -158,7 +171,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 0820;
-				LastUpgradeCheck = 0820;
+				LastUpgradeCheck = 0830;
 				ORGANIZATIONNAME = beacon;
 				TargetAttributes = {
 					38841A9F1E690C0E004EF33D = {
@@ -264,7 +277,6 @@
 				E1A9792D1F09DFAC0050431A /* LessonDetailController.swift in Sources */,
 				E1A9792A1F09DFAC0050431A /* TimetableController.swift in Sources */,
 				E1A9793A1F09E2400050431A /* LessonCell.swift in Sources */,
-				E1A9793B1F09E2400050431A /* HistoryCell.swift in Sources */,
 				E1A9792E1F09DFAC0050431A /* LoginController.swift in Sources */,
 				E1A979291F09DFAC0050431A /* NowController.swift in Sources */,
 				E1A9792C1F09DFAC0050431A /* ChangePasswordController.swift in Sources */,
@@ -371,6 +383,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 2F04FDBD21813133A02CD771 /* Pods-ATK_BLE.debug.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				DEVELOPMENT_TEAM = EBWK75HAK4;
@@ -389,6 +402,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = A480AF68145EB8C64A5ACCB4 /* Pods-ATK_BLE.release.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				DEVELOPMENT_TEAM = EBWK75HAK4;
