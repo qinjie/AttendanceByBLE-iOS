@@ -175,8 +175,10 @@ class LoginController: UIViewController {
         ]
         
         let parameters: [String: Any] = [
-            "student_id":Constant.student_id
+
+            "student_id": Constant.student_id        
         ]
+
         
         Alamofire.request(Constant.URLallClassmate, method: .post, parameters: parameters, encoding: JSONEncoding.default, headers: headers).responseJSON { (response:DataResponse) in
             print("start load clssmates")
@@ -188,13 +190,15 @@ class LoginController: UIViewController {
                     classmates.lesson_id = json["lesson_id"] as? Int
                     classmates.major = [Int]()
                     classmates.minor = [Int]()
-                    classmates.id = [Int]()
+                    classmates.student_id = [Int]()
                     
                     if let list = json["students"] as? [[String:AnyObject]]{
                         for x in list{
                             let newId = x["id"] as! Int
                             if newId != Constant.student_id{
-                                classmates.id?.append(newId)
+
+                                classmates.student_id?.append(newId)
+
                                 if let y = x["beacon_user"] as? [String:AnyObject]{
                                     let newmajor = y["major"] as! Int
                                     classmates.major?.append(newmajor)

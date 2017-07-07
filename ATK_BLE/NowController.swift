@@ -49,7 +49,9 @@ class NowController: UIViewController,UIPopoverPresentationControllerDelegate, C
             let dest = segue.destination
             if let pop = dest.popoverPresentationController {
                 pop.delegate = self
-            }
+                if(self.presentedViewController == nil) {
+                    displayAlert(title: "Info \(String(describing: UserDefaults.standard.string(forKey: "username")!))", message: "ll")
+                }            }
         }
     }
     func adaptivePresentationStyle(for controller: UIPresentationController) -> UIModalPresentationStyle {
@@ -57,25 +59,22 @@ class NowController: UIViewController,UIPopoverPresentationControllerDelegate, C
     }
     override func viewDidLoad() {
         super.viewDidLoad()
+        broadcastLabel.isHidden = true
         setupImageView()
         checkUserInBackGround()
-        checkTime()
-        //broadcast()
         // Do any additional setup after loading the view.
         locationManager.delegate = self
         bluetoothManager.delegate = self
         locationManager.requestAlwaysAuthorization()
+        UNUserNotificationCenter.current().delegate = self
+        checkTime()
+        NotificationCenter.default.addObserver(self,selector: #selector(success), name: NSNotification.Name(rawValue: "atksuccesfully"), object: nil)
+        //NotificationCenter.default.addObserver(self,selector: #selector(changeLabel), name: NSNotification.Name(rawValue: "taken"), object: nil) 
     }
     
     override func viewWillAppear(_ animated: Bool) {
         bluetoothManager = CBPeripheralManager.init(delegate: self, queue: nil)
     }
-    
-    /*override func viewWillDisappear(_ animated: Bool) {
-        peripheralManager.stopAdvertising()
-        peripheralManager = nil
-        //beaconPeripheralData = nil
-    }*/
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
@@ -91,14 +90,20 @@ class NowController: UIViewController,UIPopoverPresentationControllerDelegate, C
         imageView.addGestureRecognizer(singleTap)
         
     }
+    func success() {
+        self.currentTimeLabel.text = "You have taken attendance \nfor \(self.currentLesson.catalog!)"
+        self.currentTimeLabel.textColor = UIColor.green
+        displayAlert(title: "Successful", message: "You have taken attendance for\(currentLesson.catalog!)")
+    }
+    
     @objc func broadcastSignal() {
         if imageView.isAnimating{
             imageView.stopAnimating()
             imageView.image = #imageLiteral(resourceName: "bt_on")
+            bluetoothManager.stopAdvertising()
             return
         }
         if currentLesson != nil {
-            detectClassmate()
             imageView.animationImages = [
                 #imageLiteral(resourceName: "transmit_1"),
                 #imageLiteral(resourceName: "transmit_2"),
@@ -106,23 +111,45 @@ class NowController: UIViewController,UIPopoverPresentationControllerDelegate, C
             ]
             imageView.animationDuration = 0.5
             imageView.startAnimating()
-            uuid = NSUUID(uuidString: GlobalData.lessonUUID[currentLesson.lesson_id!]!)as UUID?
-            let newRegion = CLBeaconRegion(proximityUUID: uuid, identifier: "canhnht")
-            locationManager.stopMonitoring(for: newRegion)
-            //bluetoothManager.stopAdvertising()
-                
+            broadcast()
         }
         else{
             updateLabels()
         }
         
     }
+    func turnOnBlt() {
+        //let bluetoothManager = BluetoothManagerHandler.sharedInstance()
+        //bluetoothManager?.setPower(true)
+        let url = URL(string: "App-Prefs:root=Bluetooth") //for bluetooth setting
+        let app = UIApplication.shared
+        //app.openURL(url!)
+        app.open(url!, options: ["string":""], completionHandler: nil)
+    }
     
     func detectClassmate() {
         uuid = NSUUID(uuidString: GlobalData.lessonUUID[currentLesson.lesson_id!]!)as UUID?
         print("Current lesson: \(uuid)")
-                let newRegion = CLBeaconRegion(proximityUUID: uuid, identifier: "canhnht")
+        if ((classmate.student_id?.count)! == 0)
+        {
+            print("classmate is 0")
+        }
+        else if ((classmate.student_id?.count)! > 20){
+            print("more than 20")
+            for i in 0 ..< 20 {
+                let newRegion = CLBeaconRegion(proximityUUID: uuid , major: UInt16(classmate.major![i]) as CLBeaconMajorValue, minor: UInt16((classmate.minor?[i])!) as CLBeaconMinorValue, identifier: (classmate.student_id?[i].description)!)
                 locationManager.startMonitoring(for: newRegion)
+            }
+        }
+        else{
+            print("less than 20")
+            for i in 0 ..< (classmate.student_id?.count)!  {
+                let newRegion = CLBeaconRegion(proximityUUID: uuid , major: UInt16(classmate.major![i]) as CLBeaconMajorValue, minor: UInt16((classmate.minor?[i])!) as CLBeaconMinorValue, identifier: (classmate.student_id?[i].description)!)
+                
+                locationManager.startMonitoring(for: newRegion)
+            }
+            
+        }
     }
     func detectLecturer() {
             uuid = NSUUID(uuidString: GlobalData.lessonUUID[currentLesson.lesson_id!]!)as UUID?
@@ -143,61 +170,42 @@ class NowController: UIViewController,UIPopoverPresentationControllerDelegate, C
     }
     func broadcast() {
         if bluetoothManager.state == .poweredOn {
+            /*let major = UInt16(UserDefaults.standard.string(forKey: "major")!)as! CLBeaconMajorValue
+            let minor = UInt16(UserDefaults.standard.string(forKey: "minor")!)as! CLBeaconMinorValue */
             let major = UInt16(Constant.major)as CLBeaconMajorValue
             let minor = UInt16(Constant.minor)as CLBeaconMinorValue
            uuid = NSUUID(uuidString: GlobalData.lessonUUID[currentLesson.lesson_id!]!)as UUID?
-            let beaconRegion = CLBeaconRegion(proximityUUID: uuid!, major: major, minor: minor, identifier: "canhnht")
+            let beaconRegion = CLBeaconRegion(proximityUUID: uuid!, major: major, minor: minor, identifier: "\(String(describing: UserDefaults.standard.string(forKey: "student_id")!))")
             dataDictionary = beaconRegion.peripheralData(withMeasuredPower: nil)
             //bluetoothManager = CBPeripheralManager.init(delegate: self, queue: nil)
             bluetoothManager.startAdvertising(dataDictionary as?[String: Any])
         }
-    }
-    func locationManager(_ manager: CLLocationManager, didStartMonitoringFor region: CLRegion) {
+        else {
+            let alert = UIAlertController(title: "Bluetooth Turn on Request", message: " AME would like to turn on your bluetooth!", preferredStyle: UIAlertControllerStyle.alert)
+            // add the actions (buttons)
+            alert.addAction(UIAlertAction(title: "Allow", style: UIAlertActionStyle.default, handler: { action in
+                self.turnOnBlt()
+                self.broadcast()
+                self.dismiss(animated: true, completion: nil)
+            }))
+            alert.addAction(UIAlertAction(title: "Cancel", style: UIAlertActionStyle.cancel, handler: nil))
+            self.present(alert, animated: true, completion: nil)
+            
+        }        }
+    func testSendNoti() {
+        let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 3.0, repeats: false)
+        let content = notiContent(title: "successfull", body: "You have successfully taken attendance")
+        addNotification(trigger: trigger, content: content, identifier: "a")            }
+func locationManager(_ manager: CLLocationManager, didStartMonitoringFor region: CLRegion) {
         print("Started monitoring \(region.identifier) region")
     }
     func locationManager(_ manager: CLLocationManager, didStopMonitoringFor region: CLRegion) {
         print("Stop monitoring \(region.identifier) region")
     }
-    func locationManager(_ manager: CLLocationManager, didDetermineState state: CLRegionState, for region: CLRegion) {
-        switch state {
-        case .inside: print("Inside \(region.identifier)")
-        let content = notiContent(title: "did Determine state!!!", body: "inside")
-        let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 3.0, repeats: false)
-        addNotification(trigger: trigger, content: content, identifier: "abc")
-        
-        /* Constant.token = UserDefaults.standard.string(forKey: "token")!
-         Constant.student_id = UserDefaults.standard.integer(forKey: "student_id")
-         
-         let para1: Parameters = [
-         "lesson_date_id": GlobalData.currentLesson.ldateid!,
-         "student_id_1": Constant.student_id,
-         "student_id_2": region.identifier
-         ]
-         let parameters: [String: Any] = ["data": [para1]]
-         print(parameters)
-         let headers: HTTPHeaders = [
-         "Authorization": "Bearer" + Constant.token,
-         "Content-Type": "application/json"
-         ]
-         
-         Alamofire.request(Constant.URLatk, method: .post, parameters: parameters, encoding: JSONEncoding.default, headers: headers).responseJSON { (response:DataResponse) in
-         
-         let statusCode = response.response?.statusCode
-         if (statusCode == 200){
-         GlobalData.attendance.append(GlobalData.currentLesson.ldateid!)
-         NotificationCenter.default.post(name: NSNotification.Name(rawValue: "atksuccesfully"), object: nil)
-         
-         }
-         if let data = response.result.value{
-         print(data)
-         }
-         
-         }*/
-        //NotificationCenter.default.post(name: NSNotification.Name(rawValue: "successfully taken!!!"), object: nil)
-        case .outside: print("Outside \(region.identifier)")
-        case .unknown: print("Unknown")
-        }
-    }
+func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
+    completionHandler([.alert,.badge,.sound])
+}
+
     func locationManager(_ manager: CLLocationManager, didExitRegion region: CLRegion) {
         if (region is CLBeaconRegion) {
             print("did exit region!!! \(region.identifier)")
@@ -208,10 +216,6 @@ class NowController: UIViewController,UIPopoverPresentationControllerDelegate, C
             print("did enter region!!! \(region.identifier)")
         }
     }
-    func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
-        completionHandler([.alert,.badge,.sound])
-    }
-
     
     private func checkTime(){
         today = Date()
@@ -236,7 +240,16 @@ class NowController: UIViewController,UIPopoverPresentationControllerDelegate, C
                 currentTimeLabel.text = "Waiting for \nbeacons from classmates"
                 GlobalData.currentLesson = currentLesson
                 imageView.image = #imageLiteral(resourceName: "bt_on")
+                 checkAttandance.checkAttandance()
+                 NotificationCenter.default.addObserver(self,selector: #selector(changeLabel), name: NSNotification.Name(rawValue: "taken"), object: nil)
                 
+                print("Self.classmatesall \(GlobalData.classmates.count)!")
+                print("Current Lesson : \(GlobalData.lessonUUID)")
+                self.classmate = GlobalData.classmates.first(where : {($0.lesson_id! == currentLesson.lesson_id!)})!
+                print("Self.classmates \(String(describing: self.classmate.student_id?.count))")
+                print("\(String(describing: GlobalData.currentLesson.catalog))")
+                print(UserDefaults.standard.string(forKey: "student_id")!)
+                detectClassmate()
             }else{
                 if let nextLesson = GlobalData.today.first(where: {$0.start_time!>currentTimeStr}){
                     //Estimate the next lesson time
@@ -257,6 +270,10 @@ class NowController: UIViewController,UIPopoverPresentationControllerDelegate, C
             }
         }
         updateLabels()
+    }
+    func changeLabel() {
+        self.currentTimeLabel.text = "You have taken attendance \nfor \(self.currentLesson.catalog!)"
+        self.currentTimeLabel.textColor = UIColor.green
     }
     
     private func updateLabels(){
