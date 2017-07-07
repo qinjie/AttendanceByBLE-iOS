@@ -7,7 +7,7 @@
 //
 
 import UIKit
-
+import CoreBluetooth
 import CoreLocation
 import Alamofire
 
@@ -16,14 +16,14 @@ import Alamofire
 class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate {
 
     var window: UIWindow?
-    var locationManager: CLLocationManager!
+    self.locationManager = CLLocationManager()
     var identifier : UIBackgroundTaskIdentifier! = UIBackgroundTaskInvalid
     var id1 = ""
     var id2 = ""
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
-        self.locationManager = CLLocationManager()
+
         self.locationManager.delegate = self
         self.locationManager.requestAlwaysAuthorization()
 
@@ -33,6 +33,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
             let home:UITabBarController = (mainStoryboard.instantiateViewController(withIdentifier: "home") as? UITabBarController)!
             self.window?.rootViewController = home
         }
+        UNUserNotificationCenter.current().delegate = self
+        UNUserNotificationCenter.current().requestAuthorization(options: [.alert,.badge,.sound]) { (granted, error) in
+        }
+        
         NotificationCenter.default.addObserver(self, selector: #selector(userFailed), name: Notification.Name(rawValue: "userFailed"), object: nil)
         return true
     }
@@ -43,14 +47,37 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
     func locationManager(_ manager: CLLocationManager, didStopMonitoringFor region: CLRegion) {
         print("Stop bg monitoring \(region.identifier) region")
     }
-    
+    private func checkAttandance() -> Bool {
+        var result = false
+        let token = UserDefaults.standard.string(forKey: "token")
+        let header:HTTPHeaders = [
+            "Authorization" : "Bearer " + token!
+        ]
+        let parameter:Parameters = ["lesson_date_id":GlobalData.currentLesson.ldateid!]
+        print(GlobalData.currentLesson.ldateid!)
+        Alamofire.request(Constant.URLcheckAttandance,method: .post, parameters: parameter, encoding: JSONEncoding.default, headers: header).responseJSON(completionHandler: { (response:DataResponse) in
+            if let JSON = response.result.value as? Int{
+                print("JSON below")
+                print(JSON)
+                if(JSON >= 0) {
+                    result = true
+                }
+            }
+        })
+        return result
+    }
     func locationManager(_ manager: CLLocationManager, didDetermineState state: CLRegionState, for region: CLRegion){
         
         print("bg did determine state \(region.identifier)" )
         switch state {
         case .inside:
+            let a = checkAttandance()
+            if(a) {
+                print("//////taken already")
+            }
+            else {
             print(" bg Inside \(region.identifier)");
-            /*Constant.token = UserDefaults.standard.string(forKey: "token")!
+            Constant.token = UserDefaults.standard.string(forKey: "token")!
             Constant.student_id = UserDefaults.standard.integer(forKey: "student_id")
             
             let para1: Parameters = [
@@ -74,13 +101,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
                 if (statusCode == 200){
                     GlobalData.attendance.append(GlobalData.currentLesson.ldateid!)
                     NotificationCenter.default.post(name: NSNotification.Name(rawValue: "atksuccesfully"), object: nil)
+                    print("gl\(GlobalData.attendance)")
                     
                 }
                 if let data = response.result.value{
+                    print("///////////////result below////////////")
                     print(data)
                 }
                 
-            }*/
+            }
+            }
         case .outside: print("Outside bg \(region.identifier)")
         case .unknown: print("Unknown")
         }
