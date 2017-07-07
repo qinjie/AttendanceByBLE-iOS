@@ -158,12 +158,9 @@ class LoginController: UIViewController {
                 NSKeyedArchiver.archiveRootObject(GlobalData.timetable, toFile: filePath.timetablePath)
                 
                 print("Done loading timetable")
-                self.performSegue(withIdentifier: "sign in", sender: nil)
-                DispatchQueue.global().async {
-                    self.loadUUID()
-                    self.loadClassmate()
-                    self.loadHistory()
-                }
+                self.loadUUID()
+                self.loadClassmate()
+                self.loadHistory()
             }
             
         }
@@ -214,6 +211,7 @@ class LoginController: UIViewController {
                 NSKeyedArchiver.archiveRootObject(GlobalData.classmates, toFile: filePath.classmatePath)
                 
                 print("Done loading classmates")
+                self.performSegue(withIdentifier: "sign in", sender: nil)
                 
             }else{
                 print("load classmates parser error")
