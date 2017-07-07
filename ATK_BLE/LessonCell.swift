@@ -95,6 +95,7 @@ class LessonCell: UITableViewCell {
     
     let iconView:UIImageView = {
         let imageView = UIImageView(frame: CGRect(x: 0, y: 0, width: 50, height: 50))
+        imageView.sizeThatFits(CGSize(width: 50, height: 50))
         return imageView
     }()
     
@@ -137,7 +138,7 @@ class LessonCell: UITableViewCell {
         containerView.addConstraintsWithFormat("H:|-20-[v0]-15-[v1]", views: start_time,subjectLabel)
         containerView.addConstraintsWithFormat("H:|-20-[v0]-20-[v1]", views: end_time,classNumber)
         containerView.addConstraintsWithFormat("H:[v0]-20-|", views: venue)
-        containerView.addConstraintsWithFormat("H:|-290-[v0]-15-[v1]", views: arrivingtimeLabel,iconView)
+        containerView.addConstraintsWithFormat("H:|-260-[v0]-15-[v1]", views: arrivingtimeLabel,iconView)
         containerView.addConstraintsWithFormat("V:|-15-[v0]-15-[v1]", views: start_time,end_time)
         containerView.addConstraintsWithFormat("V:|-15-[v0]-15-[v1]", views: subjectLabel,classNumber)
         containerView.addConstraintsWithFormat("V:[v0]-25-|", views: venue)

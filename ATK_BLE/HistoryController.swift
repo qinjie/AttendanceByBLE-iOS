@@ -46,6 +46,7 @@ class HistoryController: UITableViewController {
         cell.lesson = lesson
         let history = GlobalData.attendance.filter({$0.lesson_date_id == lesson.ldateid}).first
         cell.venue.isHidden = true
+        cell.iconView.isHidden = false
         if history != nil {
             cell.iconView.image = #imageLiteral(resourceName: "green")
             cell.arrivingtimeLabel.text = history?.created_at
@@ -53,7 +54,7 @@ class HistoryController: UITableViewController {
             
         }else{
             
-            cell.iconView.image = #imageLiteral(resourceName: "red")
+            cell.iconView.image = #imageLiteral(resourceName: "questionmark")
             cell.arrivingtimeLabel.text = "00:00"
             cell.arrivingtimeLabel.isHidden = true
             

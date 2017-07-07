@@ -21,7 +21,7 @@ class NowController: UIViewController,UIPopoverPresentationControllerDelegate, C
     @IBOutlet weak var venueLabel: UILabel!
     @IBOutlet weak var currentTimeLabel: UILabel!
     @IBOutlet weak var broadcastLabel: UILabel!
-    @IBOutlet weak var wifiButton: UIButton!
+    @IBOutlet weak var imageView: UIImageView!
     
     var today = Date()
     var button = UIButton()
@@ -57,6 +57,7 @@ class NowController: UIViewController,UIPopoverPresentationControllerDelegate, C
     }
     override func viewDidLoad() {
         super.viewDidLoad()
+        setupImageView()
         checkUserInBackGround()
         checkTime()
         //broadcast()
@@ -65,9 +66,11 @@ class NowController: UIViewController,UIPopoverPresentationControllerDelegate, C
         bluetoothManager.delegate = self
         locationManager.requestAlwaysAuthorization()
     }
+    
     override func viewWillAppear(_ animated: Bool) {
         bluetoothManager = CBPeripheralManager.init(delegate: self, queue: nil)
     }
+    
     /*override func viewWillDisappear(_ animated: Bool) {
         peripheralManager.stopAdvertising()
         peripheralManager = nil
@@ -79,19 +82,35 @@ class NowController: UIViewController,UIPopoverPresentationControllerDelegate, C
         // Dispose of any resources that can be recreated.
     }
     
-    @IBAction func broadcastWifi(_ sender: UIButton) {
+    private func setupImageView(){
+        
+        imageView.isUserInteractionEnabled = true
+        
+        let singleTap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(broadcastSignal))
+        singleTap.numberOfTapsRequired = 1
+        imageView.addGestureRecognizer(singleTap)
+        
+    }
+    @objc func broadcastSignal() {
+        if imageView.isAnimating{
+            imageView.stopAnimating()
+            imageView.image = #imageLiteral(resourceName: "bt_on")
+            return
+        }
         if currentLesson != nil {
-            if wifiButton.currentImage == #imageLiteral(resourceName: "bt_on"){
-                wifiButton.setImage(#imageLiteral(resourceName: "bt_off"), for: .normal)
-                detectClassmate()
-               // broadcast()
-            }else{
-                wifiButton.setImage(#imageLiteral(resourceName: "bt_on"), for: .normal)
-                uuid = NSUUID(uuidString: GlobalData.lessonUUID[currentLesson.lesson_id!]!)as UUID?
-                let newRegion = CLBeaconRegion(proximityUUID: uuid, identifier: "canhnht")
-                locationManager.stopMonitoring(for: newRegion)
-                //bluetoothManager.stopAdvertising()
-                }
+            detectClassmate()
+            imageView.animationImages = [
+                #imageLiteral(resourceName: "transmit_1"),
+                #imageLiteral(resourceName: "transmit_2"),
+                #imageLiteral(resourceName: "transmit_3")
+            ]
+            imageView.animationDuration = 0.5
+            imageView.startAnimating()
+            uuid = NSUUID(uuidString: GlobalData.lessonUUID[currentLesson.lesson_id!]!)as UUID?
+            let newRegion = CLBeaconRegion(proximityUUID: uuid, identifier: "canhnht")
+            locationManager.stopMonitoring(for: newRegion)
+            //bluetoothManager.stopAdvertising()
+                
         }
         else{
             updateLabels()
@@ -216,6 +235,7 @@ class NowController: UIViewController,UIPopoverPresentationControllerDelegate, C
                 currentTimeLabel.textColor = UIColor.gray
                 currentTimeLabel.text = "Waiting for \nbeacons from classmates"
                 GlobalData.currentLesson = currentLesson
+                imageView.image = #imageLiteral(resourceName: "bt_on")
                 
             }else{
                 if let nextLesson = GlobalData.today.first(where: {$0.start_time!>currentTimeStr}){
@@ -249,15 +269,16 @@ class NowController: UIViewController,UIPopoverPresentationControllerDelegate, C
             noLessonLabel.isHidden = false
             venueLabel.isHidden = true
             currentTimeLabel.isHidden = true
-            wifiButton.isHidden = true
+            imageView.isHidden = true
             broadcastLabel.isHidden = true
             
         }else if currentLesson == nil{
             currentTimeLabel.textColor = UIColor.gray
-            wifiButton.setImage(#imageLiteral(resourceName: "bt_dis"), for: .normal)
+            imageView.image = #imageLiteral(resourceName: "bt_off")
             broadcastLabel.textColor = UIColor.gray
         }
     }
+    
     private func checkUserInBackGround(){
         let token = UserDefaults.standard.string(forKey: "token")!
         let headersTimetable:HTTPHeaders = [

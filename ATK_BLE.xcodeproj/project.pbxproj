@@ -383,7 +383,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 2F04FDBD21813133A02CD771 /* Pods-ATK_BLE.debug.xcconfig */;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = "$(inherited)";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				DEVELOPMENT_TEAM = EBWK75HAK4;
@@ -402,7 +402,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = A480AF68145EB8C64A5ACCB4 /* Pods-ATK_BLE.release.xcconfig */;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = "$(inherited)";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				DEVELOPMENT_TEAM = EBWK75HAK4;
