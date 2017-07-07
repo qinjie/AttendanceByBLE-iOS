@@ -83,6 +83,12 @@ class LessonDetailController: UIViewController {
         absentLabel.text = String(describing: history.absent!)
     }
     
+    @IBAction func detailedHistory(_ sender: UIButton) {
+        
+        self.performSegue(withIdentifier: "lesson detail by date", sender: self.lesson)
+        
+    }
+    
     private func calTimeDiff(start_time:String, end_time:String) -> Int{
         
         let startSplit = start_time.components(separatedBy: ":")
@@ -91,6 +97,11 @@ class LessonDetailController: UIViewController {
         let eHour = Int(endSplit[0])!
         return eHour - sHour
         
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        let destinationVC = segue.destination as! HistoryByLessonController
+        destinationVC.lesson = sender as! Lesson
     }
 
 }

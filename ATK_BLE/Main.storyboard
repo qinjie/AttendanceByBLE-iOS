@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="12118" systemVersion="16F73" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="12120" systemVersion="16F73" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12086"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12088"/>
         <capability name="Alignment constraints to the first baseline" minToolsVersion="6.0"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -267,6 +267,9 @@
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="HmY-gd-FrU">
                                 <rect key="frame" x="249" y="439" width="110" height="30"/>
                                 <state key="normal" title="Detailed History"/>
+                                <connections>
+                                    <action selector="detailedHistory:" destination="fOK-Fq-zyH" eventType="touchUpInside" id="8Ef-hi-oXa"/>
+                                </connections>
                             </button>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Present:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="fhg-jU-jMr">
                                 <rect key="frame" x="52" y="503" width="64" height="21"/>
@@ -388,11 +391,55 @@
                         <outlet property="timeLabel" destination="xnW-Zp-KB9" id="RDb-DN-oOw"/>
                         <outlet property="totalsessionLabel" destination="nRc-fm-SaJ" id="vQz-fN-0LA"/>
                         <outlet property="venueLabel" destination="GeK-si-vdl" id="fEf-d5-VtQ"/>
+                        <segue destination="W3q-lp-zw0" kind="show" identifier="lesson detail by date" id="D4Y-Dq-p3o"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="pmH-mB-uOZ" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3336.8000000000002" y="-1040.3298350824589"/>
+            <point key="canvasLocation" x="3367" y="-960"/>
+        </scene>
+        <!--History By Lesson Controller-->
+        <scene sceneID="UiK-mG-LFo">
+            <objects>
+                <viewController id="W3q-lp-zw0" customClass="HistoryByLessonController" customModule="ATK_BLE" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="56D-mt-H6W"/>
+                        <viewControllerLayoutGuide type="bottom" id="JQD-tN-hTR"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="HtW-ZL-VdD">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="hjD-Y9-pNP">
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="618"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <prototypes>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="cell" id="iIW-hd-dvR" customClass="LessonCell" customModule="ATK_BLE" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="28" width="375" height="44"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="iIW-hd-dvR" id="RTe-5n-zSu">
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                        </tableViewCellContentView>
+                                    </tableViewCell>
+                                </prototypes>
+                            </tableView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="hjD-Y9-pNP" firstAttribute="bottom" secondItem="JQD-tN-hTR" secondAttribute="top" id="ISk-Fi-4SD"/>
+                            <constraint firstAttribute="trailing" secondItem="hjD-Y9-pNP" secondAttribute="trailing" id="ck4-Cc-Uvz"/>
+                            <constraint firstItem="hjD-Y9-pNP" firstAttribute="leading" secondItem="HtW-ZL-VdD" secondAttribute="leading" id="irN-bU-KtL"/>
+                            <constraint firstItem="hjD-Y9-pNP" firstAttribute="top" secondItem="HtW-ZL-VdD" secondAttribute="top" id="xuT-P1-aCV"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="tableView" destination="hjD-Y9-pNP" id="jMM-JZ-RM9"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="faN-id-vXy" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="4197.6000000000004" y="-960.2698650674663"/>
         </scene>
         <!--History-->
         <scene sceneID="i8x-Ko-4c1">
@@ -604,7 +651,7 @@
             </objects>
             <point key="canvasLocation" x="3225" y="36"/>
         </scene>
-        <!--Change Password Controller-->
+        <!--Change Password-->
         <scene sceneID="Wd5-kp-6bq">
             <objects>
                 <viewController id="Ucb-le-PL6" customClass="ChangePasswordController" customModule="ATK_BLE" customModuleProvider="target" sceneMemberID="viewController">
@@ -695,6 +742,7 @@
                             <constraint firstItem="cpx-uJ-1HE" firstAttribute="centerX" secondItem="wyV-Qy-hgQ" secondAttribute="centerX" id="zVB-QF-6V1"/>
                         </constraints>
                     </view>
+                    <navigationItem key="navigationItem" title="Change Password" id="lMe-mA-qm3"/>
                     <connections>
                         <outlet property="confirmTF" destination="cpx-uJ-1HE" id="x3D-QU-EVF"/>
                         <outlet property="newTF" destination="teY-3s-DD9" id="87f-87-1oG"/>

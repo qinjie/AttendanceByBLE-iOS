@@ -245,7 +245,7 @@ class NowController: UIViewController,UIPopoverPresentationControllerDelegate, C
                     var minute:Int!
                     hour = Int((time?[0])!)
                     minute = Int((time?[1])!)
-                    let totalSecond = hour*3600 + minute*60 - 300
+                    let totalSecond = hour*3600 + minute*60 - 900
                     let hr = totalSecond/3600
                     let min = (totalSecond%3600)/60
                     subjectLabel.text = nextLesson.subject! + " " + nextLesson.catalog!

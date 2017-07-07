@@ -38,7 +38,7 @@ struct Constant{
     static var password = ""
     static var major : Int = 0
     static var minor : Int = 0
-    static var id : Int = 0
+    static var student_id : Int = 0
     static var email = "np@gmail.com"
     static var noti = true
     static var isScanning = true
