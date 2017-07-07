@@ -29,8 +29,9 @@ struct Constant{
     
     static let URLchangepass = baseURL + "api/web/index.php/v1/user/change-password"
     static let URLchangedevice = baseURL + "api/web/index.php/v1/student/register-device"
+    static let URLcheckAttandance = baseURL + "/api/web/index.php/v1/timetable/get-status"
+    
     static var device_token = ""
-
     static let photoURL = "http://128.199.93.67/WeTrack/backend/web/"
     static var token = ""
     static var username = ""
@@ -38,7 +39,7 @@ struct Constant{
     static var password = ""
     static var major : Int = 0
     static var minor : Int = 0
-    static var id : Int = 0
+    static var student_id : Int = 0
     static var email = "np@gmail.com"
     static var noti = true
     static var isScanning = true
@@ -47,6 +48,8 @@ struct Constant{
     static var isLogin = false
     static var device_hash = ""
     static var change_device = false
+    
+    static var identifier = ""
     
 }
 
@@ -64,6 +67,7 @@ struct GlobalData{
     static var currentLecturerMajor = 0
     static var currentLecturerMinor = 0
     static var currentLecturerId = 0
+    static var myAttendance = [Int]()
  
 }
 

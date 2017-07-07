@@ -10,13 +10,13 @@ import UIKit
 import CoreBluetooth
 import CoreLocation
 import Alamofire
-
+import UserNotifications
 
 @UIApplicationMain
-class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate {
+class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate, UNUserNotificationCenterDelegate {
 
     var window: UIWindow?
-    self.locationManager = CLLocationManager()
+    var locationManager = CLLocationManager()
     var identifier : UIBackgroundTaskIdentifier! = UIBackgroundTaskInvalid
     var id1 = ""
     var id2 = ""
@@ -33,9 +33,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
             let home:UITabBarController = (mainStoryboard.instantiateViewController(withIdentifier: "home") as? UITabBarController)!
             self.window?.rootViewController = home
         }
-        UNUserNotificationCenter.current().delegate = self
-        UNUserNotificationCenter.current().requestAuthorization(options: [.alert,.badge,.sound]) { (granted, error) in
-        }
         
         NotificationCenter.default.addObserver(self, selector: #selector(userFailed), name: Notification.Name(rawValue: "userFailed"), object: nil)
         return true
@@ -47,75 +44,55 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
     func locationManager(_ manager: CLLocationManager, didStopMonitoringFor region: CLRegion) {
         print("Stop bg monitoring \(region.identifier) region")
     }
-    private func checkAttandance() -> Bool {
-        var result = false
-        let token = UserDefaults.standard.string(forKey: "token")
-        let header:HTTPHeaders = [
-            "Authorization" : "Bearer " + token!
-        ]
-        let parameter:Parameters = ["lesson_date_id":GlobalData.currentLesson.ldateid!]
-        print(GlobalData.currentLesson.ldateid!)
-        Alamofire.request(Constant.URLcheckAttandance,method: .post, parameters: parameter, encoding: JSONEncoding.default, headers: header).responseJSON(completionHandler: { (response:DataResponse) in
-            if let JSON = response.result.value as? Int{
-                print("JSON below")
-                print(JSON)
-                if(JSON >= 0) {
-                    result = true
-                }
-            }
-        })
-        return result
-    }
+    
     func locationManager(_ manager: CLLocationManager, didDetermineState state: CLRegionState, for region: CLRegion){
         
         print("bg did determine state \(region.identifier)" )
         switch state {
         case .inside:
-            let a = checkAttandance()
-            if(a) {
-                print("//////taken already")
-            }
-            else {
-            print(" bg Inside \(region.identifier)");
-            Constant.token = UserDefaults.standard.string(forKey: "token")!
-            Constant.student_id = UserDefaults.standard.integer(forKey: "student_id")
-            
-            let para1: Parameters = [
-                "lesson_date_id": GlobalData.currentLesson.ldateid!,
-                "student_id_1": Constant.student_id,
-                "student_id_2": region.identifier,
-                ]
-            
-            
-            let parameters: [String: Any] = ["data": [para1]]
-            
-            print(parameters)
-            let headers: HTTPHeaders = [
-                "Authorization": "Bearer " + Constant.token,
-                "Content-Type": "application/json"
-            ]
-            
-            Alamofire.request(Constant.URLatk, method: .post, parameters: parameters, encoding: JSONEncoding.default, headers: headers).responseJSON { (response:DataResponse) in
-                
-                let statusCode = response.response?.statusCode
-                if (statusCode == 200){
-                    GlobalData.attendance.append(GlobalData.currentLesson.ldateid!)
-                    NotificationCenter.default.post(name: NSNotification.Name(rawValue: "atksuccesfully"), object: nil)
-                    print("gl\(GlobalData.attendance)")
-                    
-                }
-                if let data = response.result.value{
-                    print("///////////////result below////////////")
-                    print(data)
-                }
-                
-            }
-            }
+                checkAttandance.checkAttandance()
+                Constant.identifier = region.identifier
+                NotificationCenter.default.addObserver(self,selector: #selector(takeAttendance), name: NSNotification.Name(rawValue: "notTaken"), object: nil)
         case .outside: print("Outside bg \(region.identifier)")
         case .unknown: print("Unknown")
         }
     }
-    
+    func takeAttendance() {
+        print(" bg Inside \(Constant.identifier)");
+        Constant.token = UserDefaults.standard.string(forKey: "token")!
+        Constant.student_id = UserDefaults.standard.integer(forKey: "student_id")
+        
+        let para1: Parameters = [
+            "lesson_date_id": GlobalData.currentLesson.ldateid!,
+            "student_id_1": Constant.student_id,
+            "student_id_2": Constant.identifier,
+            ]
+        
+        
+        let parameters: [String: Any] = ["data": [para1]]
+        
+        print(parameters)
+        let headers: HTTPHeaders = [
+            "Authorization": "Bearer " + Constant.token,
+            "Content-Type": "application/json"
+        ]
+        
+        Alamofire.request(Constant.URLatk, method: .post, parameters: parameters, encoding: JSONEncoding.default, headers: headers).responseJSON { (response:DataResponse) in
+            
+            let statusCode = response.response?.statusCode
+            if (statusCode == 200){
+                GlobalData.myAttendance.append(GlobalData.currentLesson.ldateid!)
+                NotificationCenter.default.post(name: NSNotification.Name(rawValue: "atksuccesfully"), object: nil)
+                print("gl\(GlobalData.attendance)")
+                
+            }
+            if let data = response.result.value{
+                print("///////////////result below////////////")
+                print(data)
+            }
+            
+        }
+    }
     
     func locationManager(_ manager: CLLocationManager, didEnterRegion region: CLRegion) {
             print(" bg enter region!!!  \(region.identifier)" )
@@ -216,5 +193,33 @@ struct filePath{
         let url = manager.urls(for: .documentDirectory, in: .userDomainMask).first
         return url!.appendingPathComponent("historyDT").path
     }
+}
+
+struct checkAttandance{
+    
+    static func checkAttandance() {
+        let token = UserDefaults.standard.string(forKey: "token")
+        let header:HTTPHeaders = [
+            "Authorization" : "Bearer " + token!
+        ]
+        let parameter:Parameters = ["lesson_date_id":GlobalData.currentLesson.ldateid!]
+        print(GlobalData.currentLesson.ldateid!)
+        //spinner indicator
+        
+        Alamofire.request(Constant.URLcheckAttandance,method: .post, parameters: parameter, encoding: JSONEncoding.default, headers: header).responseJSON(completionHandler: { (response:DataResponse) in
+            if let JSON = response.result.value as? Int{
+                print("JSON below")
+                print(JSON)
+                if(JSON < 0) {
+                    NotificationCenter.default.post(name: NSNotification.Name(rawValue: "notTaken"), object: nil)
+                }
+                else{
+                    print("/////////taken already")
+                    NotificationCenter.default.post(name: NSNotification.Name(rawValue: "taken"), object: nil)
+                }
+            }
+        })
+    }
+    
 }
 

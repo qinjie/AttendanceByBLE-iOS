@@ -80,7 +80,7 @@ class LoginController: UIViewController {
                     Constant.name = JSON["name"] as! String
                     Constant.token = JSON["token"] as! String
                     UserDefaults.standard.set(Constant.token, forKey: "token")
-                    Constant.id = JSON[ "id"] as! Int
+                    Constant.student_id = JSON[ "id"] as! Int
                     Constant.major = JSON["major"] as! Int
                     Constant.minor = JSON["minor"] as! Int
                     Constant.device_hash = JSON["device_hash"] as! String
@@ -93,7 +93,7 @@ class LoginController: UIViewController {
                     UserDefaults.standard.set(Constant.major, forKey: "major")
                     UserDefaults.standard.set(Constant.minor, forKey: "minor")
                     UserDefaults.standard.set(Constant.name, forKey: "name")
-                    UserDefaults.standard.set(Constant.id, forKey: "student_id")
+                    UserDefaults.standard.set(Constant.student_id, forKey: "student_id")
                 }
             }else{
                 alertController.dismiss(animated: false, completion: nil)
@@ -175,8 +175,7 @@ class LoginController: UIViewController {
         ]
         
         let parameters: [String: Any] = [
-            "student_id":Constant.id
-        ]
+            "student_id": Constant.student_id        ]
         
         Alamofire.request(Constant.URLallClassmate, method: .post, parameters: parameters, encoding: JSONEncoding.default, headers: headers).responseJSON { (response:DataResponse) in
             print("start load clssmates")
@@ -188,13 +187,13 @@ class LoginController: UIViewController {
                     classmates.lesson_id = json["lesson_id"] as? Int
                     classmates.major = [Int]()
                     classmates.minor = [Int]()
-                    classmates.id = [Int]()
+                    classmates.student_id = [Int]()
                     
                     if let list = json["students"] as? [[String:AnyObject]]{
                         for x in list{
                             let newId = x["id"] as! Int
-                            if newId != Constant.id{
-                                classmates.id?.append(newId)
+                            if newId != Constant.student_id{
+                                classmates.student_id?.append(newId)
                                 if let y = x["beacon_user"] as? [String:AnyObject]{
                                     let newmajor = y["major"] as! Int
                                     classmates.major?.append(newmajor)

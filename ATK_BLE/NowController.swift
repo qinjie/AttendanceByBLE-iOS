@@ -68,7 +68,9 @@ class NowController: UIViewController,UIPopoverPresentationControllerDelegate, C
         locationManager.requestAlwaysAuthorization()
         UNUserNotificationCenter.current().delegate = self
         checkTime()
-        NotificationCenter.default.addObserver(self,selector: #selector(success), name: NSNotification.Name(rawValue: "atksuccesfully"), object: nil)    }
+        NotificationCenter.default.addObserver(self,selector: #selector(success), name: NSNotification.Name(rawValue: "atksuccesfully"), object: nil)
+        //NotificationCenter.default.addObserver(self,selector: #selector(changeLabel), name: NSNotification.Name(rawValue: "taken"), object: nil) 
+    }
     
     override func viewWillAppear(_ animated: Bool) {
         bluetoothManager = CBPeripheralManager.init(delegate: self, queue: nil)
@@ -98,6 +100,7 @@ class NowController: UIViewController,UIPopoverPresentationControllerDelegate, C
         if imageView.isAnimating{
             imageView.stopAnimating()
             imageView.image = #imageLiteral(resourceName: "bt_on")
+            bluetoothManager.stopAdvertising()
             return
         }
         if currentLesson != nil {
@@ -123,6 +126,7 @@ class NowController: UIViewController,UIPopoverPresentationControllerDelegate, C
         //app.openURL(url!)
         app.open(url!, options: ["string":""], completionHandler: nil)
     }
+    
     func detectClassmate() {
         uuid = NSUUID(uuidString: GlobalData.lessonUUID[currentLesson.lesson_id!]!)as UUID?
         print("Current lesson: \(uuid)")
@@ -188,11 +192,11 @@ class NowController: UIViewController,UIPopoverPresentationControllerDelegate, C
             self.present(alert, animated: true, completion: nil)
             
         }        }
-    }
     func testSendNoti() {
         let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 3.0, repeats: false)
         let content = notiContent(title: "successfull", body: "You have successfully taken attendance")
-        addNotification(trigger: trigger, content: content, identifier: "a")            }    func locationManager(_ manager: CLLocationManager, didStartMonitoringFor region: CLRegion) {
+        addNotification(trigger: trigger, content: content, identifier: "a")            }
+func locationManager(_ manager: CLLocationManager, didStartMonitoringFor region: CLRegion) {
         print("Started monitoring \(region.identifier) region")
     }
     func locationManager(_ manager: CLLocationManager, didStopMonitoringFor region: CLRegion) {
@@ -202,28 +206,6 @@ func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent noti
     completionHandler([.alert,.badge,.sound])
 }
 
-public func checkAttandance() -> Bool {
-    var result = false
-    let token = UserDefaults.standard.string(forKey: "token")
-    let header:HTTPHeaders = [
-        "Authorization" : "Bearer " + token!
-    ]
-    // let parameter: [String:Any] = ["lesson-date-id":GlobalData.currentLesson.ldateid!]
-    let parameter:Parameters = ["lesson_date_id":GlobalData.currentLesson.ldateid!]
-    Alamofire.request(Constant.URLcheckAttandance,method: .post, parameters: parameter, encoding: JSONEncoding.default, headers: header).responseJSON(completionHandler: { (response:DataResponse) in
-        if let JSON = response.result.value as? Int {
-            print("////////(JSON)")
-            if(JSON >= 0) {
-                result = true
-            }
-            else {
-                result = false
-                print(JSON)
-            }            }
-    })
-    return result
-    
-}
     func locationManager(_ manager: CLLocationManager, didExitRegion region: CLRegion) {
         if (region is CLBeaconRegion) {
             print("did exit region!!! \(region.identifier)")
@@ -234,10 +216,6 @@ public func checkAttandance() -> Bool {
             print("did enter region!!! \(region.identifier)")
         }
     }
-    func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
-        completionHandler([.alert,.badge,.sound])
-    }
-
     
     private func checkTime(){
         today = Date()
@@ -262,13 +240,9 @@ public func checkAttandance() -> Bool {
                 currentTimeLabel.text = "Waiting for \nbeacons from classmates"
                 GlobalData.currentLesson = currentLesson
                 imageView.image = #imageLiteral(resourceName: "bt_on")
-                if(checkAttandance()) {
-                    let value = checkAttandance()
-                    print(value)
-                    
-                    self.currentTimeLabel.text = "You have taken attendance \nfor \(self.currentLesson.catalog!)"
-                    self.currentTimeLabel.textColor = UIColor.green
-                }
+                 checkAttandance.checkAttandance()
+                 NotificationCenter.default.addObserver(self,selector: #selector(changeLabel), name: NSNotification.Name(rawValue: "taken"), object: nil)
+                
                 print("Self.classmatesall \(GlobalData.classmates.count)!")
                 print("Current Lesson : \(GlobalData.lessonUUID)")
                 self.classmate = GlobalData.classmates.first(where : {($0.lesson_id! == currentLesson.lesson_id!)})!
@@ -296,6 +270,10 @@ public func checkAttandance() -> Bool {
             }
         }
         updateLabels()
+    }
+    func changeLabel() {
+        self.currentTimeLabel.text = "You have taken attendance \nfor \(self.currentLesson.catalog!)"
+        self.currentTimeLabel.textColor = UIColor.green
     }
     
     private func updateLabels(){

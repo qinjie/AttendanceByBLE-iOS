@@ -194,13 +194,13 @@ class HistoryDT: NSObject, NSCoding{
 class Classmate: NSObject, NSCoding{
     
     var lesson_id:Int?
-    var id:[Int]?
+    var student_id:[Int]?
     var major:[Int]?
     var minor:[Int]?
     
     override init(){
         lesson_id = 0
-        id = []
+        student_id = []
         major = []
         minor = []
     }
@@ -208,7 +208,7 @@ class Classmate: NSObject, NSCoding{
     required init?(coder aDecoder: NSCoder) {
         
         lesson_id = aDecoder.decodeObject(forKey: "lesson_id") as? Int
-        id = aDecoder.decodeObject(forKey: "id") as? [Int]
+        student_id = aDecoder.decodeObject(forKey: "id") as? [Int]
         major = aDecoder.decodeObject(forKey: "major") as? [Int]
         minor = aDecoder.decodeObject(forKey: "minor") as? [Int]
         
@@ -217,7 +217,7 @@ class Classmate: NSObject, NSCoding{
     func encode(with aCoder: NSCoder) {
         
         aCoder.encode(lesson_id, forKey: "lesson_id")
-        aCoder.encode(id, forKey: "id")
+        aCoder.encode(student_id, forKey: "id")
         aCoder.encode(major, forKey: "major")
         aCoder.encode(minor, forKey: "minor")
         
