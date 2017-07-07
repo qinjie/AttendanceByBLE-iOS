@@ -22,6 +22,7 @@
 		E1A979311F09DFAC0050431A /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E1A979231F09DFAC0050431A /* Main.storyboard */; };
 		E1A979321F09DFAC0050431A /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E1A979241F09DFAC0050431A /* LaunchScreen.storyboard */; };
 		E1A9793A1F09E2400050431A /* LessonCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1A979381F09E2400050431A /* LessonCell.swift */; };
+		E1FB8BE41F0F48D500E087CB /* HistoryByLessonController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1FB8BE31F0F48D500E087CB /* HistoryByLessonController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -45,6 +46,7 @@
 		E1A979241F09DFAC0050431A /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
 		E1A979351F09E1ED0050431A /* ATK_BLE-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "ATK_BLE-Bridging-Header.h"; sourceTree = "<group>"; };
 		E1A979381F09E2400050431A /* LessonCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LessonCell.swift; sourceTree = "<group>"; };
+		E1FB8BE31F0F48D500E087CB /* HistoryByLessonController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HistoryByLessonController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -115,6 +117,7 @@
 			children = (
 				E1A9791B1F09DFAC0050431A /* NowController.swift */,
 				E1A9791C1F09DFAC0050431A /* TimetableController.swift */,
+				E1FB8BE31F0F48D500E087CB /* HistoryByLessonController.swift */,
 				E1A9791D1F09DFAC0050431A /* HistoryController.swift */,
 				E1A9791E1F09DFAC0050431A /* ChangePasswordController.swift */,
 				E1A9791F1F09DFAC0050431A /* LessonDetailController.swift */,
@@ -278,6 +281,7 @@
 				E1A9792A1F09DFAC0050431A /* TimetableController.swift in Sources */,
 				E1A9793A1F09E2400050431A /* LessonCell.swift in Sources */,
 				E1A9792E1F09DFAC0050431A /* LoginController.swift in Sources */,
+				E1FB8BE41F0F48D500E087CB /* HistoryByLessonController.swift in Sources */,
 				E1A979291F09DFAC0050431A /* NowController.swift in Sources */,
 				E1A9792C1F09DFAC0050431A /* ChangePasswordController.swift in Sources */,
 				E1A9792B1F09DFAC0050431A /* HistoryController.swift in Sources */,

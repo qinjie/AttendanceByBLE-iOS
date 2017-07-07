@@ -10,9 +10,9 @@ import UIKit
 
 class HistoryController: UITableViewController {
 
-    let wday = ["Monday", "Tuesday", "Wednesday", "Thursday" , "Friday", "Saturday"]
+    var wday = [String]()
     
-    let wdayInt = ["2", "3", "4", "5", "6", "7"]
+    var wdayInt = [String]()
     
     let wdayDict: [String: Any] = [
         "2" : "Monday",
@@ -23,8 +23,30 @@ class HistoryController: UITableViewController {
         "7" : "Saturday"
     ]
     
+    let wdayDict2: [String: Any] = [
+        "Monday"    : "2",
+        "Tuesday"   : "3",
+        "Wednesday" : "4",
+        "Thursday"  : "5",
+        "Friday"    : "6",
+        "Saturday"  : "7"
+    ]
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        let date = Date()
+        let today = Format.Format(date: date, format: "EEEE")
+        var i = Int(wdayDict2[today] as! String)!
+        for _ in 0...5{
+            if i == 1{
+                i = 7
+            }
+            wday.append(wdayDict[String(i)] as! String)
+            wdayInt.append(String(i))
+            i -= 1
+        }
+        print(wday)
+        print(wdayInt)
         // Do any additional setup after loading the view.
     }
 
@@ -48,11 +70,25 @@ class HistoryController: UITableViewController {
         cell.venue.isHidden = true
         cell.iconView.isHidden = false
         if history != nil {
-            cell.iconView.image = #imageLiteral(resourceName: "green")
-            cell.arrivingtimeLabel.text = history?.created_at
-            cell.arrivingtimeLabel.isHidden = false
+            if history?.status == 0 {
+                cell.iconView.image = #imageLiteral(resourceName: "green")
+                cell.arrivingtimeLabel.text = history?.created_at
+                cell.arrivingtimeLabel.isHidden = false
+            }
+                
+            else if history?.status == -1{
+                cell.iconView.image = #imageLiteral(resourceName: "red")
+                cell.arrivingtimeLabel.isHidden = true
+            }
+                
+            else{
+                cell.iconView.image = #imageLiteral(resourceName: "red")
+                cell.arrivingtimeLabel.text = history?.created_at
+                cell.arrivingtimeLabel.isHidden = false
+            }
             
-        }else{
+        }
+        else{
             
             cell.iconView.image = #imageLiteral(resourceName: "questionmark")
             cell.arrivingtimeLabel.text = "00:00"
@@ -83,11 +119,15 @@ class HistoryController: UITableViewController {
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         // Get the new view controller using segue.destinationViewController.
-        let destination = segue.destination as! LessonDetailController
-        // Pass the selected object to the new view controller.
-        if let lesson = sender as? Lesson{
-            destination.lesson = lesson
+        if segue.identifier == "lesson detail"{
+            if let destination = segue.destination as? LessonDetailController{
+                if let lesson = sender as? Lesson{
+                    destination.lesson = lesson
+                }
+            }
         }
+        // Pass the selected object to the new view controller.
+        
     }
 
 }
