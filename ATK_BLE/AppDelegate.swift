@@ -33,6 +33,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
             let home:UITabBarController = (mainStoryboard.instantiateViewController(withIdentifier: "home") as? UITabBarController)!
             self.window?.rootViewController = home
         }
+        UNUserNotificationCenter.current().delegate = self
+        UNUserNotificationCenter.current().requestAuthorization(options: [.alert]) {
+            (success, error) in
+            if success {
+                print("granted noti")
+            }
+            else {
+                print("denided noti")
+            }
+        }
         
         NotificationCenter.default.addObserver(self, selector: #selector(userFailed), name: Notification.Name(rawValue: "userFailed"), object: nil)
         return true
@@ -50,7 +60,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
         print("bg did determine state \(region.identifier)" )
         switch state {
         case .inside:
-                checkAttandance.checkAttandance()
+            print("inside liao")
+                checkAttendance.checkAttendance()
                 Constant.identifier = region.identifier
                 NotificationCenter.default.addObserver(self,selector: #selector(takeAttendance), name: NSNotification.Name(rawValue: "notTaken"), object: nil)
         case .outside: print("Outside bg \(region.identifier)")
@@ -84,7 +95,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
                 GlobalData.myAttendance.append(GlobalData.currentLesson.ldateid!)
                 NotificationCenter.default.post(name: NSNotification.Name(rawValue: "atksuccesfully"), object: nil)
                 print("gl\(GlobalData.attendance)")
-                
+                let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 3.0, repeats: false)
+                let content = checkAttendance.notiContent(title: "successfull", body: "You have successfully taken attendance")
+                checkAttendance.addNotification(trigger: trigger, content: content, identifier: "a")
             }
             if let data = response.result.value{
                 print("///////////////result below////////////")
@@ -93,7 +106,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
             
         }
     }
+    func testSendNoti() {
+        let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 3.0, repeats: false)
+        let content = checkAttendance.notiContent(title: "successfull", body: "You have successfully taken attendance")
+        checkAttendance.addNotification(trigger: trigger, content: content, identifier: "a")            }
     
+    func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
+        completionHandler([.alert,.badge,.sound])
+    }
     func locationManager(_ manager: CLLocationManager, didEnterRegion region: CLRegion) {
             print(" bg enter region!!!  \(region.identifier)" )
     }
@@ -195,30 +215,49 @@ struct filePath{
     }
 }
 
-struct checkAttandance{
+struct checkAttendance{
     
-    static func checkAttandance() {
+    static func checkAttendance() {
         let token = UserDefaults.standard.string(forKey: "token")
         let header:HTTPHeaders = [
             "Authorization" : "Bearer " + token!
         ]
         let parameter:Parameters = ["lesson_date_id":GlobalData.currentLesson.ldateid!]
         print(GlobalData.currentLesson.ldateid!)
-        //spinner indicator
         
         Alamofire.request(Constant.URLcheckAttandance,method: .post, parameters: parameter, encoding: JSONEncoding.default, headers: header).responseJSON(completionHandler: { (response:DataResponse) in
             if let JSON = response.result.value as? Int{
                 print("JSON below")
                 print(JSON)
-                if(JSON < 0) {
-                    NotificationCenter.default.post(name: NSNotification.Name(rawValue: "notTaken"), object: nil)
-                }
-                else{
+                if(JSON >= 0) {
                     print("/////////taken already")
                     NotificationCenter.default.post(name: NSNotification.Name(rawValue: "taken"), object: nil)
                 }
+                else {
+                    print("JSON not > 0")
+                }
+               
+            }
+            //check if JSON is nil
+            else {
+                NotificationCenter.default.post(name: NSNotification.Name(rawValue: "notTaken"), object: nil)
             }
         })
+    }
+    static func notiContent(title: String, body: String) -> UNMutableNotificationContent {
+        let content = UNMutableNotificationContent()
+        content.title = title
+        content.body = body
+        return content
+    }
+    static func addNotification(trigger: UNNotificationTrigger?, content:UNMutableNotificationContent, identifier: String) {
+        let request = UNNotificationRequest(identifier: identifier, content: content, trigger: trigger)
+        UNUserNotificationCenter.current().add(request) {
+            (error) in
+            if error != nil {
+                print("error adding notigicaion: \(error!.localizedDescription)")
+            }
+        }
     }
     
 }
