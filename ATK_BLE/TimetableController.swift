@@ -13,7 +13,6 @@ class TimetableController: UITableViewController {
 
     let today = Date()
     let dateFormatter = DateFormatter()
-    
     var JSON : [[String:Any]]!
     
     let wday = ["Monday", "Tuesday", "Wednesday", "Thursday" , "Friday", "Saturday"]
@@ -27,7 +26,7 @@ class TimetableController: UITableViewController {
         dateFormatter.dateFormat = "MMM dd (E)"
         let title = dateFormatter.string(from: today)
         navigationItem.title = "Timetable \(title)"
-
+        
         // Do any additional setup after loading the view.
     }
     

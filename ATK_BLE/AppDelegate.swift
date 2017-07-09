@@ -20,7 +20,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
     var identifier : UIBackgroundTaskIdentifier! = UIBackgroundTaskInvalid
     var id1 = ""
     var id2 = ""
-
+    
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
 
@@ -43,6 +43,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
                 print("denided noti")
             }
         }
+        UIApplication.shared.cancelAllLocalNotifications()
         
         NotificationCenter.default.addObserver(self, selector: #selector(userFailed), name: Notification.Name(rawValue: "userFailed"), object: nil)
         return true
@@ -98,6 +99,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
                 let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 3.0, repeats: false)
                 let content = checkAttendance.notiContent(title: "successfull", body: "You have successfully taken attendance")
                 checkAttendance.addNotification(trigger: trigger, content: content, identifier: "a")
+                
             }
             if let data = response.result.value{
                 print("///////////////result below////////////")
@@ -234,7 +236,7 @@ struct checkAttendance{
                     NotificationCenter.default.post(name: NSNotification.Name(rawValue: "taken"), object: nil)
                 }
                 else {
-                    print("JSON not > 0")
+                    print("JSON not > or = 0")
                 }
                
             }
@@ -259,6 +261,5 @@ struct checkAttendance{
             }
         }
     }
-    
-}
+    }
 
