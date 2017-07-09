@@ -318,22 +318,7 @@ extension UIViewController {
         view.endEditing(true)
     }
     
-    func notiContent(title: String, body: String) -> UNMutableNotificationContent {
-        let content = UNMutableNotificationContent()
-        content.title = title
-        content.body = body
-        return content
-    }
-    func addNotification(trigger: UNNotificationTrigger?, content:UNMutableNotificationContent, identifier: String) {
-        let request = UNNotificationRequest(identifier: identifier, content: content, trigger: trigger)
-        UNUserNotificationCenter.current().add(request) {
-            (error) in
-            if error != nil {
-                print("error adding notigicaion: \(error!.localizedDescription)")
-            }
-        }
-    }
-    func displayAlert(title:String,message:String){
+        func displayAlert(title:String,message:String){
         
         let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
         alertController.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))

@@ -55,13 +55,20 @@ class NowController: UIViewController,UIPopoverPresentationControllerDelegate, C
         checkTime()
         NotificationCenter.default.addObserver(self, selector: #selector(updateTime), name: NSNotification.Name(rawValue: "updateTime"), object: nil)
         NotificationCenter.default.addObserver(self,selector: #selector(success), name: NSNotification.Name(rawValue: "atksuccesfully"), object: nil)
-        //NotificationCenter.default.addObserver(self,selector: #selector(changeLabel), name: NSNotification.Name(rawValue: "taken"), object: nil) 
+        NotificationCenter.default.addObserver(self,selector: #selector(changeLabel), name: NSNotification.Name(rawValue: "taken"), object: nil)
+    }
+    private func stopLiao(){
+        print("Stop Advertising!!")
     }
     
     override func viewWillAppear(_ animated: Bool) {
         bluetoothManager = CBPeripheralManager.init(delegate: self, queue: nil)
     }
-    
+  
+    override func viewWillDisappear(_ animated: Bool) {
+        bluetoothManager.stopAdvertising()
+    }
+
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
@@ -146,13 +153,14 @@ class NowController: UIViewController,UIPopoverPresentationControllerDelegate, C
         self.currentTimeLabel.text = "You have taken attendance \nfor \(self.currentLesson.catalog!)"
         self.currentTimeLabel.textColor = UIColor.green
         displayAlert(title: "Successful", message: "You have taken attendance for\(currentLesson.catalog!)")
+        
     }
     
     @objc private func broadcastSignal() {
         if imageView.isAnimating{
             imageView.stopAnimating()
             imageView.image = #imageLiteral(resourceName: "bt_on")
-            bluetoothManager.stopAdvertising()
+            //bluetoothManager.stopAdvertising()
             return
         }
         if currentLesson != nil {
@@ -177,6 +185,10 @@ class NowController: UIViewController,UIPopoverPresentationControllerDelegate, C
         let app = UIApplication.shared
         //app.openURL(url!)
         app.open(url!, options: ["string":""], completionHandler: nil)
+    }
+    func stopBroadcast() {
+        bluetoothManager.stopAdvertising()
+        self.imageView.stopAnimating()
     }
     
     private func detectClassmate() {
@@ -220,7 +232,15 @@ class NowController: UIViewController,UIPopoverPresentationControllerDelegate, C
         }
         print(status)
     }
-    private func broadcast() {
+    func broadcastTime(time:Int) {
+        let rand = time + Int(arc4random_uniform(3))
+        let x = rand * 60
+        let date = Date().addingTimeInterval(TimeInterval(x))
+        print("date \(date)")
+        let timer = Timer(fireAt: date, interval: 0, target: self, selector: #selector(broadcast), userInfo: nil, repeats: false)
+        RunLoop.main.add(timer, forMode: RunLoopMode.commonModes)
+    }
+    func broadcast() {
         if bluetoothManager.state == .poweredOn {
             /*let major = UInt16(UserDefaults.standard.string(forKey: "major")!)as! CLBeaconMajorValue
             let minor = UInt16(UserDefaults.standard.string(forKey: "minor")!)as! CLBeaconMinorValue */
@@ -231,6 +251,12 @@ class NowController: UIViewController,UIPopoverPresentationControllerDelegate, C
             dataDictionary = beaconRegion.peripheralData(withMeasuredPower: nil)
             //bluetoothManager = CBPeripheralManager.init(delegate: self, queue: nil)
             bluetoothManager.startAdvertising(dataDictionary as?[String: Any])
+            if(bluetoothManager.isAdvertising){
+                print("broadcasing!!!!!!!!!!!!!!!!!!!!\(beaconRegion.identifier)")
+            }
+            let date = Date().addingTimeInterval(TimeInterval(30))
+            let timer = Timer(fireAt: date, interval: 0, target: self, selector: #selector(stopBroadcast), userInfo: nil, repeats: false)
+            RunLoop.main.add(timer, forMode: RunLoopMode.commonModes)
         }
         else {
             let alert = UIAlertController(title: "Bluetooth Turn on Request", message: " AME would like to turn on your bluetooth!", preferredStyle: UIAlertControllerStyle.alert)
@@ -244,20 +270,21 @@ class NowController: UIViewController,UIPopoverPresentationControllerDelegate, C
             self.present(alert, animated: true, completion: nil)
             
         }        }
+
    private func testSendNoti() {
         let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 3.0, repeats: false)
-        let content = notiContent(title: "successfull", body: "You have successfully taken attendance")
-        addNotification(trigger: trigger, content: content, identifier: "a")            }
-func locationManager(_ manager: CLLocationManager, didStartMonitoringFor region: CLRegion) {
+        let content = checkAttendance.notiContent(title: "yeah", body: "Not taken yet!!")
+        checkAttendance.addNotification(trigger: trigger, content: content, identifier: "zzz")
+    }
+    func locationManager(_ manager: CLLocationManager, didStartMonitoringFor region: CLRegion) {
         print("Started monitoring \(region.identifier) region")
     }
     func locationManager(_ manager: CLLocationManager, didStopMonitoringFor region: CLRegion) {
         print("Stop monitoring \(region.identifier) region")
     }
-func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
-    completionHandler([.alert,.badge,.sound])
-}
-
+    func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
+        completionHandler([.alert,.badge,.sound])
+    }
     func locationManager(_ manager: CLLocationManager, didExitRegion region: CLRegion) {
         if (region is CLBeaconRegion) {
             print("did exit region!!! \(region.identifier)")
@@ -266,6 +293,15 @@ func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent noti
     func locationManager(_ manager: CLLocationManager, didEnterRegion region: CLRegion) {
         if (region is CLBeaconRegion) {
             print("did enter region!!! \(region.identifier)")
+        }
+    }
+    func locationManager(_ manager: CLLocationManager, didDetermineState state: CLRegionState, for region: CLRegion) {
+        print("fg did determine state!!!!!")
+        switch(state) {
+        case .inside:print("fg inside\(region.identifier)")
+            broadcast()
+        case .outside:print("fg outside\(region.identifier)")
+        case .unknown:print("fg unknown\(region.identifier)")
         }
     }
     
@@ -292,8 +328,9 @@ func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent noti
                 currentTimeLabel.text = "Waiting for \nbeacons from classmates"
                 GlobalData.currentLesson = currentLesson
                 imageView.image = #imageLiteral(resourceName: "bt_on")
-                checkAttandance.checkAttandance()
-                NotificationCenter.default.addObserver(self,selector: #selector(changeLabel), name: NSNotification.Name(rawValue: "taken"), object: nil)
+
+                checkAttendance.checkAttendance()
+
                 
                 print("Self.classmatesall \(GlobalData.classmates.count)!")
                 print("Current Lesson : \(GlobalData.lessonUUID)")
@@ -302,6 +339,10 @@ func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent noti
                 print("\(String(describing: GlobalData.currentLesson.catalog))")
                 print(UserDefaults.standard.string(forKey: "student_id")!)
                 detectClassmate()
+                
+                //broadcastTime(time: 1)
+                //broadcastTime(time: 5)
+                
             }else{
                 if let nextLesson = GlobalData.today.first(where: {$0.start_time!>currentTimeStr}){
                     //Estimate the next lesson time
