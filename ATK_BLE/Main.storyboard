@@ -821,7 +821,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="John" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kE4-ic-PaA">
-                                <rect key="frame" x="109" y="254" width="45" height="21"/>
+                                <rect key="frame" x="109" y="254" width="250" height="21"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="textColor"/>
@@ -837,6 +837,7 @@
                     <navigationItem key="navigationItem" id="SNd-UL-nh0"/>
                     <connections>
                         <outlet property="myImageView" destination="fJy-2e-E7I" id="ml0-9N-TVW"/>
+                        <outlet property="username" destination="kE4-ic-PaA" id="Wii-hk-Rnw"/>
                         <segue destination="BYZ-38-t0r" kind="presentation" identifier="sign out" id="b94-xA-FyH"/>
                     </connections>
                 </viewController>

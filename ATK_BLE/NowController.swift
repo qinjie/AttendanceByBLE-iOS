@@ -41,25 +41,10 @@ class NowController: UIViewController,UIPopoverPresentationControllerDelegate, C
     var dataDictionary = NSDictionary()
     var classmate = Classmate()
 
-    @IBAction func userInfobutton(_ sender: UIButton) {
-        self.performSegue(withIdentifier: "pop", sender: self)
-    }
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == "pop" {
-            let dest = segue.destination
-            if let pop = dest.popoverPresentationController {
-                pop.delegate = self
-                if(self.presentedViewController == nil) {
-                    displayAlert(title: "Info \(String(describing: UserDefaults.standard.string(forKey: "username")!))", message: "ll")
-                }            }
-        }
-    }
-    func adaptivePresentationStyle(for controller: UIPresentationController) -> UIModalPresentationStyle {
-        return .none
-    }
     override func viewDidLoad() {
         super.viewDidLoad()
         broadcastLabel.isHidden = true
+        setupTitle()
         setupImageView()
         checkUserInBackGround()
         // Do any additional setup after loading the view.
@@ -68,6 +53,7 @@ class NowController: UIViewController,UIPopoverPresentationControllerDelegate, C
         locationManager.requestAlwaysAuthorization()
         UNUserNotificationCenter.current().delegate = self
         checkTime()
+        NotificationCenter.default.addObserver(self, selector: #selector(updateTime), name: NSNotification.Name(rawValue: "updateTime"), object: nil)
         NotificationCenter.default.addObserver(self,selector: #selector(success), name: NSNotification.Name(rawValue: "atksuccesfully"), object: nil)
         //NotificationCenter.default.addObserver(self,selector: #selector(changeLabel), name: NSNotification.Name(rawValue: "taken"), object: nil) 
     }
@@ -75,10 +61,76 @@ class NowController: UIViewController,UIPopoverPresentationControllerDelegate, C
     override func viewWillAppear(_ animated: Bool) {
         bluetoothManager = CBPeripheralManager.init(delegate: self, queue: nil)
     }
-
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
+    }
+    
+    @IBAction private func userInfobutton(_ sender: UIButton) {
+        self.performSegue(withIdentifier: "pop", sender: self)
+    }
+    
+    func adaptivePresentationStyle(for controller: UIPresentationController) -> UIModalPresentationStyle {
+        return .none
+    }
+    
+     func updateTime(){
+    
+        self.setupTitle()
+        today = Date()
+        dateFormatter.dateFormat = "yyyy-MM-dd"
+        GlobalData.currentDateStr = dateFormatter.string(from: today)
+        GlobalData.today = GlobalData.timetable.filter({$0.ldate == GlobalData.currentDateStr})
+        //print("Today : " + String(GlobalData.today.count))
+        
+        //check if today have lessons
+        if GlobalData.today.count > 0 {
+            
+            dateFormatter.dateFormat = "HH:mm:ss"
+            currentTimeStr = dateFormatter.string(from: today)
+            currentLesson = GlobalData.today.first(where: {$0.start_time!<currentTimeStr && $0.end_time!>currentTimeStr})
+            //check current have lessons?
+            if currentLesson != nil {
+                subjectLabel.text = currentLesson.subject! + " " + currentLesson.catalog!
+                classLabel.text = currentLesson.class_section
+                timeLabel.text = displayTime.display(time: currentLesson.start_time!) + " - " + displayTime.display(time: currentLesson.end_time!)
+                venueLabel.text = currentLesson.venueName
+                currentTimeLabel.textColor = UIColor.gray
+                currentTimeLabel.text = "Waiting for \nbeacons from classmates"
+                GlobalData.currentLesson = currentLesson
+                imageView.image = #imageLiteral(resourceName: "bt_on")
+                
+            }else{
+                if let nextLesson = GlobalData.today.first(where: {$0.start_time!>currentTimeStr}){
+                    //Estimate the next lesson time
+                    let time = nextLesson.start_time?.components(separatedBy: ":")
+                    var hour:Int!
+                    var minute:Int!
+                    hour = Int((time?[0])!)
+                    minute = Int((time?[1])!)
+                    let totalSecond = hour*3600 + minute*60 - 900
+                    let hr = totalSecond/3600
+                    let min = (totalSecond%3600)/60
+                    subjectLabel.text = nextLesson.subject! + " " + nextLesson.catalog!
+                    classLabel.text = nextLesson.class_section
+                    timeLabel.text = displayTime.display(time: nextLesson.start_time!) + " - " + displayTime.display(time: nextLesson.end_time!)
+                    venueLabel.text = nextLesson.venueName
+                    currentTimeLabel.text = "not yet time \ntry again after \(hr):\(min)"
+                }
+            }
+        }
+        updateLabels()
+        
+    }
+    
+    private func setupTitle(){
+        
+        let date = Date()
+        let today = Format.Format(date: date, format: "EEE")
+        let todayDate = Format.Format(date: date, format: "dd MMM")
+        self.title = today + "(" + todayDate + ")"
+        
     }
     
     private func setupImageView(){
@@ -90,13 +142,13 @@ class NowController: UIViewController,UIPopoverPresentationControllerDelegate, C
         imageView.addGestureRecognizer(singleTap)
         
     }
-    func success() {
+    @objc private func success() {
         self.currentTimeLabel.text = "You have taken attendance \nfor \(self.currentLesson.catalog!)"
         self.currentTimeLabel.textColor = UIColor.green
         displayAlert(title: "Successful", message: "You have taken attendance for\(currentLesson.catalog!)")
     }
     
-    @objc func broadcastSignal() {
+    @objc private func broadcastSignal() {
         if imageView.isAnimating{
             imageView.stopAnimating()
             imageView.image = #imageLiteral(resourceName: "bt_on")
@@ -118,7 +170,7 @@ class NowController: UIViewController,UIPopoverPresentationControllerDelegate, C
         }
         
     }
-    func turnOnBlt() {
+    private func turnOnBlt() {
         //let bluetoothManager = BluetoothManagerHandler.sharedInstance()
         //bluetoothManager?.setPower(true)
         let url = URL(string: "App-Prefs:root=Bluetooth") //for bluetooth setting
@@ -127,7 +179,7 @@ class NowController: UIViewController,UIPopoverPresentationControllerDelegate, C
         app.open(url!, options: ["string":""], completionHandler: nil)
     }
     
-    func detectClassmate() {
+    private func detectClassmate() {
         uuid = NSUUID(uuidString: GlobalData.lessonUUID[currentLesson.lesson_id!]!)as UUID?
         print("Current lesson: \(uuid)")
         if ((classmate.student_id?.count)! == 0)
@@ -151,7 +203,7 @@ class NowController: UIViewController,UIPopoverPresentationControllerDelegate, C
             
         }
     }
-    func detectLecturer() {
+    private func detectLecturer() {
             uuid = NSUUID(uuidString: GlobalData.lessonUUID[currentLesson.lesson_id!]!)as UUID?
             let lecturerRegion = CLBeaconRegion(proximityUUID: uuid, major: UInt16(lecturerMajor)as CLBeaconMajorValue, minor: UInt16(lecturerMinor)as CLBeaconMinorValue, identifier: GlobalData.currentLecturerId.description)
             locationManager.startMonitoring(for: lecturerRegion)
@@ -168,7 +220,7 @@ class NowController: UIViewController,UIPopoverPresentationControllerDelegate, C
         }
         print(status)
     }
-    func broadcast() {
+    private func broadcast() {
         if bluetoothManager.state == .poweredOn {
             /*let major = UInt16(UserDefaults.standard.string(forKey: "major")!)as! CLBeaconMajorValue
             let minor = UInt16(UserDefaults.standard.string(forKey: "minor")!)as! CLBeaconMinorValue */
@@ -192,7 +244,7 @@ class NowController: UIViewController,UIPopoverPresentationControllerDelegate, C
             self.present(alert, animated: true, completion: nil)
             
         }        }
-    func testSendNoti() {
+   private func testSendNoti() {
         let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 3.0, repeats: false)
         let content = notiContent(title: "successfull", body: "You have successfully taken attendance")
         addNotification(trigger: trigger, content: content, identifier: "a")            }
@@ -240,8 +292,8 @@ func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent noti
                 currentTimeLabel.text = "Waiting for \nbeacons from classmates"
                 GlobalData.currentLesson = currentLesson
                 imageView.image = #imageLiteral(resourceName: "bt_on")
-                 checkAttandance.checkAttandance()
-                 NotificationCenter.default.addObserver(self,selector: #selector(changeLabel), name: NSNotification.Name(rawValue: "taken"), object: nil)
+                checkAttandance.checkAttandance()
+                NotificationCenter.default.addObserver(self,selector: #selector(changeLabel), name: NSNotification.Name(rawValue: "taken"), object: nil)
                 
                 print("Self.classmatesall \(GlobalData.classmates.count)!")
                 print("Current Lesson : \(GlobalData.lessonUUID)")
@@ -290,9 +342,30 @@ func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent noti
             broadcastLabel.isHidden = true
             
         }else if currentLesson == nil{
+            
+            subjectLabel.isHidden = false
+            classLabel.isHidden = false
+            timeLabel.isHidden = false
+            noLessonLabel.isHidden = true
+            venueLabel.isHidden = false
+            currentTimeLabel.isHidden = false
+            imageView.isHidden = false
+            broadcastLabel.isHidden = false
             currentTimeLabel.textColor = UIColor.gray
             imageView.image = #imageLiteral(resourceName: "bt_off")
             broadcastLabel.textColor = UIColor.gray
+            
+        }else{
+            
+            subjectLabel.isHidden = false
+            classLabel.isHidden = false
+            timeLabel.isHidden = false
+            noLessonLabel.isHidden = true
+            venueLabel.isHidden = false
+            currentTimeLabel.isHidden = false
+            imageView.isHidden = false
+            broadcastLabel.isHidden = false
+            
         }
     }
     
@@ -313,7 +386,16 @@ func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent noti
         }
     }
     
-
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "pop" {
+            let dest = segue.destination
+            if let pop = dest.popoverPresentationController {
+                pop.delegate = self
+                if(self.presentedViewController == nil) {
+                    displayAlert(title: "Info \(String(describing: UserDefaults.standard.string(forKey: "username")!))", message: "ll")
+                }            }
+        }
+    }
     /*
     // MARK: - Navigation
 

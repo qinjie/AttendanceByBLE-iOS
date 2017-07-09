@@ -179,7 +179,7 @@
 				TargetAttributes = {
 					38841A9F1E690C0E004EF33D = {
 						CreatedOnToolsVersion = 8.2.1;
-						DevelopmentTeam = R397SMDAA7;
+						DevelopmentTeam = EBWK75HAK4;
 						LastSwiftMigration = 0820;
 						ProvisioningStyle = Automatic;
 						SystemCapabilities = {
@@ -390,11 +390,11 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = "$(inherited)";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
-				DEVELOPMENT_TEAM = R397SMDAA7;
+				DEVELOPMENT_TEAM = EBWK75HAK4;
 				INFOPLIST_FILE = ATK_BLE/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.2;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = "com.iot.ATK-BLE.Kyizar";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.iot.ATK-BLE.KyizarKL";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "ATK_BLE-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -409,11 +409,11 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = "$(inherited)";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
-				DEVELOPMENT_TEAM = R397SMDAA7;
+				DEVELOPMENT_TEAM = EBWK75HAK4;
 				INFOPLIST_FILE = ATK_BLE/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.2;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = "com.iot.ATK-BLE.Kyizar";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.iot.ATK-BLE.KyizarKL";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "ATK_BLE-Bridging-Header.h";
 				SWIFT_VERSION = 3.0;

@@ -61,6 +61,7 @@ class HistoryByLessonController: UIViewController, UITableViewDelegate, UITableV
         cell.lesson = mLesson
         cell.venue.isHidden = true
         cell.iconView.isHidden = false
+        cell.isUserInteractionEnabled = false
         if mHistory != nil {
             if mHistory?.status == 0 {
                 cell.iconView.image = #imageLiteral(resourceName: "green")
@@ -70,7 +71,7 @@ class HistoryByLessonController: UIViewController, UITableViewDelegate, UITableV
                 cell.iconView.image = #imageLiteral(resourceName: "red")
                 cell.arrivingtimeLabel.isHidden = true
             }else{
-                cell.iconView.image = #imageLiteral(resourceName: "red")
+                cell.iconView.image = #imageLiteral(resourceName: "yellow")
                 cell.arrivingtimeLabel.text = mHistory?.created_at
                 cell.arrivingtimeLabel.isHidden = false
             }

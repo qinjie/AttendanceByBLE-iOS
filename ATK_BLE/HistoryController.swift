@@ -35,6 +35,7 @@ class HistoryController: UITableViewController {
         var date = Date()
         let today = Format.Format(date: date, format: "EEEE")
         var i = 0
+        var mDate = Format.Format(date: date, format: "dd MMM")
         if  let j = wdayDict2[today] as? String{
             i = Int(j)!
         }
@@ -43,11 +44,11 @@ class HistoryController: UITableViewController {
                 date = date.addingTimeInterval(-60*60*24)
             }
             else{
-                date = date.addingTimeInterval(-60*60*24*24)
+                date = date.addingTimeInterval(-60*60*24*2)
             }
             i = 6
         }
-        var mDate = Format.Format(date: date, format: "dd MMM")
+         mDate = Format.Format(date: date, format: "dd MMM")
         for _ in 0...4{
             if i == 1{
                 i = 6
@@ -55,13 +56,10 @@ class HistoryController: UITableViewController {
             wday.append(wdayDict[String(i)] as! String)
             wdayInt.append(String(i))
             wdayDate.append(mDate)
-            print(mDate)
             date = date.addingTimeInterval(-60*60*24)
             mDate = Format.Format(date: date, format: "dd MMM")
             i -= 1
         }
-        print(wday)
-        print(wdayInt)
         // Do any additional setup after loading the view.
     }
 

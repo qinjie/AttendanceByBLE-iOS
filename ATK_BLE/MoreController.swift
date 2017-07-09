@@ -11,10 +11,12 @@ import Alamofire
 
 class MoreController: UIViewController {
     @IBOutlet weak var myImageView: UIImageView!
+    @IBOutlet weak var username: UILabel!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         myImageView.image = UIImage(named: "student")
-        
+        username.text = UserDefaults.standard.string(forKey: "name")
         // Do any additional setup after loading the view.
     }
 
