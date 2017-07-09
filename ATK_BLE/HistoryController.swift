@@ -11,7 +11,7 @@ import UIKit
 class HistoryController: UITableViewController {
 
     var wday = [String]()
-    
+    var wdayDate = [String]()
     var wdayInt = [String]()
     
     let wdayDict: [String: Any] = [
@@ -19,8 +19,7 @@ class HistoryController: UITableViewController {
         "3" : "Tuesday",
         "4" : "Wednesday",
         "5" : "Thursday",
-        "6" : "Friday",
-        "7" : "Saturday"
+        "6" : "Friday"
     ]
     
     let wdayDict2: [String: Any] = [
@@ -28,21 +27,37 @@ class HistoryController: UITableViewController {
         "Tuesday"   : "3",
         "Wednesday" : "4",
         "Thursday"  : "5",
-        "Friday"    : "6",
-        "Saturday"  : "7"
+        "Friday"    : "6"
     ]
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        let date = Date()
+        var date = Date()
         let today = Format.Format(date: date, format: "EEEE")
-        var i = Int(wdayDict2[today] as! String)!
-        for _ in 0...5{
+        var i = 0
+        if  let j = wdayDict2[today] as? String{
+            i = Int(j)!
+        }
+        else{
+            if today == "Saturday"{
+                date = date.addingTimeInterval(-60*60*24)
+            }
+            else{
+                date = date.addingTimeInterval(-60*60*24*24)
+            }
+            i = 6
+        }
+        var mDate = Format.Format(date: date, format: "dd MMM")
+        for _ in 0...4{
             if i == 1{
-                i = 7
+                i = 6
             }
             wday.append(wdayDict[String(i)] as! String)
             wdayInt.append(String(i))
+            wdayDate.append(mDate)
+            print(mDate)
+            date = date.addingTimeInterval(-60*60*24)
+            mDate = Format.Format(date: date, format: "dd MMM")
             i -= 1
         }
         print(wday)
@@ -82,7 +97,7 @@ class HistoryController: UITableViewController {
             }
                 
             else{
-                cell.iconView.image = #imageLiteral(resourceName: "red")
+                cell.iconView.image = #imageLiteral(resourceName: "yellow")
                 cell.arrivingtimeLabel.text = history?.created_at
                 cell.arrivingtimeLabel.isHidden = false
             }
@@ -110,7 +125,7 @@ class HistoryController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        return wday[section]
+        return wday[section] + "(" + wdayDate[section] + ")"
     }
     
     override func numberOfSections(in tableView: UITableView) -> Int {

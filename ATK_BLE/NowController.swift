@@ -105,9 +105,9 @@ class NowController: UIViewController,UIPopoverPresentationControllerDelegate, C
         }
         if currentLesson != nil {
             imageView.animationImages = [
-                #imageLiteral(resourceName: "transmit_1"),
-                #imageLiteral(resourceName: "transmit_2"),
-                #imageLiteral(resourceName: "transmit_3")
+                #imageLiteral(resourceName: "transmit_a"),
+                #imageLiteral(resourceName: "transmit_b"),
+                #imageLiteral(resourceName: "transmit_c")
             ]
             imageView.animationDuration = 0.5
             imageView.startAnimating()

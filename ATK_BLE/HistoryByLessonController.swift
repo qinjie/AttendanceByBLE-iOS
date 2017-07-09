@@ -86,39 +86,6 @@ class HistoryByLessonController: UIViewController, UITableViewDelegate, UITableV
         
         return cell
     }
-    
-    /*
-     let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! LessonCell
-     
-     let lessonInDay = GlobalData.timetable.filter({$0.weekday == wdayInt[indexPath.section]})
-     
-     let lesson = lessonInDay[indexPath.row]
-     cell.lesson = lesson
-     let history = GlobalData.attendance.filter({$0.lesson_date_id == lesson.ldateid}).first
-     cell.venue.isHidden = true
-     cell.iconView.isHidden = false
-     if history != nil {
-     if history?.status == 0 {
-     cell.iconView.image = #imageLiteral(resourceName: "green")
-     cell.arrivingtimeLabel.text = history?.created_at
-     cell.arrivingtimeLabel.isHidden = false
-     }else if history?.status == -1{
-     cell.iconView.image = #imageLiteral(resourceName: "red")
-     cell.arrivingtimeLabel.isHidden = true
-     }else{
-     cell.iconView.image = #imageLiteral(resourceName: "red")
-     cell.arrivingtimeLabel.text = history?.created_at
-     cell.arrivingtimeLabel.isHidden = false
-     }
-     
-     }else{
-     
-     cell.iconView.image = #imageLiteral(resourceName: "questionmark")
-     cell.arrivingtimeLabel.text = "00:00"
-     cell.arrivingtimeLabel.isHidden = true
-     
-     }
-    */
 
     /*
     // MARK: - Navigation
