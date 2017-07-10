@@ -13,7 +13,6 @@ class TimetableController: UITableViewController {
     
     let today = Date()
     let dateFormatter = DateFormatter()
-    
     var JSON : [[String:Any]]!
     
     let wday = ["Monday", "Tuesday", "Wednesday", "Thursday" , "Friday", "Saturday"]
