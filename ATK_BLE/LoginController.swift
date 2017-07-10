@@ -128,7 +128,7 @@ class LoginController: UIViewController {
                         newLesson.end_time = lesson["end_time"] as? String
                         newLesson.weekday = lesson["weekday"] as? String
                         newLesson.class_section = lesson["class_section"] as? String
-                    }
+                    } 
                     
                     if let lecturer = json["lecturers"] as? [String:Any]{
                         
