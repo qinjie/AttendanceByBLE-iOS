@@ -11,7 +11,7 @@ import Alamofire
 import UserNotifications
 
 class LoginController: UIViewController {
-
+    
     @IBOutlet weak var usernameTxt: UITextField!
     @IBOutlet weak var passwordTxt: UITextField!
     
@@ -19,15 +19,15 @@ class LoginController: UIViewController {
         super.viewDidLoad()
         hideKeyboardWhenTappedAround()
         /*if (UserDefaults.standard.value(forKey: "username") != nil){
-            loadData()
-            DispatchQueue.main.async {
-                self.performSegue(withIdentifier: "sign in", sender: nil)
-            }
-        }*/
-
+         loadData()
+         DispatchQueue.main.async {
+         self.performSegue(withIdentifier: "sign in", sender: nil)
+         }
+         }*/
+        
         // Do any additional setup after loading the view.
     }
-
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
@@ -40,7 +40,7 @@ class LoginController: UIViewController {
             displayAlert(title: "Missing infomations", message: "Both username and password are required")
             
         }else{
-                self.login()
+            self.login()
         }
         
     }
@@ -100,7 +100,7 @@ class LoginController: UIViewController {
                 self.displayAlert(title: "LOGIN FAILED", message: "Username or password incorrect!")
             }
         })
-
+        
     }
     
     private func setupData(){
@@ -175,10 +175,10 @@ class LoginController: UIViewController {
         ]
         
         let parameters: [String: Any] = [
-
-            "student_id": Constant.student_id        
+            
+            "student_id": Constant.student_id
         ]
-
+        
         
         Alamofire.request(Constant.URLallClassmate, method: .post, parameters: parameters, encoding: JSONEncoding.default, headers: headers).responseJSON { (response:DataResponse) in
             print("start load clssmates")
@@ -192,24 +192,34 @@ class LoginController: UIViewController {
                     classmates.minor = [Int]()
                     classmates.student_id = [Int]()
                     
+                    if classmates.lesson_id == 24{
+                        
+                    }
+                    
                     if let list = json["students"] as? [[String:AnyObject]]{
                         for x in list{
                             let newId = x["id"] as! Int
                             if newId != Constant.student_id{
-
+                                
                                 classmates.student_id?.append(newId)
-
+                                
                                 if let y = x["beacon_user"] as? [String:AnyObject]{
                                     let newmajor = y["major"] as! Int
                                     classmates.major?.append(newmajor)
                                     let newminor = y["minor"] as! Int
                                     classmates.minor?.append(newminor)
                                 }
+                            }else{
+                                
+                                UserDefaults.standard.set(x["email"], forKey: "email")
+                                UserDefaults.standard.set(x["address"], forKey: "address")
+                                
                             }
                         }
                     }
                     
                     GlobalData.classmates.append(classmates)
+                    
                 }
                 //Write classmates to local directory
                 NSKeyedArchiver.archiveRootObject(GlobalData.classmates, toFile: filePath.classmatePath)
@@ -221,7 +231,7 @@ class LoginController: UIViewController {
                 print("load classmates parser error")
             }
         }
-
+        
         
     }
     
@@ -297,15 +307,15 @@ class LoginController: UIViewController {
     
     
     /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
-    }
-    */
-
+     // MARK: - Navigation
+     
+     // In a storyboard-based application, you will often want to do a little preparation before navigation
+     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+     // Get the new view controller using segue.destinationViewController.
+     // Pass the selected object to the new view controller.
+     }
+     */
+    
 }
 extension UIViewController {
     
@@ -318,21 +328,6 @@ extension UIViewController {
         view.endEditing(true)
     }
     
-    func notiContent(title: String, body: String) -> UNMutableNotificationContent {
-        let content = UNMutableNotificationContent()
-        content.title = title
-        content.body = body
-        return content
-    }
-    func addNotification(trigger: UNNotificationTrigger?, content:UNMutableNotificationContent, identifier: String) {
-        let request = UNNotificationRequest(identifier: identifier, content: content, trigger: trigger)
-        UNUserNotificationCenter.current().add(request) {
-            (error) in
-            if error != nil {
-                print("error adding notigicaion: \(error!.localizedDescription)")
-            }
-        }
-    }
     func displayAlert(title:String,message:String){
         
         let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)

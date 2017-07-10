@@ -17,7 +17,7 @@ struct Constant{
     static let URLstudentlogin = baseURL + "api/web/index.php/v1/student/login"
     static let URLtimetable = baseURL + "api/web/index.php/v1/timetable?expand=lesson,lesson_date,lecturers,venue"
     static let URLlessonUUID = baseURL + "api/web/index.php/v1/beacon-lesson/uuid"
-
+    
     static let URLcurrentLesson = baseURL + "api/web/index.php/v1/timetable/time"
     static let URLhistory = baseURL + "api/web/index.php/v1/student/history"
     
@@ -68,7 +68,7 @@ struct GlobalData{
     static var currentLecturerMinor = 0
     static var currentLecturerId = 0
     static var myAttendance = [Int]()
- 
+    
 }
 
 class Format{

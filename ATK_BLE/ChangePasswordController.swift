@@ -10,7 +10,7 @@ import UIKit
 import Alamofire
 
 class ChangePasswordController: UIViewController {
-
+    
     @IBOutlet weak var oldTF: UITextField!
     @IBOutlet weak var newTF: UITextField!
     @IBOutlet weak var confirmTF: UITextField!
@@ -20,13 +20,14 @@ class ChangePasswordController: UIViewController {
         hideKeyboardWhenTappedAround()
         // Do any additional setup after loading the view.
     }
-
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
     
     @IBAction func confirmPressed(_ sender: UIButton) {
+        
         let token = Constant.token
         if newTF.text! == confirmTF.text!{
             let parameters:[String:Any] = [
@@ -46,31 +47,30 @@ class ChangePasswordController: UIViewController {
             self.present(alertController, animated: false, completion: nil)
             Alamofire.request(Constant.URLchangepass, method: .post, parameters: parameters, encoding: JSONEncoding.default, headers: headers).responseJSON(completionHandler: { (response:DataResponse) in
                 let code = response.result
-                alertController.dismiss(animated: true, completion: nil)
+                alertController.dismiss(animated: false, completion: nil)
                 switch code{
-                case .success(_): /*notification.createAlert(VC: self, title: "Change Password", message: "Successful", actionMsg: "OK")*/break
+                case .success(_):
+                    let alert = UIAlertController(title: "Change Password", message: "Successful", preferredStyle: .alert)
+                    alert.addAction(UIAlertAction(title: "Sign in", style: .default, handler: { (action:UIAlertAction) in
+                        self.performSegue(withIdentifier: "change password", sender: nil)
+                    }))
+                    self.present(alert, animated: false, completion: nil)
                 case .failure(let error): print(error.localizedDescription)
                 }
             })
         }
-        /*let parameters:[String:Any] = [
-            "username" : usernameTxt.text!,
-            "password" : passwordTxt.text!,
-            "device_hash" : this_device!
-        ]
-         let headersTimetable:HTTPHeaders = [
-         "Authorization" : "Bearer " + token!
-         ]*/
     }
-
+    
+    
+    
     /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
-    }
-    */
-
+     // MARK: - Navigation
+     
+     // In a storyboard-based application, you will often want to do a little preparation before navigation
+     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+     // Get the new view controller using segue.destinationViewController.
+     // Pass the selected object to the new view controller.
+     }
+     */
+    
 }

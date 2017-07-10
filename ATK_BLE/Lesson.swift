@@ -103,9 +103,9 @@ class Lesson : NSObject, NSCoding {
         
         aCoder.encode(start_time, forKey: "start_time")
         aCoder.encode(end_time, forKey: "end_time")
-
+        
     }
-  
+    
 }
 
 class Venue{

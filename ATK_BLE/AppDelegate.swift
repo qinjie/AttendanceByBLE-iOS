@@ -14,24 +14,34 @@ import UserNotifications
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate, UNUserNotificationCenterDelegate {
-
+    
     var window: UIWindow?
     var locationManager = CLLocationManager()
     var identifier : UIBackgroundTaskIdentifier! = UIBackgroundTaskInvalid
     var id1 = ""
     var id2 = ""
-
+    
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
-
+        
         self.locationManager.delegate = self
         self.locationManager.requestAlwaysAuthorization()
-
+        
         if UserDefaults.standard.string(forKey: "student_id") != nil{
             self.loadData()
             let mainStoryboard: UIStoryboard = UIStoryboard(name: "Main", bundle: nil)
             let home:UITabBarController = (mainStoryboard.instantiateViewController(withIdentifier: "home") as? UITabBarController)!
             self.window?.rootViewController = home
+        }
+        UNUserNotificationCenter.current().delegate = self
+        UNUserNotificationCenter.current().requestAuthorization(options: [.alert]) {
+            (success, error) in
+            if success {
+                print("granted noti")
+            }
+            else {
+                print("denided noti")
+            }
         }
         
         NotificationCenter.default.addObserver(self, selector: #selector(userFailed), name: Notification.Name(rawValue: "userFailed"), object: nil)
@@ -39,7 +49,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
     }
     func locationManager(_ manager: CLLocationManager, didStartMonitoringFor region: CLRegion) {
         print("Start bg monitoring \(region.identifier) region")
-
+        
     }
     func locationManager(_ manager: CLLocationManager, didStopMonitoringFor region: CLRegion) {
         print("Stop bg monitoring \(region.identifier) region")
@@ -50,9 +60,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
         print("bg did determine state \(region.identifier)" )
         switch state {
         case .inside:
-                checkAttandance.checkAttandance()
-                Constant.identifier = region.identifier
-                NotificationCenter.default.addObserver(self,selector: #selector(takeAttendance), name: NSNotification.Name(rawValue: "notTaken"), object: nil)
+            print("inside liao")
+            checkAttendance.checkAttendance()
+            Constant.identifier = region.identifier
+            NotificationCenter.default.addObserver(self,selector: #selector(takeAttendance), name: NSNotification.Name(rawValue: "notTaken"), object: nil)
         case .outside: print("Outside bg \(region.identifier)")
         case .unknown: print("Unknown")
         }
@@ -84,7 +95,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
                 GlobalData.myAttendance.append(GlobalData.currentLesson.ldateid!)
                 NotificationCenter.default.post(name: NSNotification.Name(rawValue: "atksuccesfully"), object: nil)
                 print("gl\(GlobalData.attendance)")
-                
+                let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 3.0, repeats: false)
+                let content = checkAttendance.notiContent(title: "successfull", body: "You have successfully taken attendance")
+                checkAttendance.addNotification(trigger: trigger, content: content, identifier: "a")
             }
             if let data = response.result.value{
                 print("///////////////result below////////////")
@@ -93,19 +106,26 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
             
         }
     }
+    func testSendNoti() {
+        let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 3.0, repeats: false)
+        let content = checkAttendance.notiContent(title: "successfull", body: "You have successfully taken attendance")
+        checkAttendance.addNotification(trigger: trigger, content: content, identifier: "a")            }
     
+    func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
+        completionHandler([.alert,.badge,.sound])
+    }
     func locationManager(_ manager: CLLocationManager, didEnterRegion region: CLRegion) {
-            print(" bg enter region!!!  \(region.identifier)" )
+        print(" bg enter region!!!  \(region.identifier)" )
     }
     
     func locationManager(_ manager: CLLocationManager, didExitRegion region: CLRegion) {
-            print("bg did exit region!!!   \(region.identifier)")
+        print("bg did exit region!!!   \(region.identifier)")
     }
     func applicationWillResignActive(_ application: UIApplication) {
         // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
         // Use this method to pause ongoing tasks, disable timers, and invalidate graphics rendering callbacks. Games should use this method to pause the game.
     }
-
+    
     func applicationDidEnterBackground(_ application: UIApplication) {
         // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later.
         // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
@@ -120,14 +140,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
         NotificationCenter.default.post(name: NSNotification.Name(rawValue: "updateTime"), object: nil)
         // Called as part of the transition from the background to the active state; here you can undo many of the changes made on entering the background.
         /*if identifier != UIBackgroundTaskInvalid {
-            endBackgroundTask()
-        }*/
+         endBackgroundTask()
+         }*/
     }
-
+    
     func applicationDidBecomeActive(_ application: UIApplication) {
         // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
     }
-
+    
     func applicationWillTerminate(_ application: UIApplication) {
         // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
     }
@@ -141,7 +161,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
             self.window?.rootViewController = login
         }))
     }
-
+    
     private func loadData(){
         
         if let timetable = NSKeyedUnarchiver.unarchiveObject(withFile: filePath.timetablePath) as? [Lesson]{
@@ -196,30 +216,49 @@ struct filePath{
     }
 }
 
-struct checkAttandance{
+struct checkAttendance{
     
-    static func checkAttandance() {
+    static func checkAttendance() {
         let token = UserDefaults.standard.string(forKey: "token")
         let header:HTTPHeaders = [
             "Authorization" : "Bearer " + token!
         ]
         let parameter:Parameters = ["lesson_date_id":GlobalData.currentLesson.ldateid!]
         print(GlobalData.currentLesson.ldateid!)
-        //spinner indicator
         
         Alamofire.request(Constant.URLcheckAttandance,method: .post, parameters: parameter, encoding: JSONEncoding.default, headers: header).responseJSON(completionHandler: { (response:DataResponse) in
             if let JSON = response.result.value as? Int{
                 print("JSON below")
                 print(JSON)
-                if(JSON < 0) {
-                    NotificationCenter.default.post(name: NSNotification.Name(rawValue: "notTaken"), object: nil)
-                }
-                else{
+                if(JSON >= 0) {
                     print("/////////taken already")
                     NotificationCenter.default.post(name: NSNotification.Name(rawValue: "taken"), object: nil)
                 }
+                else {
+                    print("JSON not > 0")
+                }
+                
+            }
+                //check if JSON is nil
+            else {
+                NotificationCenter.default.post(name: NSNotification.Name(rawValue: "notTaken"), object: nil)
             }
         })
+    }
+    static func notiContent(title: String, body: String) -> UNMutableNotificationContent {
+        let content = UNMutableNotificationContent()
+        content.title = title
+        content.body = body
+        return content
+    }
+    static func addNotification(trigger: UNNotificationTrigger?, content:UNMutableNotificationContent, identifier: String) {
+        let request = UNNotificationRequest(identifier: identifier, content: content, trigger: trigger)
+        UNUserNotificationCenter.current().add(request) {
+            (error) in
+            if error != nil {
+                print("error adding notigicaion: \(error!.localizedDescription)")
+            }
+        }
     }
     
 }

@@ -13,7 +13,7 @@ class HistoryByLessonController: UIViewController, UITableViewDelegate, UITableV
     var lesson:Lesson!
     var history:[HistoryDT]!
     var count:Int!
-
+    
     @IBOutlet weak var tableView: UITableView!
     
     override func viewDidLoad() {
@@ -29,18 +29,19 @@ class HistoryByLessonController: UIViewController, UITableViewDelegate, UITableV
             count = 0
             return
         }
-
+        print(count)
+        
         // Do any additional setup after loading the view.
     }
-
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
     
     /*func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        <#code#>
-    }*/
+     <#code#>
+     }*/
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 70
@@ -56,46 +57,37 @@ class HistoryByLessonController: UIViewController, UITableViewDelegate, UITableV
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = (tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as? LessonCell)!
-        let mLesson = GlobalData.timetable.filter({$0.ldateid == history[indexPath.row].lesson_date_id}).first
-        let mHistory = GlobalData.attendance.filter({$0.lesson_date_id == mLesson?.ldateid}).first
-        cell.lesson = mLesson
+        let mHistory = history[indexPath.row]
+        let lesson = GlobalData.timetable.filter({$0.lesson_id == mHistory.lesson_id}).first
+        cell.lesson = lesson
         cell.venue.isHidden = true
         cell.iconView.isHidden = false
         cell.isUserInteractionEnabled = false
-        if mHistory != nil {
-            if mHistory?.status == 0 {
-                cell.iconView.image = #imageLiteral(resourceName: "green")
-                cell.arrivingtimeLabel.text = mHistory?.created_at
-                cell.arrivingtimeLabel.isHidden = false
-            }else if mHistory?.status == -1{
-                cell.iconView.image = #imageLiteral(resourceName: "red")
-                cell.arrivingtimeLabel.isHidden = true
-            }else{
-                cell.iconView.image = #imageLiteral(resourceName: "yellow")
-                cell.arrivingtimeLabel.text = mHistory?.created_at
-                cell.arrivingtimeLabel.isHidden = false
-            }
-            
-        }else{
-            
-            cell.iconView.image = #imageLiteral(resourceName: "questionmark")
-            cell.arrivingtimeLabel.text = "00:00"
+        if mHistory.status == 0 {
+            cell.iconView.image = #imageLiteral(resourceName: "green")
+            cell.arrivingtimeLabel.text = mHistory.created_at
+            cell.arrivingtimeLabel.isHidden = false
+        }else if mHistory.status == -1{
+            cell.iconView.image = #imageLiteral(resourceName: "red")
             cell.arrivingtimeLabel.isHidden = true
-            
+        }else{
+            cell.iconView.image = #imageLiteral(resourceName: "yellow")
+            cell.arrivingtimeLabel.text = mHistory.created_at
+            cell.arrivingtimeLabel.isHidden = false
         }
         // Configure the cell...
         
         return cell
     }
-
+    
     /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
-    }
-    */
-
+     // MARK: - Navigation
+     
+     // In a storyboard-based application, you will often want to do a little preparation before navigation
+     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+     // Get the new view controller using segue.destinationViewController.
+     // Pass the selected object to the new view controller.
+     }
+     */
+    
 }

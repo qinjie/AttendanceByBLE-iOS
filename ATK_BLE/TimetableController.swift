@@ -10,7 +10,7 @@ import UIKit
 import Alamofire
 
 class TimetableController: UITableViewController {
-
+    
     let today = Date()
     let dateFormatter = DateFormatter()
     
@@ -27,7 +27,7 @@ class TimetableController: UITableViewController {
         dateFormatter.dateFormat = "MMM dd (E)"
         let title = dateFormatter.string(from: today)
         navigationItem.title = "Timetable \(title)"
-
+        
         // Do any additional setup after loading the view.
     }
     
@@ -67,7 +67,7 @@ class TimetableController: UITableViewController {
     override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         return wday[section]
     }
-
+    
     @IBAction func RefreshButtonPressed(_ sender: UIBarButtonItem) {
         setupData()
     }
@@ -146,8 +146,8 @@ class TimetableController: UITableViewController {
         }
         
     }
-
-
+    
+    
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         // Get the new view controller using segue.destinationViewController.
         let destination = segue.destination as! LessonDetailController
@@ -156,5 +156,5 @@ class TimetableController: UITableViewController {
             destination.lesson = lesson
         }
     }
-
+    
 }

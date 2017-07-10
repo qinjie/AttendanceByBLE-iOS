@@ -747,6 +747,7 @@
                         <outlet property="confirmTF" destination="cpx-uJ-1HE" id="x3D-QU-EVF"/>
                         <outlet property="newTF" destination="teY-3s-DD9" id="87f-87-1oG"/>
                         <outlet property="oldTF" destination="Rlg-Yx-ya5" id="RI3-5J-tg8"/>
+                        <segue destination="BYZ-38-t0r" kind="presentation" identifier="change password" id="mYg-nF-PZP"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="g8Q-TO-RB6" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -807,7 +808,7 @@
                                 </connections>
                             </button>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="John@np.edu.sg" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="HsW-kh-9jB">
-                                <rect key="frame" x="109" y="283" width="129" height="21"/>
+                                <rect key="frame" x="109" y="283" width="250" height="21"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="textColor"/>
@@ -836,6 +837,8 @@
                     </view>
                     <navigationItem key="navigationItem" id="SNd-UL-nh0"/>
                     <connections>
+                        <outlet property="address" destination="bhw-UD-rZm" id="7kL-Wj-2vc"/>
+                        <outlet property="email" destination="HsW-kh-9jB" id="SJK-xc-MpX"/>
                         <outlet property="myImageView" destination="fJy-2e-E7I" id="ml0-9N-TVW"/>
                         <outlet property="username" destination="kE4-ic-PaA" id="Wii-hk-Rnw"/>
                         <segue destination="BYZ-38-t0r" kind="presentation" identifier="sign out" id="b94-xA-FyH"/>
@@ -887,7 +890,7 @@
         <scene sceneID="yd6-Pw-1iX">
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="mSm-Ec-Y8Z" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="Now" id="fEn-oM-zr7"/>
+                    <tabBarItem key="tabBarItem" title="Now" image="Today" selectedImage="Today" id="fEn-oM-zr7"/>
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="71x-U4-3UC">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
@@ -902,11 +905,11 @@
             </objects>
             <point key="canvasLocation" x="1516" y="35.532233883058474"/>
         </scene>
-        <!--Navigation Controller-->
+        <!--Setting-->
         <scene sceneID="CkA-AR-uaV">
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="fYJ-EJ-CEX" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" systemItem="more" id="gPW-sL-qby"/>
+                    <tabBarItem key="tabBarItem" title="Setting" image="Settings" selectedImage="Settings" id="gPW-sL-qby"/>
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="H9D-cx-dUx">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
@@ -924,11 +927,14 @@
     </scenes>
     <resources>
         <image name="NP_image" width="2680" height="822"/>
+        <image name="Settings" width="30" height="30"/>
+        <image name="Today" width="30" height="30"/>
         <image name="bt_off" width="512" height="512"/>
         <image name="calendar" width="29" height="30"/>
         <image name="userr" width="225" height="225"/>
     </resources>
     <inferredMetricsTieBreakers>
+        <segue reference="b94-xA-FyH"/>
         <segue reference="zG7-cK-laq"/>
     </inferredMetricsTieBreakers>
 </document>

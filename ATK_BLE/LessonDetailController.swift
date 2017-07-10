@@ -9,7 +9,7 @@
 import UIKit
 
 class LessonDetailController: UIViewController {
-
+    
     @IBOutlet weak var subjectLabel: UILabel!
     @IBOutlet weak var subjectnameLabel: UILabel!
     @IBOutlet weak var creditLabel: UILabel!
@@ -43,7 +43,7 @@ class LessonDetailController: UIViewController {
         setupLabels()
         // Do any additional setup after loading the view.
     }
-
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
@@ -103,5 +103,5 @@ class LessonDetailController: UIViewController {
         let destinationVC = segue.destination as! HistoryByLessonController
         destinationVC.lesson = sender as! Lesson
     }
-
+    
 }

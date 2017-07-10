@@ -9,7 +9,7 @@
 import UIKit
 
 class HistoryController: UITableViewController {
-
+    
     var wday = [String]()
     var wdayDate = [String]()
     var wdayInt = [String]()
@@ -48,7 +48,7 @@ class HistoryController: UITableViewController {
             }
             i = 6
         }
-         mDate = Format.Format(date: date, format: "dd MMM")
+        mDate = Format.Format(date: date, format: "dd MMM")
         for _ in 0...4{
             if i == 1{
                 i = 6
@@ -56,13 +56,21 @@ class HistoryController: UITableViewController {
             wday.append(wdayDict[String(i)] as! String)
             wdayInt.append(String(i))
             wdayDate.append(mDate)
-            date = date.addingTimeInterval(-60*60*24)
+            
+            if Format.Format(date: date, format: "EEEE") == "Monday"{
+                date = date.addingTimeInterval(-60*60*24*3)
+                i = 6
+            }
+            else{
+                date = date.addingTimeInterval(-60*60*24)
+                i -= 1
+            }
             mDate = Format.Format(date: date, format: "dd MMM")
-            i -= 1
         }
+        
         // Do any additional setup after loading the view.
     }
-
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
@@ -142,5 +150,5 @@ class HistoryController: UITableViewController {
         // Pass the selected object to the new view controller.
         
     }
-
+    
 }
