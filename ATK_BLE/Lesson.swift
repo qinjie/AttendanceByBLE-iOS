@@ -31,6 +31,10 @@ class Lesson : NSObject, NSCoding {
     var start_time: String?
     var end_time: String?
     
+    var lecturer_id: Int?
+    var status: Int?
+    var recorded_time: String?
+    
     override init() {
         lesson_id = 0
         subject = "X"
@@ -48,6 +52,9 @@ class Lesson : NSObject, NSCoding {
         minor = 0
         start_time = "00:00"
         end_time = "00:00"
+        status = nil
+        recorded_time = "00:00"
+        lecturer_id = 0
     }
     
     required init(coder aDecoder: NSCoder) {
@@ -75,6 +82,10 @@ class Lesson : NSObject, NSCoding {
         
         start_time = aDecoder.decodeObject(forKey: "start_time") as! String?
         end_time = aDecoder.decodeObject(forKey: "end_time") as! String?
+        
+        status = aDecoder.decodeObject(forKey: "status") as! Int?
+        recorded_time = aDecoder.decodeObject(forKey: "recorded_at") as! String?
+        lecturer_id = aDecoder.decodeObject(forKey: "lecturer_id") as! Int?
     }
     
     func encode(with aCoder: NSCoder) {
@@ -104,6 +115,10 @@ class Lesson : NSObject, NSCoding {
         aCoder.encode(start_time, forKey: "start_time")
         aCoder.encode(end_time, forKey: "end_time")
         
+        aCoder.encode(status, forKey: "status")
+        aCoder.encode(recorded_time, forKey: "recorded_time")
+        aCoder.encode(lecturer_id, forKey: "lecturer_id")
+        
     }
     
 }
@@ -117,7 +132,7 @@ class Venue{
     var minor:Int32 = 0
 }
 
-class HistoryOA: NSObject, NSCoding{
+class History: NSObject, NSCoding{
     
     var name: String?
     var total: Int?
@@ -147,47 +162,6 @@ class HistoryOA: NSObject, NSCoding{
         aCoder.encode(absent, forKey: "absent")
         aCoder.encode(present, forKey: "present")
         aCoder.encode(late, forKey: "late")
-    }
-}
-
-class HistoryDT: NSObject, NSCoding{
-    
-    var lesson_date_id: Int?
-    var lecturer_id: Int?
-    var status: Int?
-    var lesson_id: Int?
-    var ldate: String?
-    //var updated_by: Int?
-    var created_at: String?
-    
-    override init() {
-        lesson_date_id = 0
-        lecturer_id = 0
-        status = 0
-        lesson_id = 0
-        ldate = ""
-        //updated_by = 0
-        created_at = ""
-    }
-    
-    required init?(coder aDecoder: NSCoder) {
-        lesson_date_id = aDecoder.decodeObject(forKey: "lesson_date_id") as! Int?
-        lecturer_id = aDecoder.decodeObject(forKey: "lecturer_id") as! Int?
-        status = aDecoder.decodeObject(forKey: "status") as! Int?
-        lesson_id = aDecoder.decodeObject(forKey: "lesson_id") as! Int?
-        ldate = aDecoder.decodeObject(forKey: "ldate") as! String?
-        //updated_by = aDecoder.decodeObject(forKey: "update_by") as! Int?
-        created_at = aDecoder.decodeObject(forKey: "created_at") as! String?
-    }
-    
-    func encode(with aCoder: NSCoder) {
-        aCoder.encode(lesson_date_id, forKey: "lesson_date_id")
-        aCoder.encode(lecturer_id, forKey: "lecturer_id")
-        aCoder.encode(status, forKey: "status")
-        aCoder.encode(lesson_id, forKey: "lesson_id")
-        aCoder.encode(ldate, forKey: "ldate")
-        //aCoder.encode(updated_by, forKey: "updated_by")
-        aCoder.encode(created_at, forKey: "created_at")
     }
 }
 

@@ -11,7 +11,7 @@ import UIKit
 class HistoryByLessonController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
     var lesson:Lesson!
-    var history:[HistoryDT]!
+    var history:[Lesson]!
     var count:Int!
     
     @IBOutlet weak var tableView: UITableView!
@@ -65,14 +65,14 @@ class HistoryByLessonController: UIViewController, UITableViewDelegate, UITableV
         cell.isUserInteractionEnabled = false
         if mHistory.status == 0 {
             cell.iconView.image = #imageLiteral(resourceName: "green")
-            cell.arrivingtimeLabel.text = mHistory.created_at
+            cell.arrivingtimeLabel.text = mHistory.recorded_time
             cell.arrivingtimeLabel.isHidden = false
         }else if mHistory.status == -1{
             cell.iconView.image = #imageLiteral(resourceName: "red")
             cell.arrivingtimeLabel.isHidden = true
         }else{
             cell.iconView.image = #imageLiteral(resourceName: "yellow")
-            cell.arrivingtimeLabel.text = mHistory.created_at
+            cell.arrivingtimeLabel.text = mHistory.recorded_time
             cell.arrivingtimeLabel.isHidden = false
         }
         // Configure the cell...

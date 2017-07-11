@@ -13,6 +13,7 @@ class HistoryController: UITableViewController {
     var wday = [String]()
     var wdayDate = [String]()
     var wdayInt = [String]()
+    var historyDate = [String]()
     
     let wdayDict: [String: Any] = [
         "2" : "Monday",
@@ -32,7 +33,8 @@ class HistoryController: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        var date = Date()
+        historyDate = HistoryBrain.getHistoryDate()
+        /*var date = Date()
         let today = Format.Format(date: date, format: "EEEE")
         var i = 0
         var mDate = Format.Format(date: date, format: "dd MMM")
@@ -66,7 +68,7 @@ class HistoryController: UITableViewController {
                 i -= 1
             }
             mDate = Format.Format(date: date, format: "dd MMM")
-        }
+        }*/
         
         // Do any additional setup after loading the view.
     }
@@ -77,34 +79,34 @@ class HistoryController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return GlobalData.timetable.filter({$0.weekday == wdayInt[section]}).count
+        return GlobalData.attendance.filter({$0.ldate == historyDate[section]}).count
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! LessonCell
         
-        let lessonInDay = GlobalData.timetable.filter({$0.weekday == wdayInt[indexPath.section]})
+        let historyInDay = GlobalData.attendance.filter({$0.ldate == historyDate[indexPath.section]})
+        let history = historyInDay[indexPath.row]
+        let lesson = GlobalData.timetable.filter({$0.lesson_id == history.lesson_id}).first
         
-        let lesson = lessonInDay[indexPath.row]
         cell.lesson = lesson
-        let history = GlobalData.attendance.filter({$0.lesson_date_id == lesson.ldateid}).first
         cell.venue.isHidden = true
         cell.iconView.isHidden = false
-        if history != nil {
-            if history?.status == 0 {
+        if history.status != nil {
+            if history.status == 0 {
                 cell.iconView.image = #imageLiteral(resourceName: "green")
-                cell.arrivingtimeLabel.text = history?.created_at
+                cell.arrivingtimeLabel.text = history.recorded_time
                 cell.arrivingtimeLabel.isHidden = false
             }
                 
-            else if history?.status == -1{
+            else if history.status == -1{
                 cell.iconView.image = #imageLiteral(resourceName: "red")
                 cell.arrivingtimeLabel.isHidden = true
             }
                 
             else{
                 cell.iconView.image = #imageLiteral(resourceName: "yellow")
-                cell.arrivingtimeLabel.text = history?.created_at
+                cell.arrivingtimeLabel.text = history.recorded_time
                 cell.arrivingtimeLabel.isHidden = false
             }
             
@@ -131,11 +133,11 @@ class HistoryController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        return wday[section] + "(" + wdayDate[section] + ")"
+        return Format.Format(date: Format.Format(string: historyDate[section], format: "yyyy-MM-dd"), format: "EEEE(dd MMM)")
     }
     
     override func numberOfSections(in tableView: UITableView) -> Int {
-        return 5
+        return historyDate.count
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {

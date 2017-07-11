@@ -120,6 +120,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
     }
     
     func locationManager(_ manager: CLLocationManager, didExitRegion region: CLRegion) {
+        NotificationCenter.default.removeObserver(self)
         print("bg did exit region!!!   \(region.identifier)")
     }
     func applicationWillResignActive(_ application: UIApplication) {
@@ -176,11 +177,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
         if let lessonuuid = NSKeyedUnarchiver.unarchiveObject(withFile: filePath.lessonuuidPath) as? [Int : String]{
             GlobalData.lessonUUID = lessonuuid
         }
-        if let history = NSKeyedUnarchiver.unarchiveObject(withFile: filePath.historyPath) as? [HistoryOA]{
+        if let history = NSKeyedUnarchiver.unarchiveObject(withFile: filePath.historyPath) as? [History]{
             GlobalData.history = history
         }
         
-        if let historyDT = NSKeyedUnarchiver.unarchiveObject(withFile: filePath.historyDTPath) as? [HistoryDT]{
+        if let historyDT = NSKeyedUnarchiver.unarchiveObject(withFile: filePath.historyDTPath) as? [Lesson]{
             GlobalData.attendance = historyDT
         }
         

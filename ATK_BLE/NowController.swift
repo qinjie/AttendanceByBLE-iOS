@@ -43,6 +43,8 @@ class NowController: UIViewController,UIPopoverPresentationControllerDelegate, C
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        GlobalData.timetable.sort(by: {$0.start_time! < $1.start_time!})
+        HistoryBrain.arrangeHistory()
         broadcastLabel.isHidden = true
         setupImageView()
         checkUserInBackGround()
@@ -302,7 +304,7 @@ class NowController: UIViewController,UIPopoverPresentationControllerDelegate, C
                 //print("Current Lesson : \(GlobalData.lessonUUID)")
                 self.classmate = GlobalData.classmates.filter({($0.lesson_id! == currentLesson.lesson_id!)}).first!
                 
-                print("Self.classmates \(String(describing: self.classmate.student_id?.count))")
+                print("Students  \(String(describing: self.classmate.student_id?.count))")
                 print("\(String(describing: GlobalData.currentLesson.catalog))")
                 print(UserDefaults.standard.string(forKey: "student_id")!)
                 detectClassmate()

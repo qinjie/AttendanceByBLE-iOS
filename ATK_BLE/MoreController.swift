@@ -8,6 +8,7 @@
 
 import UIKit
 import Alamofire
+import UserNotifications
 
 class MoreController: UIViewController {
     @IBOutlet weak var myImageView: UIImageView!
@@ -30,11 +31,13 @@ class MoreController: UIViewController {
     }
     
     @IBAction func signOut(_ sender: UIButton) {
+        NotificationCenter.default.removeObserver(self)
         UserDefaults.standard.removeObject(forKey: "student_id")
+        UserDefaults.standard.set("-", forKey: "email")
+        UserDefaults.standard.set("-", forKey: "address")
         let headers: HTTPHeaders = [
             "Authorization" : "Bearer " + UserDefaults.standard.string(forKey: "token")!
         ]
-        
         let spinnerIndicator = UIActivityIndicatorView(activityIndicatorStyle: .whiteLarge)
         spinnerIndicator.center = CGPoint(x: UIScreen.main.bounds.size.width*0.5, y: UIScreen.main.bounds.size.height*0.5)
         spinnerIndicator.color = UIColor.black

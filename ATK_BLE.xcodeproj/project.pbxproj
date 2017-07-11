@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		3CE89EF5A7A07C1622FF4DCA /* Pods_ATK_BLE.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8730CE69BF02DA57AF883CE4 /* Pods_ATK_BLE.framework */; };
+		E15349FE1F1360EE00957D8D /* HistoryBrain.swift in Sources */ = {isa = PBXBuildFile; fileRef = E15349FD1F1360EE00957D8D /* HistoryBrain.swift */; };
 		E1A979261F09DFAC0050431A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1A979181F09DFAC0050431A /* AppDelegate.swift */; };
 		E1A979271F09DFAC0050431A /* Items.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1A979191F09DFAC0050431A /* Items.swift */; };
 		E1A979281F09DFAC0050431A /* Lesson.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1A9791A1F09DFAC0050431A /* Lesson.swift */; };
@@ -31,6 +32,7 @@
 		38841AAF1E690C0E004EF33D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		8730CE69BF02DA57AF883CE4 /* Pods_ATK_BLE.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ATK_BLE.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		A480AF68145EB8C64A5ACCB4 /* Pods-ATK_BLE.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ATK_BLE.release.xcconfig"; path = "Pods/Target Support Files/Pods-ATK_BLE/Pods-ATK_BLE.release.xcconfig"; sourceTree = "<group>"; };
+		E15349FD1F1360EE00957D8D /* HistoryBrain.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HistoryBrain.swift; sourceTree = "<group>"; };
 		E1A979181F09DFAC0050431A /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		E1A979191F09DFAC0050431A /* Items.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Items.swift; sourceTree = "<group>"; };
 		E1A9791A1F09DFAC0050431A /* Lesson.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Lesson.swift; sourceTree = "<group>"; };
@@ -93,6 +95,7 @@
 			children = (
 				E1A9793C1F09E24A0050431A /* TableViewCell */,
 				E12AB71D1F0A08A700ADA79E /* Entity */,
+				E15349FC1F13607100957D8D /* Models */,
 				E12AB71C1F0A070F00ADA79E /* Controllers */,
 				E1A979181F09DFAC0050431A /* AppDelegate.swift */,
 				E1A979221F09DFAC0050431A /* Assets.xcassets */,
@@ -134,6 +137,14 @@
 				E1A9791A1F09DFAC0050431A /* Lesson.swift */,
 			);
 			name = Entity;
+			sourceTree = "<group>";
+		};
+		E15349FC1F13607100957D8D /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				E15349FD1F1360EE00957D8D /* HistoryBrain.swift */,
+			);
+			name = Models;
 			sourceTree = "<group>";
 		};
 		E1A9793C1F09E24A0050431A /* TableViewCell */ = {
@@ -275,6 +286,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				E1A9792F1F09DFAC0050431A /* MoreController.swift in Sources */,
+				E15349FE1F1360EE00957D8D /* HistoryBrain.swift in Sources */,
 				E1A979281F09DFAC0050431A /* Lesson.swift in Sources */,
 				E1A979271F09DFAC0050431A /* Items.swift in Sources */,
 				E1A9792D1F09DFAC0050431A /* LessonDetailController.swift in Sources */,

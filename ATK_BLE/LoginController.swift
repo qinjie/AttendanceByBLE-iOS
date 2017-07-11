@@ -128,7 +128,7 @@ class LoginController: UIViewController {
                         newLesson.end_time = lesson["end_time"] as? String
                         newLesson.weekday = lesson["weekday"] as? String
                         newLesson.class_section = lesson["class_section"] as? String
-                    } 
+                    }
                     
                     if let lecturer = json["lecturers"] as? [String:Any]{
                         
@@ -211,8 +211,12 @@ class LoginController: UIViewController {
                                 }
                             }else{
                                 
-                                UserDefaults.standard.set(x["email"], forKey: "email")
-                                UserDefaults.standard.set(x["address"], forKey: "address")
+                                if let email = x["email"] as? String{
+                                    UserDefaults.standard.set(email, forKey: "email")
+                                }
+                                if let address =  x["address"] as? String{
+                                    UserDefaults.standard.set(address, forKey: "address")
+                                }
                                 
                             }
                         }
@@ -262,16 +266,16 @@ class LoginController: UIViewController {
             if let JSON = response.result.value as? [[String:Any]]{
                 GlobalData.attendance.removeAll()
                 for json in JSON{
-                    let history = HistoryDT()
-                    history.lesson_date_id = json["lesson_date_id"] as? Int
+                    let history = Lesson()
+                    history.ldateid = json["lesson_date_id"] as? Int
                     history.lecturer_id = json["lecturer_id"] as? Int
                     history.status = json["status"] as? Int
-                    let time = Format.Format(date: Format.Format(string: (json["created_at"] as? String)!, format: "yyyy-MM-dd HH:mm:ss"), format: "HH:mm")
+                    let time = Format.Format(date: Format.Format(string: (json["recorded_time"] as? String)!, format: "HH:mm:ss"), format: "HH:mm")
                     let lesson = (json["lesson_date"] as? [String:AnyObject])!
                     history.lesson_id = lesson["lesson_id"] as? Int
                     history.ldate = lesson["ldate"] as? String
                     //history.updated_by = lesson["updated_by"] as? Int
-                    history.created_at = time
+                    history.recorded_time = time
                     GlobalData.attendance.append(history)
                 }
                 NSKeyedArchiver.archiveRootObject(GlobalData.attendance, toFile: filePath.historyDTPath)
@@ -290,7 +294,7 @@ class LoginController: UIViewController {
             GlobalData.history.removeAll()
             if let JSON = response.result.value as? [AnyObject]{
                 for json in JSON{
-                    let newHistory = HistoryOA()
+                    let newHistory = History()
                     newHistory.name = json["lesson_name"] as? String
                     newHistory.absent = json["absented"] as? Int
                     newHistory.present = json["presented"] as? Int

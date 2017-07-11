@@ -34,7 +34,7 @@ class LessonDetailController: UIViewController {
     ]
     
     var lesson:Lesson!
-    var history:HistoryOA!
+    var history:History!
     
     override func viewDidLoad() {
         super.viewDidLoad()
