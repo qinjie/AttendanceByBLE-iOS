@@ -68,84 +68,21 @@ class TimetableController: UITableViewController {
     }
     
     @IBAction func RefreshButtonPressed(_ sender: UIBarButtonItem) {
-        setupData()
+        alamofire.loadTimetable()
+        NotificationCenter.default.addObserver(self, selector: #selector(refreshTable), name: NSNotification.Name(rawValue: "done loading timetable"), object: nil)
+    }
+    
+    @objc func refreshTable(){
+        
+        NotificationCenter.default.post(name: NSNotification.Name(rawValue: "updateTime"), object: nil)
+        self.tableView.reloadData()
+        
     }
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-    
-    func setupData(){
-        
-        //let today = Date()
-        
-        //let myCalendar = NSCalendar(calendarIdentifier: NSCalendar.Identifier.gregorian)!
-        //let myComponents = myCalendar.components(.weekday, from: today)
-        
-        
-        let headers: HTTPHeaders = [
-            "Authorization": "Bearer " + Constant.token
-            // "Accept": "application/json"
-        ]
-        
-        Alamofire.request(Constant.URLtimetable, method: .get, parameters: nil, encoding: JSONEncoding.default, headers: headers).responseJSON { (response:DataResponse) in
-            print("load setup success")
-            if let JSON = response.result.value as? [AnyObject]{
-                GlobalData.timetable.removeAll()
-                for json in JSON {
-                    
-                    let newLesson = Lesson()
-                    
-                    if let lesson = json["lesson"] as? [String: Any]{
-                        
-                        newLesson.lesson_id = (lesson["id"] as? Int)!
-                        newLesson.catalog = (lesson["catalog_number"] as? String)!
-                        newLesson.subject = (lesson["subject_area"] as? String)!
-                        newLesson.start_time = (lesson["start_time"] as? String)!
-                        newLesson.end_time = (lesson["end_time"] as? String)!
-                        newLesson.weekday = (lesson["weekday"] as? String)!
-                    }
-                    
-                    if let lecturer = json["lecturers"] as? [String: Any]{
-                        
-                        newLesson.lecturer = lecturer["name"] as? String
-                        newLesson.lecAcad = lecturer["acad"] as? String
-                        newLesson.lecEmail = lecturer["email"] as? String
-                        newLesson.lecOffice = lecturer["office"] as? String
-                        newLesson.lecPhone = lecturer["phone"] as? String
-                        //   print(newLesson.lecturer)
-                    }
-                    
-                    
-                    if let lesson_date = json["lesson_date"] as? [String: Any]{
-                        
-                        newLesson.ldateid = (lesson_date["id"] as? Int)!
-                        newLesson.ldate = (lesson_date["ldate"] as? String)!
-                        
-                    }
-                    
-                    if let venue = json["venue"] as? [String: Any]{
-                        
-                        newLesson.major = (venue["major"] as? Int32)!
-                        newLesson.minor = (venue["minor"] as? Int32)!
-                        newLesson.venueName = (venue["name"] as? String)!
-                        newLesson.location = (venue["location"] as? String)!
-                        
-                    }
-                    
-                    GlobalData.timetable.append(newLesson)
-                }
-                self.tableView.reloadData()
-            }else{
-                
-            }
-            
-            
-        }
-        
-    }
-    
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         // Get the new view controller using segue.destinationViewController.

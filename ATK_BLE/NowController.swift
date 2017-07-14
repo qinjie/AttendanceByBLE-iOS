@@ -28,7 +28,7 @@ class NowController: UIViewController,UIPopoverPresentationControllerDelegate, C
     var dateFormatter = DateFormatter()
     var currentTimeStr = ""
     var currentLesson:Lesson!
-    var nextLesson:Lesson!
+    var nextLesson:Int!
     var timer:Timer?
     
     var locationManager = CLLocationManager()
@@ -278,10 +278,9 @@ class NowController: UIViewController,UIPopoverPresentationControllerDelegate, C
         GlobalData.currentDateStr = dateFormatter.string(from: today)
         GlobalData.today = GlobalData.timetable.filter({$0.ldate == GlobalData.currentDateStr})
         //print("Today : " + String(GlobalData.today.count))
-        
+        nextLesson = 1
         //check if today have lessons
         if GlobalData.today.count > 0 {
-            
             dateFormatter.dateFormat = "HH:mm:ss"
             currentTimeStr = dateFormatter.string(from: today)
             currentLesson = GlobalData.today.first(where: {$0.start_time!<currentTimeStr && $0.end_time!>currentTimeStr})
@@ -313,9 +312,9 @@ class NowController: UIViewController,UIPopoverPresentationControllerDelegate, C
                 //broadcastTime(time: 5)
                 
             }else{
-                if let nextLesson = GlobalData.today.first(where: {$0.start_time!>currentTimeStr}){
+                if let nLesson = GlobalData.today.first(where: {$0.start_time!>currentTimeStr}){
                     //Estimate the next lesson time
-                    let time = nextLesson.start_time?.components(separatedBy: ":")
+                    let time = nLesson.start_time?.components(separatedBy: ":")
                     var hour:Int!
                     var minute:Int!
                     hour = Int((time?[0])!)
@@ -323,11 +322,16 @@ class NowController: UIViewController,UIPopoverPresentationControllerDelegate, C
                     let totalSecond = hour*3600 + minute*60 - 900
                     let hr = totalSecond/3600
                     let min = (totalSecond%3600)/60
-                    subjectLabel.text = nextLesson.subject! + " " + nextLesson.catalog!
-                    classLabel.text = nextLesson.class_section
-                    timeLabel.text = displayTime.display(time: nextLesson.start_time!) + " - " + displayTime.display(time: nextLesson.end_time!)
-                    venueLabel.text = nextLesson.venueName
+                    subjectLabel.text = nLesson.subject! + " " + nLesson.catalog!
+                    classLabel.text = nLesson.class_section
+                    timeLabel.text = displayTime.display(time: nLesson.start_time!) + " - " + displayTime.display(time: nLesson.end_time!)
+                    venueLabel.text = nLesson.venueName
                     currentTimeLabel.text = "not yet time \ntry again after \(hr):\(min)"
+                }else{
+                    
+                    self.nextLesson = nil
+                    self.updateLabels()
+                    
                 }
             }
         }
@@ -340,7 +344,7 @@ class NowController: UIViewController,UIPopoverPresentationControllerDelegate, C
     
     private func updateLabels(){
         
-        if GlobalData.today.count == 0{
+        if nextLesson == nil{
             
             subjectLabel.isHidden = true
             classLabel.isHidden = true

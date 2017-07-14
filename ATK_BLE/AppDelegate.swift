@@ -140,6 +140,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
     
     func applicationWillEnterForeground(_ application: UIApplication) {
         NotificationCenter.default.post(name: NSNotification.Name(rawValue: "updateTime"), object: nil)
+        alamofire.loadHistory()
         // Called as part of the transition from the background to the active state; here you can undo many of the changes made on entering the background.
         /*if identifier != UIBackgroundTaskInvalid {
          endBackgroundTask()
@@ -188,79 +189,4 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
     }
 }
 
-struct filePath{
-    static var timetablePath: String{
-        let manager = FileManager.default
-        let url = manager.urls(for: .documentDirectory, in: .userDomainMask).first
-        return url!.appendingPathComponent("timetable").path
-    }
-    
-    static var classmatePath: String{
-        let manager = FileManager.default
-        let url = manager.urls(for: .documentDirectory, in: .userDomainMask).first
-        return url!.appendingPathComponent("classmate").path
-    }
-    
-    static var lessonuuidPath: String{
-        let manager = FileManager.default
-        let url = manager.urls(for: .documentDirectory, in: .userDomainMask).first
-        return url!.appendingPathComponent("lessonuuid").path
-    }
-    static var historyPath: String{
-        let manager = FileManager.default
-        let url = manager.urls(for: .documentDirectory, in: .userDomainMask).first
-        return url!.appendingPathComponent("history").path
-    }
-    static var historyDTPath: String{
-        let manager = FileManager.default
-        let url = manager.urls(for: .documentDirectory, in: .userDomainMask).first
-        return url!.appendingPathComponent("historyDT").path
-    }
-}
-
-struct checkAttendance{
-    
-    static func checkAttendance() {
-        let token = UserDefaults.standard.string(forKey: "token")
-        let header:HTTPHeaders = [
-            "Authorization" : "Bearer " + token!
-        ]
-        let parameter:Parameters = ["lesson_date_id":GlobalData.currentLesson.ldateid!]
-        print(GlobalData.currentLesson.ldateid!)
-        
-        Alamofire.request(Constant.URLcheckAttandance,method: .post, parameters: parameter, encoding: JSONEncoding.default, headers: header).responseJSON(completionHandler: { (response:DataResponse) in
-            if let JSON = response.result.value as? Int{
-                print("JSON below")
-                print(JSON)
-                if(JSON >= 0) {
-                    print("/////////taken already")
-                    NotificationCenter.default.post(name: NSNotification.Name(rawValue: "taken"), object: nil)
-                }
-                else {
-                    print("JSON not > or = 0")
-                }
-                
-            }
-                //check if JSON is nil
-            else {
-                NotificationCenter.default.post(name: NSNotification.Name(rawValue: "notTaken"), object: nil)
-            }
-        })
-    }
-    static func notiContent(title: String, body: String) -> UNMutableNotificationContent {
-        let content = UNMutableNotificationContent()
-        content.title = title
-        content.body = body
-        return content
-    }
-    static func addNotification(trigger: UNNotificationTrigger?, content:UNMutableNotificationContent, identifier: String) {
-        let request = UNNotificationRequest(identifier: identifier, content: content, trigger: trigger)
-        UNUserNotificationCenter.current().add(request) {
-            (error) in
-            if error != nil {
-                print("error adding notigicaion: \(error!.localizedDescription)")
-            }
-        }
-    }
-    }
 

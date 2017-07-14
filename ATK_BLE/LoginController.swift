@@ -217,7 +217,6 @@ class LoginController: UIViewController {
                                 if let address =  x["address"] as? String{
                                     UserDefaults.standard.set(address, forKey: "address")
                                 }
-                                
                             }
                         }
                     }

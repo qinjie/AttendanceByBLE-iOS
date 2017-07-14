@@ -34,48 +34,26 @@ class HistoryController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         historyDate = HistoryBrain.getHistoryDate()
-        /*var date = Date()
-        let today = Format.Format(date: date, format: "EEEE")
-        var i = 0
-        var mDate = Format.Format(date: date, format: "dd MMM")
-        if  let j = wdayDict2[today] as? String{
-            i = Int(j)!
-        }
-        else{
-            if today == "Saturday"{
-                date = date.addingTimeInterval(-60*60*24)
-            }
-            else{
-                date = date.addingTimeInterval(-60*60*24*2)
-            }
-            i = 6
-        }
-        mDate = Format.Format(date: date, format: "dd MMM")
-        for _ in 0...4{
-            if i == 1{
-                i = 6
-            }
-            wday.append(wdayDict[String(i)] as! String)
-            wdayInt.append(String(i))
-            wdayDate.append(mDate)
-            
-            if Format.Format(date: date, format: "EEEE") == "Monday"{
-                date = date.addingTimeInterval(-60*60*24*3)
-                i = 6
-            }
-            else{
-                date = date.addingTimeInterval(-60*60*24)
-                i -= 1
-            }
-            mDate = Format.Format(date: date, format: "dd MMM")
-        }*/
-        
         // Do any additional setup after loading the view.
     }
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
+    }
+    
+    
+    @IBAction func refreshButton(_ sender: UIBarButtonItem) {
+        
+        alamofire.loadHistory()
+        NotificationCenter.default.addObserver(self, selector: #selector(refreshTable), name: NSNotification.Name(rawValue: "done loading history"), object: nil)
+        
+    }
+    
+    @objc func refreshTable(){
+        
+        self.tableView.reloadData()
+        
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {

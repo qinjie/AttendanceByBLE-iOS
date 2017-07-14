@@ -464,7 +464,13 @@
                             <outlet property="delegate" destination="H64-7B-rfA" id="aC2-QQ-IZW"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" title="History" id="6sM-o0-uX7"/>
+                    <navigationItem key="navigationItem" title="History" id="6sM-o0-uX7">
+                        <barButtonItem key="rightBarButtonItem" systemItem="refresh" id="Z3h-bq-kJT">
+                            <connections>
+                                <action selector="refreshButton:" destination="H64-7B-rfA" id="tbK-xY-EPY"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
                     <connections>
                         <segue destination="fOK-Fq-zyH" kind="show" identifier="lesson detail" id="zG7-cK-laq"/>
                     </connections>

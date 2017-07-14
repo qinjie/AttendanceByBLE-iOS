@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		3CE89EF5A7A07C1622FF4DCA /* Pods_ATK_BLE.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8730CE69BF02DA57AF883CE4 /* Pods_ATK_BLE.framework */; };
+		E10957C01F187D4400B55AAC /* alamofire.swift in Sources */ = {isa = PBXBuildFile; fileRef = E10957BF1F187D4400B55AAC /* alamofire.swift */; };
+		E10957C21F188AA800B55AAC /* filePath.swift in Sources */ = {isa = PBXBuildFile; fileRef = E10957C11F188AA800B55AAC /* filePath.swift */; };
 		E15349FE1F1360EE00957D8D /* HistoryBrain.swift in Sources */ = {isa = PBXBuildFile; fileRef = E15349FD1F1360EE00957D8D /* HistoryBrain.swift */; };
 		E1A979261F09DFAC0050431A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1A979181F09DFAC0050431A /* AppDelegate.swift */; };
 		E1A979271F09DFAC0050431A /* Items.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1A979191F09DFAC0050431A /* Items.swift */; };
@@ -32,6 +34,8 @@
 		38841AAF1E690C0E004EF33D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		8730CE69BF02DA57AF883CE4 /* Pods_ATK_BLE.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ATK_BLE.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		A480AF68145EB8C64A5ACCB4 /* Pods-ATK_BLE.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ATK_BLE.release.xcconfig"; path = "Pods/Target Support Files/Pods-ATK_BLE/Pods-ATK_BLE.release.xcconfig"; sourceTree = "<group>"; };
+		E10957BF1F187D4400B55AAC /* alamofire.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = alamofire.swift; sourceTree = "<group>"; };
+		E10957C11F188AA800B55AAC /* filePath.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = filePath.swift; sourceTree = "<group>"; };
 		E15349FD1F1360EE00957D8D /* HistoryBrain.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HistoryBrain.swift; sourceTree = "<group>"; };
 		E1A979181F09DFAC0050431A /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		E1A979191F09DFAC0050431A /* Items.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Items.swift; sourceTree = "<group>"; };
@@ -143,6 +147,8 @@
 			isa = PBXGroup;
 			children = (
 				E15349FD1F1360EE00957D8D /* HistoryBrain.swift */,
+				E10957BF1F187D4400B55AAC /* alamofire.swift */,
+				E10957C11F188AA800B55AAC /* filePath.swift */,
 			);
 			name = Models;
 			sourceTree = "<group>";
@@ -285,6 +291,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E10957C01F187D4400B55AAC /* alamofire.swift in Sources */,
+				E10957C21F188AA800B55AAC /* filePath.swift in Sources */,
 				E1A9792F1F09DFAC0050431A /* MoreController.swift in Sources */,
 				E15349FE1F1360EE00957D8D /* HistoryBrain.swift in Sources */,
 				E1A979281F09DFAC0050431A /* Lesson.swift in Sources */,
