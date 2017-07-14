@@ -84,10 +84,13 @@ class LoginController: UIViewController {
                     Constant.major = JSON["major"] as! Int
                     Constant.minor = JSON["minor"] as! Int
                     Constant.device_hash = JSON["device_hash"] as! String
-                    
+                    UserDefaults.standard.set(Constant.device_hash, forKey: "device_hash")
                     //Check if the device is new
                     if Constant.device_hash != this_device{
                         Constant.change_device = true
+                        
+                    }else{
+                        Constant.change_device = false
                     }
                     self.setupData()
                     UserDefaults.standard.set(Constant.major, forKey: "major")

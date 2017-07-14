@@ -43,12 +43,12 @@ class NowController: UIViewController,UIPopoverPresentationControllerDelegate, C
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        checkDevice()
+        checkUserInBackGround()
         GlobalData.timetable.sort(by: {$0.start_time! < $1.start_time!})
         HistoryBrain.arrangeHistory()
         broadcastLabel.isHidden = true
         setupImageView()
-        checkUserInBackGround()
-        // Do any additional setup after loading the view.
         locationManager.delegate = self
         bluetoothManager.delegate = self
         bluetoothManager = CBPeripheralManager.init(delegate: self, queue: nil)
@@ -59,6 +59,41 @@ class NowController: UIViewController,UIPopoverPresentationControllerDelegate, C
         NotificationCenter.default.addObserver(self,selector: #selector(success), name: NSNotification.Name(rawValue: "atksuccesfully"), object: nil)
         NotificationCenter.default.addObserver(self,selector: #selector(changeLabel), name: NSNotification.Name(rawValue: "taken"), object: nil)
     }
+    
+    private func checkDevice(){
+        
+        if Constant.change_device == true{
+            let deviceAlertController = UIAlertController(title: "New Device", message: "Do you want to continue to use this device?\nYes:Can only take attendance tommorrow\nNo:Can take attendance using old device", preferredStyle: .alert)
+            let yesAction = UIAlertAction(title: "Yes", style: .default, handler: { (action:UIAlertAction) in
+                self.changeDevice()
+            })
+            let noAction =  UIAlertAction(title: "No", style: .default, handler: { (action:UIAlertAction) in
+                Constant.change_device = true
+            })
+            deviceAlertController.addAction(yesAction)
+            deviceAlertController.addAction(noAction)
+            self.present(deviceAlertController, animated: false, completion: nil)
+        }
+        
+    }
+    
+    private func changeDevice(){
+        let this_device = UIDevice.current.identifierForVendor?.uuidString
+        let username = UserDefaults.standard.string(forKey: "username")!
+        let password = UserDefaults.standard.string(forKey: "password")!
+        let parameters:[String:Any] = [
+            "username" : username,
+            "password" : password,
+            "device_hash" : this_device!
+        ]
+        let headers:HTTPHeaders = [
+            "Content-Type" : "application/json"
+        ]
+        Alamofire.request(Constant.URLchangedevice, method: .post, parameters: parameters, encoding: JSONEncoding.default, headers: headers).responseJSON(completionHandler: { (response:DataResponse) in
+            print("Changed device")
+        })
+    }
+    
     private func stopLiao(){
         print("Stop Advertising!!")
     }
@@ -115,14 +150,21 @@ class NowController: UIViewController,UIPopoverPresentationControllerDelegate, C
             return
         }
         if currentLesson != nil {
-            imageView.animationImages = [
-                #imageLiteral(resourceName: "transmit_a"),
-                #imageLiteral(resourceName: "transmit_b"),
-                #imageLiteral(resourceName: "transmit_c")
-            ]
-            imageView.animationDuration = 0.5
-            imageView.startAnimating()
-            broadcast()
+            if Constant.change_device == true{
+                let alertController = UIAlertController(title: "New Device", message: "Cannot take attendance with this device\nNew device can attendance after the day register", preferredStyle: .alert)
+                let okAction = UIAlertAction(title: "OK", style: .default, handler: nil)
+                alertController.addAction(okAction)
+                self.present(alertController, animated: false, completion: nil)
+            }else{
+                imageView.animationImages = [
+                    #imageLiteral(resourceName: "transmit_a"),
+                    #imageLiteral(resourceName: "transmit_b"),
+                    #imageLiteral(resourceName: "transmit_c")
+                ]
+                imageView.animationDuration = 0.5
+                imageView.startAnimating()
+                broadcast()
+            }
         }
         else{
             updateLabels()
@@ -209,7 +251,7 @@ class NowController: UIViewController,UIPopoverPresentationControllerDelegate, C
             dataDictionary = beaconRegion.peripheralData(withMeasuredPower: nil)
             //bluetoothManager = CBPeripheralManager.init(delegate: self, queue: nil)
             bluetoothManager.startAdvertising(dataDictionary as?[String: Any])
-
+            
             let date = Date().addingTimeInterval(TimeInterval(10))
             let timer = Timer(fireAt: date, interval: 0, target: self, selector: #selector(stopBroadcast), userInfo: nil, repeats: false)
             RunLoop.main.add(timer, forMode: RunLoopMode.commonModes)
@@ -384,6 +426,13 @@ class NowController: UIViewController,UIPopoverPresentationControllerDelegate, C
     }
     
     private func checkUserInBackGround(){
+        if let device_hash = UserDefaults.standard.string(forKey: "device_hash"){
+            let this_device = UIDevice.current.identifierForVendor?.uuidString
+            if this_device != device_hash{
+                Constant.change_device = true
+            }
+        }
+        
         let token = UserDefaults.standard.string(forKey: "token")!
         let headersTimetable:HTTPHeaders = [
             "Authorization" : "Bearer " + token

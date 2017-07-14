@@ -38,10 +38,8 @@ class LessonDetailController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        //print(lesson.catalog)
         history = GlobalData.history.filter({$0.name == lesson.catalog}).first
         setupLabels()
-        // Do any additional setup after loading the view.
     }
     
     override func didReceiveMemoryWarning() {

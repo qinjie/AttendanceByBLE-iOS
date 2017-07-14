@@ -69,43 +69,50 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
         }
     }
     func takeAttendance() {
-        print(" bg Inside \(Constant.identifier)");
-        Constant.token = UserDefaults.standard.string(forKey: "token")!
-        Constant.student_id = UserDefaults.standard.integer(forKey: "student_id")
-        
-        let para1: Parameters = [
-            "lesson_date_id": GlobalData.currentLesson.ldateid!,
-            "student_id_1": Constant.student_id,
-            "student_id_2": Constant.identifier,
-            ]
-        
-        
-        let parameters: [String: Any] = ["data": [para1]]
-        
-        print(parameters)
-        let headers: HTTPHeaders = [
-            "Authorization": "Bearer " + Constant.token,
-            "Content-Type": "application/json"
-        ]
-        
-        Alamofire.request(Constant.URLatk, method: .post, parameters: parameters, encoding: JSONEncoding.default, headers: headers).responseJSON { (response:DataResponse) in
+    
+        if Constant.change_device == true{
             
-            let statusCode = response.response?.statusCode
-            if (statusCode == 200){
-                GlobalData.myAttendance.append(GlobalData.currentLesson.ldateid!)
-                NotificationCenter.default.post(name: NSNotification.Name(rawValue: "atksuccesfully"), object: nil)
-                print("gl\(GlobalData.attendance)")
-                let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 3.0, repeats: false)
-                let content = checkAttendance.notiContent(title: "successfull", body: "You have successfully taken attendance")
-                checkAttendance.addNotification(trigger: trigger, content: content, identifier: "a")
+        }else{
+            print(" bg Inside \(Constant.identifier)");
+            Constant.token = UserDefaults.standard.string(forKey: "token")!
+            Constant.student_id = UserDefaults.standard.integer(forKey: "student_id")
+            
+            let para1: Parameters = [
+                "lesson_date_id": GlobalData.currentLesson.ldateid!,
+                "student_id_1": Constant.student_id,
+                "student_id_2": Constant.identifier,
+                ]
+            
+            
+            let parameters: [String: Any] = ["data": [para1]]
+            
+            print(parameters)
+            let headers: HTTPHeaders = [
+                "Authorization": "Bearer " + Constant.token,
+                "Content-Type": "application/json"
+            ]
+            
+            Alamofire.request(Constant.URLatk, method: .post, parameters: parameters, encoding: JSONEncoding.default, headers: headers).responseJSON { (response:DataResponse) in
+                
+                let statusCode = response.response?.statusCode
+                if (statusCode == 200){
+                    GlobalData.myAttendance.append(GlobalData.currentLesson.ldateid!)
+                    NotificationCenter.default.post(name: NSNotification.Name(rawValue: "atksuccesfully"), object: nil)
+                    print("gl\(GlobalData.attendance)")
+                    let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 3.0, repeats: false)
+                    let content = checkAttendance.notiContent(title: "successfull", body: "You have successfully taken attendance")
+                    checkAttendance.addNotification(trigger: trigger, content: content, identifier: "a")
+                    
+                }
+                if let data = response.result.value{
+                    print("///////////////result below////////////")
+                    print(data)
+                }
                 
             }
-            if let data = response.result.value{
-                print("///////////////result below////////////")
-                print(data)
-            }
-            
+
         }
+        
     }
     func testSendNoti() {
         let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 3.0, repeats: false)
