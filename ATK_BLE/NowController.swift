@@ -94,6 +94,9 @@ class NowController: UIViewController,UIPopoverPresentationControllerDelegate, C
             "Content-Type" : "application/json"
         ]
         Alamofire.request(Constant.URLchangedevice, method: .post, parameters: parameters, encoding: JSONEncoding.default, headers: headers).responseJSON(completionHandler: { (response:DataResponse) in
+            print("username" + username)
+            print("password" + password)
+            //print(response.response?.statusCode ?? <#default value#>)
             print("Changed device")
         })
     }
@@ -256,7 +259,7 @@ class NowController: UIViewController,UIPopoverPresentationControllerDelegate, C
             //bluetoothManager = CBPeripheralManager.init(delegate: self, queue: nil)
             bluetoothManager.startAdvertising(dataDictionary as?[String: Any])
             
-            let date = Date().addingTimeInterval(TimeInterval(10))
+            let date = Date().addingTimeInterval(TimeInterval(30))
             let timer = Timer(fireAt: date, interval: 0, target: self, selector: #selector(stopBroadcast), userInfo: nil, repeats: false)
             RunLoop.main.add(timer, forMode: RunLoopMode.commonModes)
         }

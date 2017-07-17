@@ -217,8 +217,14 @@ class LoginController: UIViewController {
                                 if let email = x["email"] as? String{
                                     UserDefaults.standard.set(email, forKey: "email")
                                 }
+                                else {
+                                    UserDefaults.standard.removeObject(forKey: "email")
+                                }
                                 if let address =  x["address"] as? String{
                                     UserDefaults.standard.set(address, forKey: "address")
+                                }
+                                else {
+                                    UserDefaults.standard.removeObject(forKey: "address")
                                 }
                             }
                         }
