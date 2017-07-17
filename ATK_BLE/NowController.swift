@@ -60,6 +60,10 @@ class NowController: UIViewController,UIPopoverPresentationControllerDelegate, C
         NotificationCenter.default.addObserver(self,selector: #selector(changeLabel), name: NSNotification.Name(rawValue: "taken"), object: nil)
     }
     
+    override func viewDidAppear(_ animated: Bool) {
+       
+    }
+    
     private func checkDevice(){
         
         if Constant.change_device == true{
@@ -186,7 +190,7 @@ class NowController: UIViewController,UIPopoverPresentationControllerDelegate, C
         self.imageView.stopAnimating()
     }
     
-    private func detectClassmate() {
+    @objc func detectClassmate() {
         uuid = NSUUID(uuidString: GlobalData.lessonUUID[currentLesson.lesson_id!]!)as UUID?
         print("Current lesson: \(uuid)")
         if ((classmate.student_id?.count)! == 0)
@@ -273,8 +277,8 @@ class NowController: UIViewController,UIPopoverPresentationControllerDelegate, C
     private func testSendNoti() {
         
         let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 3.0, repeats: false)
-        let content = checkAttendance.notiContent(title: "successfull", body: "You have successfully taken attendance")
-        checkAttendance.addNotification(trigger: trigger, content: content, identifier: "abc")
+        let content = notification.notiContent(title: "successfull", body: "You have successfully taken attendance")
+        notification.addNotification(trigger: trigger, content: content, identifier: "abc")
     }
     
 
@@ -348,7 +352,10 @@ class NowController: UIViewController,UIPopoverPresentationControllerDelegate, C
                 print("Students  \(String(describing: self.classmate.student_id?.count))")
                 print("\(String(describing: GlobalData.currentLesson.catalog))")
                 print(UserDefaults.standard.string(forKey: "student_id")!)
-                detectClassmate()
+                if GlobalData.detectClassmateObserver != true{
+                    NotificationCenter.default.addObserver(self, selector: #selector(detectClassmate), name: NSNotification.Name(rawValue: "detect classmate"), object: nil)
+                    GlobalData.detectClassmateObserver = true
+                }
                 
                 //broadcastTime(time: 1)
                 //broadcastTime(time: 5)
@@ -426,10 +433,25 @@ class NowController: UIViewController,UIPopoverPresentationControllerDelegate, C
     }
     
     private func checkUserInBackGround(){
-        if let device_hash = UserDefaults.standard.string(forKey: "device_hash"){
-            let this_device = UIDevice.current.identifierForVendor?.uuidString
-            if this_device != device_hash{
-                Constant.change_device = true
+        
+        let this_device = UIDevice.current.identifierForVendor?.uuidString
+        let parameters:[String:Any] = [
+            "username" : UserDefaults.standard.string(forKey: "username")!,
+            "password" : UserDefaults.standard.string(forKey: "password")!,
+            "device_hash" : this_device!
+        ]
+        Alamofire.request(Constant.URLstudentlogin, method: .post, parameters: parameters, encoding: JSONEncoding.default, headers: nil).responseJSON { (response:DataResponse) in
+            let code = response.response?.statusCode
+            if code == 200{
+                if let json = response.result.value as? [String:AnyObject]{
+                    UserDefaults.standard.set(json["token"], forKey: "token")
+                    let status = json["status"] as? Int
+                    if status != 10{
+                        Constant.change_device = true
+                    }else{
+                        NotificationCenter.default.post(name: NSNotification.Name(rawValue:"detect classmate"), object: nil)
+                    }
+                }
             }
         }
         

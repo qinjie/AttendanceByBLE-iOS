@@ -156,6 +156,9 @@ struct checkAttendance{
             }
         })
     }
+}
+
+struct notification{
     static func notiContent(title: String, body: String) -> UNMutableNotificationContent {
         let content = UNMutableNotificationContent()
         content.title = title
@@ -171,6 +174,7 @@ struct checkAttendance{
             }
         }
     }
+
 }
 
 

@@ -100,8 +100,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
                     NotificationCenter.default.post(name: NSNotification.Name(rawValue: "atksuccesfully"), object: nil)
                     print("gl\(GlobalData.attendance)")
                     let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 3.0, repeats: false)
-                    let content = checkAttendance.notiContent(title: "successfull", body: "You have successfully taken attendance")
-                    checkAttendance.addNotification(trigger: trigger, content: content, identifier: "a")
+                    let content = notification.notiContent(title: "successfull", body: "You have successfully taken attendance")
+                    notification.addNotification(trigger: trigger, content: content, identifier: "a")
                     
                 }
                 if let data = response.result.value{
@@ -116,8 +116,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
     }
     func testSendNoti() {
         let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 3.0, repeats: false)
-        let content = checkAttendance.notiContent(title: "successfull", body: "You have successfully taken attendance")
-        checkAttendance.addNotification(trigger: trigger, content: content, identifier: "a")            }
+        let content = notification.notiContent(title: "successfull", body: "You have successfully taken attendance")
+        notification.addNotification(trigger: trigger, content: content, identifier: "a")            }
     
     func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
         completionHandler([.alert,.badge,.sound])

@@ -69,6 +69,8 @@ struct GlobalData{
     static var currentLecturerId = 0
     static var myAttendance = [Int]()
     
+    static var detectClassmateObserver = Bool()
+    
 }
 
 class Format{
