@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="12118" systemVersion="16F73" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
@@ -576,17 +577,19 @@
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Broadcast My Beacon" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="6cZ-g6-jAu">
-                                <rect key="frame" x="89" y="543" width="196" height="24"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Press the above button to broadcast ur beacon" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="6cZ-g6-jAu">
+                                <rect key="frame" x="34" y="543" width="312" height="58"/>
                                 <constraints>
+
                                     <constraint firstAttribute="height" constant="24" id="EhB-nc-jgE"/>
+
                                 </constraints>
                                 <fontDescription key="fontDescription" type="system" pointSize="20"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Yeah! No more lesson today." textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="34g-Zl-igP">
-                                <rect key="frame" x="54" y="206" width="266" height="26"/>
+                                <rect key="frame" x="-74" y="206" width="522" height="26"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="21"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
@@ -609,6 +612,7 @@
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
+
                             <constraint firstItem="3bO-Er-hMG" firstAttribute="centerX" secondItem="GHp-Ig-qa7" secondAttribute="centerX" id="053-Fn-Wv6"/>
                             <constraint firstItem="fgJ-ut-fcb" firstAttribute="centerX" secondItem="6cZ-g6-jAu" secondAttribute="centerX" id="0Pn-bx-K2m"/>
                             <constraint firstItem="fgJ-ut-fcb" firstAttribute="top" secondItem="BOi-lA-5Zq" secondAttribute="bottom" constant="28" id="2BI-fi-fXt"/>
@@ -628,6 +632,7 @@
                             <constraint firstItem="3bO-Er-hMG" firstAttribute="trailing" secondItem="hIH-at-N4H" secondAttribute="trailingMargin" id="qVy-o6-mpY"/>
                             <constraint firstItem="6cZ-g6-jAu" firstAttribute="top" secondItem="fgJ-ut-fcb" secondAttribute="bottom" constant="8" symbolic="YES" id="xsW-ts-8zd"/>
                             <constraint firstItem="BOi-lA-5Zq" firstAttribute="centerY" secondItem="hIH-at-N4H" secondAttribute="centerY" id="zQk-gH-wzS"/>
+
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="Now" id="xuA-ec-vxj">

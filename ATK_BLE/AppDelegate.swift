@@ -60,7 +60,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
         print("bg did determine state \(region.identifier)" )
         switch state {
         case .inside:
-            print("inside liao")
+            print("inside !!!!!")
             checkAttendance.checkAttendance()
             Constant.identifier = region.identifier
             NotificationCenter.default.addObserver(self,selector: #selector(takeAttendance), name: NSNotification.Name(rawValue: "notTaken"), object: nil)

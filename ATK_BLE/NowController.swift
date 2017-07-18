@@ -124,7 +124,9 @@ class NowController: UIViewController,UIPopoverPresentationControllerDelegate, C
             "Content-Type" : "application/json"
         ]
         Alamofire.request(Constant.URLchangedevice, method: .post, parameters: parameters, encoding: JSONEncoding.default, headers: headers).responseJSON(completionHandler: { (response:DataResponse) in
+
             print("Changed device result: " + String(describing: response.response!.statusCode))
+
         })
     }
     
@@ -141,7 +143,7 @@ class NowController: UIViewController,UIPopoverPresentationControllerDelegate, C
     }
     
     @IBAction private func userInfobutton(_ sender: UIButton) {
-        //self.performSegue(withIdentifier: "pop", sender: self)
+        self.performSegue(withIdentifier: "pop", sender: self)
         NotificationCenter.default.addObserver(self,selector: #selector(success), name: NSNotification.Name(rawValue: "atksuccesfully"), object: nil)
         NotificationCenter.default.addObserver(self,selector: #selector(changeLabel), name: NSNotification.Name(rawValue: "taken"), object: nil)
         
@@ -503,7 +505,7 @@ class NowController: UIViewController,UIPopoverPresentationControllerDelegate, C
             if let pop = dest.popoverPresentationController {
                 pop.delegate = self
                 if(self.presentedViewController == nil) {
-                    displayAlert(title: "Info \(String(describing: UserDefaults.standard.string(forKey: "username")!))", message: "ll")
+                    displayAlert(title: "Name: \(String(describing: UserDefaults.standard.string(forKey: "username")!))", message: "Student id: \(UserDefaults.standard.string(forKey: "student_id")!)")
                 }            }
         }
     }
