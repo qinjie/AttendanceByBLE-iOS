@@ -11,6 +11,7 @@ import Alamofire
 import CoreBluetooth
 import CoreLocation
 import UserNotifications
+import AVFoundation
 
 class NowController: UIViewController,UIPopoverPresentationControllerDelegate, CLLocationManagerDelegate, UNUserNotificationCenterDelegate, CBPeripheralManagerDelegate {
     
@@ -24,7 +25,6 @@ class NowController: UIViewController,UIPopoverPresentationControllerDelegate, C
     @IBOutlet weak var imageView: UIImageView!
     
     var today = Date()
-    var button = UIButton()
     var currentTimeStr = ""
     var currentLesson:Lesson!
     var nextLesson:Int!
@@ -42,8 +42,8 @@ class NowController: UIViewController,UIPopoverPresentationControllerDelegate, C
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        addObservers()
-        checkDevice()
+        addObservers()  // to receive local notification from other view
+        checkDevice()   // check if this is new device
         GlobalData.timetable.sort(by: {$0.start_time! < $1.start_time!})
         HistoryBrain.arrangeHistory()
         broadcastLabel.isHidden = true
@@ -56,7 +56,7 @@ class NowController: UIViewController,UIPopoverPresentationControllerDelegate, C
         UNUserNotificationCenter.current().delegate = self
         
         checkTime()
-        setupTimer()    //For every lesson before 15 mins
+        setupTimer()    //For every lesson before 10 mins
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -88,7 +88,12 @@ class NowController: UIViewController,UIPopoverPresentationControllerDelegate, C
         NotificationCenter.default.addObserver(self, selector: #selector(checkTime), name: NSNotification.Name(rawValue: "refresh"), object: nil)
         NotificationCenter.default.addObserver(self,selector: #selector(success), name: NSNotification.Name(rawValue: "atksuccesfully"), object: nil)
         NotificationCenter.default.addObserver(self,selector: #selector(changeLabel), name: NSNotification.Name(rawValue: "taken"), object: nil)
+        NotificationCenter.default.addObserver(self,selector: #selector(enableImageView), name: NSNotification.Name(rawValue: "enable imageView"), object: nil)
         
+    }
+    
+    @objc func enableImageView(){
+        imageView.isUserInteractionEnabled = true
     }
     
     private func checkDevice(){
@@ -124,7 +129,9 @@ class NowController: UIViewController,UIPopoverPresentationControllerDelegate, C
             "Content-Type" : "application/json"
         ]
         Alamofire.request(Constant.URLchangedevice, method: .post, parameters: parameters, encoding: JSONEncoding.default, headers: headers).responseJSON(completionHandler: { (response:DataResponse) in
+
             print("Changed device result: " + String(describing: response.response!.statusCode))
+
         })
     }
     
@@ -141,9 +148,8 @@ class NowController: UIViewController,UIPopoverPresentationControllerDelegate, C
     }
     
     @IBAction private func userInfobutton(_ sender: UIButton) {
-        //self.performSegue(withIdentifier: "pop", sender: self)
-        NotificationCenter.default.addObserver(self,selector: #selector(success), name: NSNotification.Name(rawValue: "atksuccesfully"), object: nil)
-        NotificationCenter.default.addObserver(self,selector: #selector(changeLabel), name: NSNotification.Name(rawValue: "taken"), object: nil)
+        
+        showUserInfo()
         
     }
     
@@ -162,7 +168,7 @@ class NowController: UIViewController,UIPopoverPresentationControllerDelegate, C
     
     private func setupImageView(){
         
-        imageView.isUserInteractionEnabled = true
+        imageView.isUserInteractionEnabled = false
         
         let singleTap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(broadcastSignal))
         singleTap.numberOfTapsRequired = 1
@@ -172,7 +178,6 @@ class NowController: UIViewController,UIPopoverPresentationControllerDelegate, C
     @objc private func success() {
         self.currentTimeLabel.text = "You have taken attendance \nfor \(self.currentLesson.catalog!)"
         self.currentTimeLabel.textColor = UIColor.green
-        displayAlert(title: "Successful", message: "You have taken attendance for\(currentLesson.catalog!)")
         
     }
     
@@ -207,11 +212,8 @@ class NowController: UIViewController,UIPopoverPresentationControllerDelegate, C
     }
     
     private func turnOnBlt() {
-        //let bluetoothManager = BluetoothManagerHandler.sharedInstance()
-        //bluetoothManager?.setPower(true)
         let url = URL(string: "App-Prefs:root=Bluetooth") //for bluetooth setting
         let app = UIApplication.shared
-        //app.openURL(url!)
         app.open(url!, options: ["string":""], completionHandler: nil)
     }
     
@@ -275,15 +277,12 @@ class NowController: UIViewController,UIPopoverPresentationControllerDelegate, C
     func broadcast() {
         
         if bluetoothManager.state == .poweredOn {
-            /*let major = UInt16(UserDefaults.standard.string(forKey: "major")!)as! CLBeaconMajorValue
-             let minor = UInt16(UserDefaults.standard.string(forKey: "minor")!)as! CLBeaconMinorValue */
             print("broadcasting")
             let major = UInt16(Int(UserDefaults.standard.string(forKey: "major")!)!)as CLBeaconMajorValue
             let minor = UInt16(Int(UserDefaults.standard.string(forKey: "minor")!)!)as CLBeaconMinorValue
             uuid = NSUUID(uuidString: GlobalData.lessonUUID[currentLesson.lesson_id!]!)as UUID?
             let beaconRegion = CLBeaconRegion(proximityUUID: uuid!, major: major, minor: minor, identifier: "\(String(describing: UserDefaults.standard.string(forKey: "student_id")!))")
             dataDictionary = beaconRegion.peripheralData(withMeasuredPower: nil)
-            //bluetoothManager = CBPeripheralManager.init(delegate: self, queue: nil)
             bluetoothManager.startAdvertising(dataDictionary as?[String: Any])
             
             let date = Date().addingTimeInterval(TimeInterval(30))
@@ -292,7 +291,6 @@ class NowController: UIViewController,UIPopoverPresentationControllerDelegate, C
         }
         else {
             let alert = UIAlertController(title: "Bluetooth Turn on Request", message: " AME would like to turn on your bluetooth!", preferredStyle: UIAlertControllerStyle.alert)
-            // add the actions (buttons)
             alert.addAction(UIAlertAction(title: "Allow", style: UIAlertActionStyle.default, handler: { action in
                 self.turnOnBlt()
                 self.broadcast()
@@ -341,7 +339,6 @@ class NowController: UIViewController,UIPopoverPresentationControllerDelegate, C
         print("fg did determine state!!!!!")
         switch(state) {
         case .inside:print("fg inside\(region.identifier)")
-        broadcast()
         case .outside:print("fg outside\(region.identifier)")
         case .unknown:print("fg unknown\(region.identifier)")
         }
@@ -352,7 +349,6 @@ class NowController: UIViewController,UIPopoverPresentationControllerDelegate, C
         today = Date()
         GlobalData.currentDateStr = Format.Format(date: today, format: "yyyy-MM-dd")
         GlobalData.today = GlobalData.timetable.filter({$0.ldate == GlobalData.currentDateStr})
-        //print("Today : " + String(GlobalData.today.count))
         nextLesson = 1
         //check if today have lessons
         if GlobalData.today.count > 0 {
@@ -384,9 +380,6 @@ class NowController: UIViewController,UIPopoverPresentationControllerDelegate, C
                     NotificationCenter.default.addObserver(self, selector: #selector(detectClassmate), name: NSNotification.Name(rawValue: "detect classmate"), object: nil)
                     GlobalData.detectClassmateObserver = true
                 }
-                
-                //broadcastTime(time: 1)
-                //broadcastTime(time: 5)
                 
             }else{
                 if let nLesson = GlobalData.today.first(where: {$0.start_time!>currentTimeStr}){
@@ -466,12 +459,19 @@ class NowController: UIViewController,UIPopoverPresentationControllerDelegate, C
             "password" : UserDefaults.standard.string(forKey: "password")!,
             "device_hash" : this_device!
         ]
+        let spinnerIndicator = UIActivityIndicatorView(activityIndicatorStyle: .whiteLarge)
+        spinnerIndicator.center = CGPoint(x: 135.0, y: 80.0)
+        spinnerIndicator.color = UIColor.black
+        spinnerIndicator.startAnimating()
+        self.view.addSubview(spinnerIndicator)
         Alamofire.request(Constant.URLstudentlogin, method: .post, parameters: parameters, encoding: JSONEncoding.default, headers: nil).responseJSON { (response:DataResponse) in
             let code = response.response?.statusCode
+            spinnerIndicator.removeFromSuperview()
             if code == 200{
                 if let json = response.result.value as? [String:AnyObject]{
                     UserDefaults.standard.set(json["token"], forKey: "token")
                     let status = json["status"] as? Int
+                    NotificationCenter.default.post(name: NSNotification.Name(rawValue: "enable imageView"), object: nil)
                     if status != 10{
                         Constant.change_device = true
                     }else{
@@ -497,14 +497,21 @@ class NowController: UIViewController,UIPopoverPresentationControllerDelegate, C
         }
     }
     
+    private func showUserInfo(){
+        let username = UserDefaults.standard.string(forKey: "username")!
+        let card = UserDefaults.standard.string(forKey: "card")!
+        if(self.presentedViewController == nil) {
+            displayAlert(title: "Name: \(username)", message: "Student id: \(card)")
+        }
+        
+    }
+    
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "pop" {
             let dest = segue.destination
             if let pop = dest.popoverPresentationController {
                 pop.delegate = self
-                if(self.presentedViewController == nil) {
-                    displayAlert(title: "Info \(String(describing: UserDefaults.standard.string(forKey: "username")!))", message: "ll")
-                }            }
+                         }
         }
     }
     /*

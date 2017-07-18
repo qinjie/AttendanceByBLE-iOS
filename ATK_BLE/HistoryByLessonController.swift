@@ -39,10 +39,6 @@ class HistoryByLessonController: UIViewController, UITableViewDelegate, UITableV
         // Dispose of any resources that can be recreated.
     }
     
-    /*func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-     <#code#>
-     }*/
-    
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 70
     }
@@ -63,20 +59,19 @@ class HistoryByLessonController: UIViewController, UITableViewDelegate, UITableV
         cell.venue.isHidden = true
         cell.iconView.isHidden = false
         cell.isUserInteractionEnabled = false
+        let ldate = Format.Format(date: Format.Format(string: mHistory.ldate!, format: "yyyy-MM-dd"), format: "dd/MM/yy")
         if mHistory.status == 0 {
             cell.iconView.image = #imageLiteral(resourceName: "green")
-            cell.arrivingtimeLabel.text = mHistory.recorded_time
-            cell.arrivingtimeLabel.isHidden = false
+            cell.arrivingtimeLabel.text = ldate + " " + mHistory.recorded_time!
         }else if mHistory.status == -1{
             cell.iconView.image = #imageLiteral(resourceName: "red")
-            cell.arrivingtimeLabel.isHidden = true
+            cell.arrivingtimeLabel.text = ldate
         }else{
             cell.iconView.image = #imageLiteral(resourceName: "yellow")
-            cell.arrivingtimeLabel.text = mHistory.recorded_time
-            cell.arrivingtimeLabel.isHidden = false
+            cell.arrivingtimeLabel.text = ldate + " " + mHistory.recorded_time!
         }
         // Configure the cell...
-        
+        cell.arrivingtimeLabel.isHidden = false
         return cell
     }
     

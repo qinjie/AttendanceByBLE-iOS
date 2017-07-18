@@ -113,7 +113,6 @@ struct alamofire{
                     let lesson = (json["lesson_date"] as? [String:AnyObject])!
                     history.lesson_id = lesson["lesson_id"] as? Int
                     history.ldate = lesson["ldate"] as? String
-                    //history.updated_by = lesson["updated_by"] as? Int
                     history.recorded_time = time
                     GlobalData.attendance.append(history)
                 }

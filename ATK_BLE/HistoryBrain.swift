@@ -21,9 +21,6 @@ class HistoryBrain{
         }
         
         GlobalData.attendance.sort(by: {$0.ldate! > $1.ldate!})
-        /*for i in GlobalData.attendance{
-            print(i.ldate! + i.recorded_time!)
-        }*/
 
     }
     
@@ -62,11 +59,3 @@ class HistoryBrain{
     }
     
 }
-/*if GlobalData.attendance.filter({$0.lesson_id == lesson.lesson_id}) != []{
- history = GlobalData.attendance.filter({$0.lesson_id == lesson.lesson_id})
- count = history.count
- }else{
- count = 0
- return
- }
- print(count)*/

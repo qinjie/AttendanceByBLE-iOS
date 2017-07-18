@@ -84,7 +84,7 @@ class Lesson : NSObject, NSCoding {
         end_time = aDecoder.decodeObject(forKey: "end_time") as! String?
         
         status = aDecoder.decodeObject(forKey: "status") as! Int?
-        recorded_time = aDecoder.decodeObject(forKey: "recorded_at") as! String?
+        recorded_time = aDecoder.decodeObject(forKey: "recorded_time") as! String?
         lecturer_id = aDecoder.decodeObject(forKey: "lecturer_id") as! Int?
     }
     

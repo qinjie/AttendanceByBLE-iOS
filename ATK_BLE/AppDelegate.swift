@@ -11,6 +11,7 @@ import CoreBluetooth
 import CoreLocation
 import Alamofire
 import UserNotifications
+import AVFoundation
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate, UNUserNotificationCenterDelegate {
@@ -60,7 +61,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
         print("bg did determine state \(region.identifier)" )
         switch state {
         case .inside:
-            print("inside liao")
+            print("inside !!!!!")
             checkAttendance.checkAttendance()
             Constant.identifier = region.identifier
             NotificationCenter.default.addObserver(self,selector: #selector(takeAttendance), name: NSNotification.Name(rawValue: "notTaken"), object: nil)
@@ -99,7 +100,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
                     GlobalData.myAttendance.append(GlobalData.currentLesson.ldateid!)
                     NotificationCenter.default.post(name: NSNotification.Name(rawValue: "atksuccesfully"), object: nil)
                     print("gl\(GlobalData.attendance)")
-                    let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 3.0, repeats: false)
+                    let systemSoundID: SystemSoundID = 1315
+                    AudioServicesPlaySystemSound(systemSoundID)
+                    let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 1.0, repeats: false)
                     let content = notification.notiContent(title: "successfull", body: "You have successfully taken attendance")
                     notification.addNotification(trigger: trigger, content: content, identifier: "a")
                     
@@ -128,7 +131,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
     }
     
     func locationManager(_ manager: CLLocationManager, didExitRegion region: CLRegion) {
-        NotificationCenter.default.removeObserver(self)
         print("bg did exit region!!!   \(region.identifier)")
     }
     func applicationWillResignActive(_ application: UIApplication) {
@@ -148,7 +150,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
     
     func applicationWillEnterForeground(_ application: UIApplication) {
         NotificationCenter.default.post(name: NSNotification.Name(rawValue: "refresh"), object: nil)
-        alamofire.loadHistory()
         // Called as part of the transition from the background to the active state; here you can undo many of the changes made on entering the background.
         /*if identifier != UIBackgroundTaskInvalid {
          endBackgroundTask()

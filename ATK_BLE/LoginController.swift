@@ -17,15 +17,14 @@ class LoginController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        hideKeyboardWhenTappedAround()
-        /*if (UserDefaults.standard.value(forKey: "username") != nil){
-         loadData()
-         DispatchQueue.main.async {
-         self.performSegue(withIdentifier: "sign in", sender: nil)
-         }
-         }*/
-        
         // Do any additional setup after loading the view.
+        hideKeyboardWhenTappedAround()
+        if let username = UserDefaults.standard.string(forKey: "username"){
+            usernameTxt.text = username
+        }else{
+            usernameTxt.placeholder = "Name"
+        }
+        
     }
     
     override func didReceiveMemoryWarning() {
@@ -108,7 +107,6 @@ class LoginController: UIViewController {
     
     private func setupData(){
         
-        //Load all classmates
         let token = UserDefaults.standard.string(forKey: "token")
         //Load timetable, lecturer and lesson...
         let headersTimetable:HTTPHeaders = [
@@ -216,9 +214,18 @@ class LoginController: UIViewController {
                                 
                                 if let email = x["email"] as? String{
                                     UserDefaults.standard.set(email, forKey: "email")
+                                }else {
+                                    UserDefaults.standard.removeObject(forKey: "email")
                                 }
                                 if let address =  x["address"] as? String{
                                     UserDefaults.standard.set(address, forKey: "address")
+                                }else {
+                                    UserDefaults.standard.removeObject(forKey: "address")
+                                }
+                                if let card = x["card"] as? String{
+                                    UserDefaults.standard.set(card, forKey: "card")
+                                }else{
+                                    UserDefaults.standard.removeObject(forKey: "card")
                                 }
                             }
                         }
@@ -276,14 +283,14 @@ class LoginController: UIViewController {
                     let lesson = (json["lesson_date"] as? [String:AnyObject])!
                     history.lesson_id = lesson["lesson_id"] as? Int
                     history.ldate = lesson["ldate"] as? String
-                    //history.updated_by = lesson["updated_by"] as? Int
                     history.recorded_time = time
                     GlobalData.attendance.append(history)
                 }
                 NSKeyedArchiver.archiveRootObject(GlobalData.attendance, toFile: filePath.historyDTPath)
+                print("Done setup data")
             }
         })
-        print("Done setup data")
+        
     }
     
     private func loadHistory(){

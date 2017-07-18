@@ -31,31 +31,13 @@ class MoreController: UIViewController {
     }
     
     @IBAction func signOut(_ sender: UIButton) {
-        NotificationCenter.default.removeObserver(self)
+        
+        NotificationCenter.default.removeObserver(UIApplication.shared.delegate!)
         UserDefaults.standard.removeObject(forKey: "student_id")
         UserDefaults.standard.set("-", forKey: "email")
         UserDefaults.standard.set("-", forKey: "address")
-        let headers: HTTPHeaders = [
-            "Authorization" : "Bearer " + UserDefaults.standard.string(forKey: "token")!
-        ]
-        let spinnerIndicator = UIActivityIndicatorView(activityIndicatorStyle: .whiteLarge)
-        spinnerIndicator.center = CGPoint(x: UIScreen.main.bounds.size.width*0.5, y: UIScreen.main.bounds.size.height*0.5)
-        spinnerIndicator.color = UIColor.black
-        spinnerIndicator.startAnimating()
-        self.view.addSubview(spinnerIndicator)
-        Alamofire.request(Constant.URLlogout, method: .get, parameters: nil, encoding: JSONEncoding.default, headers: headers).responseJSON { (response:DataResponse) in
-            let code = response.response?.statusCode
-            spinnerIndicator.stopAnimating()
-            print("done")
-            if code == 200{
-                self.performSegue(withIdentifier: "sign out", sender: nil)
-            }
-            else{
-                let alertController = UIAlertController(title: "Sign Out", message: "Error signing out", preferredStyle: .alert)
-                alertController.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
-                self.present(alertController, animated: true, completion: nil)
-            }
-        }
+        self.performSegue(withIdentifier: "sign out", sender: nil)
+        
     }
     
     /*

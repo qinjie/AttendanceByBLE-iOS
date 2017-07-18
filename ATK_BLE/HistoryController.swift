@@ -35,6 +35,7 @@ class HistoryController: UITableViewController {
         super.viewDidLoad()
         historyDate = HistoryBrain.getHistoryDate()
         // Do any additional setup after loading the view.
+        
     }
     
     override func didReceiveMemoryWarning() {
