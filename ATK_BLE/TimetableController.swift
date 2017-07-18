@@ -26,7 +26,7 @@ class TimetableController: UITableViewController {
         dateFormatter.dateFormat = "MMM dd (E)"
         let title = dateFormatter.string(from: today)
         navigationItem.title = "Timetable \(title)"
-        
+        NotificationCenter.default.addObserver(self, selector: #selector(refreshTable), name: NSNotification.Name(rawValue: "refresh"), object: nil)
         // Do any additional setup after loading the view.
     }
     
@@ -55,7 +55,10 @@ class TimetableController: UITableViewController {
         
         let lesson = lessonInDay[indexPath.row]
         cell.lesson = lesson
-        if GlobalData.currentLesson.ldateid == lesson.ldateid{
+        if GlobalData.currentLesson.ldateid == nil{
+            cell.backgroundColor = UIColor.white
+        }
+        else if GlobalData.currentLesson.ldateid == lesson.ldateid{
             cell.backgroundColor = UIColor(red: 0.84, green: 1.00, blue: 0.95, alpha: 1.0)
         }else{
             cell.backgroundColor = UIColor.white
@@ -74,7 +77,6 @@ class TimetableController: UITableViewController {
     
     @objc func refreshTable(){
         
-        NotificationCenter.default.post(name: NSNotification.Name(rawValue: "updateTime"), object: nil)
         self.tableView.reloadData()
         
     }

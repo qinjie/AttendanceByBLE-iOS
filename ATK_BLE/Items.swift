@@ -73,19 +73,7 @@ struct GlobalData{
     
 }
 
-class Format{
-    static func Format(date: Date, format:String) -> String{
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = format
-        return dateFormatter.string(from: date)
-    }
-    
-    static func Format(string: String, format: String) -> Date{
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = format
-        return dateFormatter.date(from: string)!
-    }
-}
+
 
 
 

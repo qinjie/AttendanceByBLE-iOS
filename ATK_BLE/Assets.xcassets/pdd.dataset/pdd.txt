@@ -1,0 +1,8 @@
+ override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        // Get the new view controller using segue.destinationViewController.
+        let destination = segue.destination as! LessonDetailController
+        // Pass the selected object to the new view controller.
+        if let lesson = sender as? Lesson{
+            destination.lesson = lesson
+        }
+    }
