@@ -368,15 +368,8 @@ class NowController: UIViewController,UIPopoverPresentationControllerDelegate, C
                 currentTimeLabel.textColor = UIColor.gray
                 currentTimeLabel.text = "Waiting for \nbeacons from classmates"
                 GlobalData.currentLesson = currentLesson
-<<<<<<< HEAD
-                imageView.image = #imageLiteral(resourceName: "bt_on")
-                
-                
-=======
                 imageView.image = #imageLiteral(resourceName: "bluetooth_on")
 
-
->>>>>>> 19535ba0acddb30c8ce27f7e06bcc1232b7e0452
                 checkAttendance.checkAttendance()
                 
                 
