@@ -148,7 +148,6 @@ class NowController: UIViewController,UIPopoverPresentationControllerDelegate, C
     }
     
     @IBAction private func userInfobutton(_ sender: UIButton) {
-        
         showUserInfo()
         
     }
@@ -507,12 +506,7 @@ class NowController: UIViewController,UIPopoverPresentationControllerDelegate, C
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == "pop" {
-            let dest = segue.destination
-            if let pop = dest.popoverPresentationController {
-                pop.delegate = self
-                         }
-        }
+       
     }
     /*
      // MARK: - Navigation

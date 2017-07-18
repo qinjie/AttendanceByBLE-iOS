@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<<<<<<< HEAD
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="12120" systemVersion="16F73" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+=======
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="12118" systemVersion="16F73" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+
+>>>>>>> 97470d9885503fd99794e3d7d393be94f1f39433
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
@@ -576,8 +581,22 @@
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
+<<<<<<< HEAD
+=======
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Press the above button to broadcast ur beacon" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="6cZ-g6-jAu">
+                                <rect key="frame" x="34" y="543" width="312" height="58"/>
+                                <constraints>
+
+                                    <constraint firstAttribute="height" constant="24" id="EhB-nc-jgE"/>
+
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="20"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+>>>>>>> 97470d9885503fd99794e3d7d393be94f1f39433
                             <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Yeah! No more lesson today." textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="34g-Zl-igP">
-                                <rect key="frame" x="54" y="206" width="266" height="26"/>
+                                <rect key="frame" x="-74" y="206" width="522" height="26"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="21"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
@@ -609,6 +628,7 @@
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
+<<<<<<< HEAD
                             <constraint firstItem="WPd-I9-cjv" firstAttribute="top" secondItem="6cZ-g6-jAu" secondAttribute="bottom" constant="17" id="2h7-Vz-3d8"/>
                             <constraint firstItem="WPd-I9-cjv" firstAttribute="top" secondItem="fgJ-ut-fcb" secondAttribute="bottom" constant="83" id="44b-zt-rdK"/>
                             <constraint firstItem="Kiu-aQ-ra1" firstAttribute="top" secondItem="vfT-gg-BOK" secondAttribute="bottom" constant="24" id="7Uw-AF-KAi"/>
@@ -629,6 +649,29 @@
                             <constraint firstItem="GHp-Ig-qa7" firstAttribute="top" secondItem="3bO-Er-hMG" secondAttribute="bottom" constant="25" id="khe-Y9-EUh"/>
                             <constraint firstItem="6cZ-g6-jAu" firstAttribute="leading" secondItem="hIH-at-N4H" secondAttribute="leadingMargin" constant="13" id="yiX-6V-nx0"/>
                             <constraint firstItem="vfT-gg-BOK" firstAttribute="top" secondItem="GHp-Ig-qa7" secondAttribute="bottom" constant="16" id="z94-rv-3Wj"/>
+=======
+
+                            <constraint firstItem="3bO-Er-hMG" firstAttribute="centerX" secondItem="GHp-Ig-qa7" secondAttribute="centerX" id="053-Fn-Wv6"/>
+                            <constraint firstItem="fgJ-ut-fcb" firstAttribute="centerX" secondItem="6cZ-g6-jAu" secondAttribute="centerX" id="0Pn-bx-K2m"/>
+                            <constraint firstItem="fgJ-ut-fcb" firstAttribute="top" secondItem="BOi-lA-5Zq" secondAttribute="bottom" constant="28" id="2BI-fi-fXt"/>
+                            <constraint firstItem="34g-Zl-igP" firstAttribute="top" secondItem="vfT-gg-BOK" secondAttribute="bottom" constant="1" id="9pt-EA-g2P"/>
+                            <constraint firstItem="Kiu-aQ-ra1" firstAttribute="top" secondItem="vfT-gg-BOK" secondAttribute="bottom" constant="24" id="G4X-XE-cjr"/>
+                            <constraint firstItem="34g-Zl-igP" firstAttribute="centerX" secondItem="Kiu-aQ-ra1" secondAttribute="centerX" id="HPx-fU-IYf"/>
+                            <constraint firstItem="3bO-Er-hMG" firstAttribute="top" secondItem="Wdg-H4-6o8" secondAttribute="bottom" constant="24" id="MEe-Js-hC7"/>
+                            <constraint firstItem="BOi-lA-5Zq" firstAttribute="centerX" secondItem="fgJ-ut-fcb" secondAttribute="centerX" id="MTl-9n-63S"/>
+                            <constraint firstItem="GHp-Ig-qa7" firstAttribute="top" secondItem="3bO-Er-hMG" secondAttribute="bottom" constant="25" id="YEz-oJ-AKg"/>
+                            <constraint firstItem="vfT-gg-BOK" firstAttribute="centerX" secondItem="34g-Zl-igP" secondAttribute="centerX" id="cLK-Nh-D1i"/>
+                            <constraint firstItem="GHp-Ig-qa7" firstAttribute="centerX" secondItem="vfT-gg-BOK" secondAttribute="centerX" id="cP1-M7-rfZ"/>
+                            <constraint firstItem="WPd-I9-cjv" firstAttribute="top" secondItem="6cZ-g6-jAu" secondAttribute="bottom" constant="51" id="iMl-7z-Jrr"/>
+                            <constraint firstItem="3bO-Er-hMG" firstAttribute="leading" secondItem="hIH-at-N4H" secondAttribute="leadingMargin" id="mt3-HL-KfM"/>
+                            <constraint firstItem="Kiu-aQ-ra1" firstAttribute="centerX" secondItem="BOi-lA-5Zq" secondAttribute="centerX" id="o82-5N-6NY"/>
+                            <constraint firstItem="vfT-gg-BOK" firstAttribute="top" secondItem="GHp-Ig-qa7" secondAttribute="bottom" constant="16" id="orC-mW-rYL"/>
+                            <constraint firstItem="fgJ-ut-fcb" firstAttribute="leading" secondItem="hIH-at-N4H" secondAttribute="leadingMargin" constant="98" id="phu-Tq-mfo"/>
+                            <constraint firstItem="3bO-Er-hMG" firstAttribute="trailing" secondItem="hIH-at-N4H" secondAttribute="trailingMargin" id="qVy-o6-mpY"/>
+                            <constraint firstItem="6cZ-g6-jAu" firstAttribute="top" secondItem="fgJ-ut-fcb" secondAttribute="bottom" constant="8" symbolic="YES" id="xsW-ts-8zd"/>
+                            <constraint firstItem="BOi-lA-5Zq" firstAttribute="centerY" secondItem="hIH-at-N4H" secondAttribute="centerY" id="zQk-gH-wzS"/>
+
+>>>>>>> 97470d9885503fd99794e3d7d393be94f1f39433
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="Now" id="xuA-ec-vxj">
