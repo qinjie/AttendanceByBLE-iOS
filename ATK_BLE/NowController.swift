@@ -149,7 +149,7 @@ class NowController: UIViewController,UIPopoverPresentationControllerDelegate, C
     @objc private func broadcastSignal() {
         if imageView.isAnimating{
             imageView.stopAnimating()
-            imageView.image = #imageLiteral(resourceName: "bt_on")
+            imageView.image = #imageLiteral(resourceName: "bluetooth_on")
             //bluetoothManager.stopAdvertising()
             return
         }
@@ -161,9 +161,9 @@ class NowController: UIViewController,UIPopoverPresentationControllerDelegate, C
                 self.present(alertController, animated: false, completion: nil)
             }else{
                 imageView.animationImages = [
-                    #imageLiteral(resourceName: "transmit_a"),
-                    #imageLiteral(resourceName: "transmit_b"),
-                    #imageLiteral(resourceName: "transmit_c")
+                    #imageLiteral(resourceName: "blue_1"),
+                    #imageLiteral(resourceName: "blue_2"),
+                    #imageLiteral(resourceName: "blue_3")
                 ]
                 imageView.animationDuration = 0.5
                 imageView.startAnimating()
@@ -339,7 +339,7 @@ class NowController: UIViewController,UIPopoverPresentationControllerDelegate, C
                 currentTimeLabel.textColor = UIColor.gray
                 currentTimeLabel.text = "Waiting for \nbeacons from classmates"
                 GlobalData.currentLesson = currentLesson
-                imageView.image = #imageLiteral(resourceName: "bt_on")
+                imageView.image = #imageLiteral(resourceName: "bluetooth_on")
 
 
                 checkAttendance.checkAttendance()
@@ -415,7 +415,7 @@ class NowController: UIViewController,UIPopoverPresentationControllerDelegate, C
             imageView.isHidden = false
             broadcastLabel.isHidden = false
             currentTimeLabel.textColor = UIColor.gray
-            imageView.image = #imageLiteral(resourceName: "bt_off")
+            imageView.image = #imageLiteral(resourceName: "bluetooth_off")
             broadcastLabel.textColor = UIColor.gray
             
         }else{
