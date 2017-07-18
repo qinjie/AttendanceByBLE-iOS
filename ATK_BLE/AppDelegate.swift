@@ -27,12 +27,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
         self.locationManager.delegate = self
         self.locationManager.requestAlwaysAuthorization()
         
-        /*if UserDefaults.standard.string(forKey: "student_id") != nil{
+        if UserDefaults.standard.string(forKey: "student_id") != nil{
             self.loadData()
             let mainStoryboard: UIStoryboard = UIStoryboard(name: "Main", bundle: nil)
             let home:UITabBarController = (mainStoryboard.instantiateViewController(withIdentifier: "home") as? UITabBarController)!
             self.window?.rootViewController = home
-        }*/
+        }
         UNUserNotificationCenter.current().delegate = self
         UNUserNotificationCenter.current().requestAuthorization(options: [.alert]) {
             (success, error) in

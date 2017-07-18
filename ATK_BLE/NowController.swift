@@ -71,9 +71,9 @@ class NowController: UIViewController,UIPopoverPresentationControllerDelegate, C
             date = Format.Format(date: Date(), format: "HH:mm:ss")
             let start_time = Format.Format(string: i.start_time!, format: "HH:mm:ss")
             let calendar = Calendar.current.dateComponents([.hour,.minute,.second], from: Format.Format(string: date, format: "HH:mm:ss"), to: start_time)
-            let interval = Double(calendar.hour!*3600 + calendar.minute!*60 + calendar.second! - 900)
+            let interval = Double(calendar.hour!*3600 + calendar.minute!*60 + calendar.second! - 600)
             if interval > 0 {
-                let notificationContent = notification.notiContent(title: "Upcoming lesson", body: "\(String(describing: i.catalog)) \(String(describing: i.class_section)) \(String(describing: i.location))")
+                let notificationContent = notification.notiContent(title: "Upcoming lesson", body: "\(String(describing: i.catalog!)) \(String(describing: i.class_section!)) \(String(describing: i.location!))")
                 let trigger = UNTimeIntervalNotificationTrigger(timeInterval: interval, repeats: false)
                 notification.addNotification(trigger: trigger, content: notificationContent, identifier: String(describing:i.ldateid))
             }
