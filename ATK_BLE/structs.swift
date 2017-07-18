@@ -10,7 +10,7 @@ import Foundation
 import Alamofire
 import UserNotifications
 
-class alamofire{
+struct alamofire{
     
     static func loadTimetable(){
         
@@ -175,6 +175,22 @@ struct notification{
         }
     }
 
+}
+
+struct Format{
+    static func Format(date: Date, format:String) -> String{
+        let dateFormatter = DateFormatter()
+        dateFormatter.timeZone = TimeZone.ReferenceType.local
+        dateFormatter.dateFormat = format
+        return dateFormatter.string(from: date)
+    }
+    
+    static func Format(string: String, format: String) -> Date{
+        let dateFormatter = DateFormatter()
+        dateFormatter.timeZone = TimeZone.ReferenceType.local
+        dateFormatter.dateFormat = format
+        return dateFormatter.date(from: string)!
+    }
 }
 
 

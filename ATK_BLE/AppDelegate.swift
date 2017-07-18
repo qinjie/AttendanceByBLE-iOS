@@ -27,12 +27,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
         self.locationManager.delegate = self
         self.locationManager.requestAlwaysAuthorization()
         
-        if UserDefaults.standard.string(forKey: "student_id") != nil{
+        /*if UserDefaults.standard.string(forKey: "student_id") != nil{
             self.loadData()
             let mainStoryboard: UIStoryboard = UIStoryboard(name: "Main", bundle: nil)
             let home:UITabBarController = (mainStoryboard.instantiateViewController(withIdentifier: "home") as? UITabBarController)!
             self.window?.rootViewController = home
-        }
+        }*/
         UNUserNotificationCenter.current().delegate = self
         UNUserNotificationCenter.current().requestAuthorization(options: [.alert]) {
             (success, error) in
@@ -117,7 +117,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
     func testSendNoti() {
         let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 3.0, repeats: false)
         let content = notification.notiContent(title: "successfull", body: "You have successfully taken attendance")
-        notification.addNotification(trigger: trigger, content: content, identifier: "a")            }
+        notification.addNotification(trigger: trigger, content: content, identifier: "a")
+    }
     
     func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
         completionHandler([.alert,.badge,.sound])
@@ -146,7 +147,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
     }
     
     func applicationWillEnterForeground(_ application: UIApplication) {
-        NotificationCenter.default.post(name: NSNotification.Name(rawValue: "updateTime"), object: nil)
+        NotificationCenter.default.post(name: NSNotification.Name(rawValue: "refresh"), object: nil)
         alamofire.loadHistory()
         // Called as part of the transition from the background to the active state; here you can undo many of the changes made on entering the background.
         /*if identifier != UIBackgroundTaskInvalid {
