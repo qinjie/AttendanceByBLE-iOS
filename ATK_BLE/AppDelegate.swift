@@ -103,7 +103,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
                     let systemSoundID: SystemSoundID = 1315
                     AudioServicesPlaySystemSound(systemSoundID)
                     let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 1.0, repeats: false)
-                    let content = notification.notiContent(title: "successfull", body: "You have successfully taken attendance")
+                    let content = notification.notiContent(title: "successful", body: "You have successfully taken attendance")
                     notification.addNotification(trigger: trigger, content: content, identifier: "a")
                     
                 }
@@ -149,7 +149,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
     }
     
     func applicationWillEnterForeground(_ application: UIApplication) {
-        NotificationCenter.default.post(name: NSNotification.Name(rawValue: "refresh"), object: nil)
+        NotificationCenter.default.post(name: NSNotification.Name(rawValue: "enter foreground"), object: nil)
         // Called as part of the transition from the background to the active state; here you can undo many of the changes made on entering the background.
         /*if identifier != UIBackgroundTaskInvalid {
          endBackgroundTask()

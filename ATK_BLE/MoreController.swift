@@ -15,6 +15,9 @@ class MoreController: UIViewController {
     @IBOutlet weak var username: UILabel!
     @IBOutlet weak var email: UILabel!
     @IBOutlet weak var address: UILabel!
+    @IBOutlet weak var notificationTime: UILabel!
+    @IBOutlet weak var stepper: UIStepper!
+    var stepperValue:Int?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -22,6 +25,9 @@ class MoreController: UIViewController {
         username.text = UserDefaults.standard.string(forKey: "name")
         email.text = UserDefaults.standard.string(forKey: "email")
         address.text = UserDefaults.standard.string(forKey: "address")
+        stepperValue = Int(UserDefaults.standard.string(forKey: "notification time")!)!
+        notificationTime.text = "before \(stepperValue!) mins"
+        stepper.value = Double(stepperValue!)
         // Do any additional setup after loading the view.
     }
     
@@ -40,6 +46,13 @@ class MoreController: UIViewController {
         
     }
     
+    @IBAction func stepperPressed(_ sender: UIStepper) {
+        stepperValue = Int(sender.value)
+        notificationTime.text = "before \(stepperValue!) mins"
+        UserDefaults.standard.set(stepperValue, forKey: "notification time")
+        NotificationCenter.default.post(name: NSNotification.Name(rawValue: "stepper changed"), object: nil)
+        
+    }
     /*
      // MARK: - Navigation
      

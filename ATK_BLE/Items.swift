@@ -59,6 +59,8 @@ struct GlobalData{
     static var today = [Lesson]()
     static var lessonUUID = [Int:String]()
     static var currentLesson = Lesson()
+    static var nextLesson = Lesson()
+    static var nextLessonTime = String()
     static var classmates = [Classmate]()
     static var history = [History]()
     

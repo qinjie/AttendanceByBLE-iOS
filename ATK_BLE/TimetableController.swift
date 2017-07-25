@@ -26,7 +26,7 @@ class TimetableController: UITableViewController {
         dateFormatter.dateFormat = "MMM dd (E)"
         let title = dateFormatter.string(from: today)
         navigationItem.title = "Timetable \(title)"
-        NotificationCenter.default.addObserver(self, selector: #selector(refreshTable), name: NSNotification.Name(rawValue: "refresh"), object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(refreshTable), name: NSNotification.Name(rawValue: "enter foreground"), object: nil)
         // Do any additional setup after loading the view.
     }
     
@@ -59,12 +59,14 @@ class TimetableController: UITableViewController {
             cell.backgroundColor = UIColor.white
         }
         else if GlobalData.currentLesson.ldateid == lesson.ldateid{
+            tableView.scrollToRow(at: indexPath, at: .top, animated: true)
             cell.backgroundColor = UIColor(red: 0.84, green: 1.00, blue: 0.95, alpha: 1.0)
         }else{
             cell.backgroundColor = UIColor.white
         }
         return cell
     }
+    
     
     override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         return wday[section]

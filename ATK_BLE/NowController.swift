@@ -45,7 +45,6 @@ class NowController: UIViewController,UIPopoverPresentationControllerDelegate, C
         addObservers()  // to receive local notification from other view
         checkDevice()   // check if this is new device
         GlobalData.timetable.sort(by: {$0.start_time! < $1.start_time!})
-        HistoryBrain.arrangeHistory()
         broadcastLabel.isHidden = true
         setupImageView()
         
@@ -63,7 +62,7 @@ class NowController: UIViewController,UIPopoverPresentationControllerDelegate, C
         
     }
     
-    private func setupTimer(){
+    @objc func setupTimer(){
         
         var date = Format.Format(date: Date(), format: "HH:mm:ss")
         let upcomingLesson = GlobalData.today.filter({$0.start_time! > date})
@@ -71,7 +70,8 @@ class NowController: UIViewController,UIPopoverPresentationControllerDelegate, C
             date = Format.Format(date: Date(), format: "HH:mm:ss")
             let start_time = Format.Format(string: i.start_time!, format: "HH:mm:ss")
             let calendar = Calendar.current.dateComponents([.hour,.minute,.second], from: Format.Format(string: date, format: "HH:mm:ss"), to: start_time)
-            let interval = Double(calendar.hour!*3600 + calendar.minute!*60 + calendar.second! - 600)
+            let time = Int(UserDefaults.standard.string(forKey: "notification time")!)!
+            let interval = Double(calendar.hour!*3600 + calendar.minute!*60 + calendar.second! - time*60)
             if interval > 0 {
                 let notificationContent = notification.notiContent(title: "Upcoming lesson", body: "\(String(describing: i.catalog!)) \(String(describing: i.class_section!)) \(String(describing: i.location!))")
                 let trigger = UNTimeIntervalNotificationTrigger(timeInterval: interval, repeats: false)
@@ -85,7 +85,9 @@ class NowController: UIViewController,UIPopoverPresentationControllerDelegate, C
     private func addObservers(){
         
         NotificationCenter.default.removeObserver(self)
-        NotificationCenter.default.addObserver(self, selector: #selector(checkTime), name: NSNotification.Name(rawValue: "refresh"), object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(setupTimer), name: NSNotification.Name(rawValue: "stepper changed"), object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(checkTime), name: NSNotification.Name(rawValue: "done loading timetable"), object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(checkTime), name: NSNotification.Name(rawValue: "enter foreground"), object: nil)
         NotificationCenter.default.addObserver(self,selector: #selector(success), name: NSNotification.Name(rawValue: "atksuccesfully"), object: nil)
         NotificationCenter.default.addObserver(self,selector: #selector(changeLabel), name: NSNotification.Name(rawValue: "taken"), object: nil)
         NotificationCenter.default.addObserver(self,selector: #selector(enableImageView), name: NSNotification.Name(rawValue: "enable imageView"), object: nil)
@@ -176,7 +178,8 @@ class NowController: UIViewController,UIPopoverPresentationControllerDelegate, C
     }
     @objc private func success() {
         self.currentTimeLabel.text = "You have taken attendance \nfor \(self.currentLesson.catalog!)"
-        self.currentTimeLabel.textColor = UIColor.green
+        self.currentTimeLabel.textColor = UIColor(red: 0, green: 50, blue: 0, alpha: 1.0)
+        self.currentTimeLabel.font = UIFont.boldSystemFont(ofSize: 16.0)
         
     }
     
@@ -284,7 +287,7 @@ class NowController: UIViewController,UIPopoverPresentationControllerDelegate, C
             dataDictionary = beaconRegion.peripheralData(withMeasuredPower: nil)
             bluetoothManager.startAdvertising(dataDictionary as?[String: Any])
             
-            let date = Date().addingTimeInterval(TimeInterval(30))
+            let date = Date().addingTimeInterval(TimeInterval(10))
             let timer = Timer(fireAt: date, interval: 0, target: self, selector: #selector(stopBroadcast), userInfo: nil, repeats: false)
             RunLoop.main.add(timer, forMode: RunLoopMode.commonModes)
         }
@@ -304,7 +307,7 @@ class NowController: UIViewController,UIPopoverPresentationControllerDelegate, C
     private func testSendNoti() {
         
         let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 5.0, repeats: false)
-        let content = notification.notiContent(title: "successfull", body: "You have successfully taken attendance")
+        let content = notification.notiContent(title: "successful", body: "You have successfully taken attendance")
         notification.addNotification(trigger: trigger, content: content, identifier: "abc")
     }
     
@@ -338,6 +341,7 @@ class NowController: UIViewController,UIPopoverPresentationControllerDelegate, C
         print("fg did determine state!!!!!")
         switch(state) {
         case .inside:print("fg inside\(region.identifier)")
+                        self.broadcast()
         case .outside:print("fg outside\(region.identifier)")
         case .unknown:print("fg unknown\(region.identifier)")
         }
@@ -345,17 +349,10 @@ class NowController: UIViewController,UIPopoverPresentationControllerDelegate, C
     
     @objc private func checkTime(){
         self.setupTitle()
-        today = Date()
-        GlobalData.currentDateStr = Format.Format(date: today, format: "yyyy-MM-dd")
-        GlobalData.today = GlobalData.timetable.filter({$0.ldate == GlobalData.currentDateStr})
         nextLesson = 1
         //check if today have lessons
-        if GlobalData.today.count > 0 {
-            today.addTimeInterval(300)
-            currentTimeStr = Format.Format(date: today, format: "HH:mm:ss")
-            currentLesson = GlobalData.today.first(where: {$0.start_time!<=currentTimeStr && $0.end_time!>=currentTimeStr})
-            //check current have lessons?
-            if currentLesson != nil {
+        if checkLesson.checkCurrentLesson() == true {
+                currentLesson = GlobalData.currentLesson
                 subjectLabel.text = currentLesson.subject! + " " + currentLesson.catalog!
                 classLabel.text = currentLesson.class_section
                 timeLabel.text = displayTime.display(time: currentLesson.start_time!) + " - " + displayTime.display(time: currentLesson.end_time!)
@@ -379,35 +376,27 @@ class NowController: UIViewController,UIPopoverPresentationControllerDelegate, C
                     NotificationCenter.default.addObserver(self, selector: #selector(detectClassmate), name: NSNotification.Name(rawValue: "detect classmate"), object: nil)
                     GlobalData.detectClassmateObserver = true
                 }
-                
+        }else{
+            if checkLesson.checkNextLesson() == true{
+                let nLesson = GlobalData.nextLesson
+                //Estimate the next lesson time
+                subjectLabel.text = nLesson.subject! + " " + nLesson.catalog!
+                classLabel.text = nLesson.class_section
+                timeLabel.text = displayTime.display(time: nLesson.start_time!) + " - " + displayTime.display(time: nLesson.end_time!)
+                venueLabel.text = nLesson.venueName
+                currentTimeLabel.text = GlobalData.nextLessonTime
             }else{
-                if let nLesson = GlobalData.today.first(where: {$0.start_time!>currentTimeStr}){
-                    //Estimate the next lesson time
-                    let time = nLesson.start_time?.components(separatedBy: ":")
-                    var hour:Int!
-                    var minute:Int!
-                    hour = Int((time?[0])!)
-                    minute = Int((time?[1])!)
-                    let totalSecond = hour*3600 + minute*60 - 300
-                    let hr = totalSecond/3600
-                    let min = (totalSecond%3600)/60
-                    subjectLabel.text = nLesson.subject! + " " + nLesson.catalog!
-                    classLabel.text = nLesson.class_section
-                    timeLabel.text = displayTime.display(time: nLesson.start_time!) + " - " + displayTime.display(time: nLesson.end_time!)
-                    venueLabel.text = nLesson.venueName
-                    currentTimeLabel.text = "not yet time \ntry again after \(hr):\(min)"
-                }else{
-                    GlobalData.currentLesson.ldateid = nil
-                    self.nextLesson = nil
-                    
-                }
+                GlobalData.currentLesson.ldateid = nil
+                self.nextLesson = nil
+                
             }
         }
         updateLabels()
     }
     func changeLabel() {
         self.currentTimeLabel.text = "You have taken attendance \nfor \(self.currentLesson.catalog!)"
-        self.currentTimeLabel.textColor = UIColor.green
+        self.currentTimeLabel.font = UIFont.boldSystemFont(ofSize: 20)
+        self.currentTimeLabel.textColor = UIColor(red: 0.1412, green: 0.6078, blue: 0, alpha: 1.0)
     }
     
     private func updateLabels(){
@@ -459,7 +448,7 @@ class NowController: UIViewController,UIPopoverPresentationControllerDelegate, C
             "device_hash" : this_device!
         ]
         let spinnerIndicator = UIActivityIndicatorView(activityIndicatorStyle: .whiteLarge)
-        spinnerIndicator.center = CGPoint(x: 135.0, y: 80.0)
+        spinnerIndicator.center = CGPoint(x: self.view.frame.width/2,y: self.view.frame.height/2)
         spinnerIndicator.color = UIColor.black
         spinnerIndicator.startAnimating()
         self.view.addSubview(spinnerIndicator)

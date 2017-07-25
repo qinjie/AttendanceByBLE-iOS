@@ -157,6 +157,51 @@ struct checkAttendance{
     }
 }
 
+
+class checkLesson{
+    
+    static func checkCurrentLesson() -> Bool{
+        let today = Date()
+        GlobalData.currentDateStr = Format.Format(date: today, format: "yyyy-MM-dd")
+        GlobalData.today = GlobalData.timetable.filter({$0.ldate == GlobalData.currentDateStr})
+        //check if today have lessons
+        if GlobalData.today.count > 0 {
+            let currentTimeStr = Format.Format(date: today, format: "HH:mm:ss")
+            let currentLesson = GlobalData.today.first(where: {$0.start_time!<=currentTimeStr && $0.end_time!>=currentTimeStr})
+            //check current have lessons?
+            if currentLesson != nil {
+                GlobalData.currentLesson = currentLesson!
+                return true
+            }else{
+                return false
+            }
+        }else{
+            return false
+        }
+    }
+    
+    static func checkNextLesson() -> Bool{
+        let today = Date()
+        let currentTimeStr = Format.Format(date: today, format: "HH:mm:ss")
+        if let nLesson = GlobalData.today.first(where: {$0.start_time!>currentTimeStr}){
+            //Estimate the next lesson time
+            let time = nLesson.start_time?.components(separatedBy: ":")
+            var hour:Int!
+            var minute:Int!
+            hour = Int((time?[0])!)
+            minute = Int((time?[1])!)
+            let totalSecond = hour*3600 + minute*60 - 300
+            let hr = totalSecond/3600
+            let min = (totalSecond%3600)/60
+            GlobalData.nextLessonTime = "not yet time \ntry again after \(hr):\(min)"
+            GlobalData.nextLesson = nLesson
+            return true
+        }else{
+            return false
+        }
+    }
+}
+
 struct notification{
     static func notiContent(title: String, body: String) -> UNMutableNotificationContent {
         let content = UNMutableNotificationContent()
@@ -173,7 +218,7 @@ struct notification{
             }
         }
     }
-
+    
 }
 
 struct Format{

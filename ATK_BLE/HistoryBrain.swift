@@ -19,9 +19,24 @@ class HistoryBrain{
                 GlobalData.attendance.append(i)
             }
         }
-        
         GlobalData.attendance.sort(by: {$0.ldate! > $1.ldate!})
-
+        var history = [Lesson]()
+        var tempHistory = [Lesson]()
+        var ldate = ""
+        for i in GlobalData.attendance{
+            let lesson = GlobalData.timetable.first(where: {$0.lesson_id == i.lesson_id})
+            i.start_time = lesson?.start_time
+            if i.ldate != ldate{
+                tempHistory.sort(by: {$0.start_time!<$1.start_time!})
+                for i in tempHistory{
+                    history.append(i)
+                }
+                tempHistory.removeAll()
+                ldate = i.ldate!
+            }
+            tempHistory.append(i)
+        }
+        GlobalData.attendance = history
     }
     
     static func getHistoryDate() -> [String]{

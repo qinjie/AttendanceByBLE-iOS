@@ -271,25 +271,7 @@ class LoginController: UIViewController {
             
         })
         //Load Attendance
-        Alamofire.request(Constant.URLattendance, method: .get, parameters: nil, encoding: JSONEncoding.default, headers: headers).responseJSON(completionHandler: { (response:DataResponse) in
-            if let JSON = response.result.value as? [[String:Any]]{
-                GlobalData.attendance.removeAll()
-                for json in JSON{
-                    let history = Lesson()
-                    history.ldateid = json["lesson_date_id"] as? Int
-                    history.lecturer_id = json["lecturer_id"] as? Int
-                    history.status = json["status"] as? Int
-                    let time = Format.Format(date: Format.Format(string: (json["recorded_time"] as? String)!, format: "HH:mm:ss"), format: "HH:mm")
-                    let lesson = (json["lesson_date"] as? [String:AnyObject])!
-                    history.lesson_id = lesson["lesson_id"] as? Int
-                    history.ldate = lesson["ldate"] as? String
-                    history.recorded_time = time
-                    GlobalData.attendance.append(history)
-                }
-                NSKeyedArchiver.archiveRootObject(GlobalData.attendance, toFile: filePath.historyDTPath)
-                print("Done setup data")
-            }
-        })
+        alamofire.loadHistory()
         
     }
     
