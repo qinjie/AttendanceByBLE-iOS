@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="12120" systemVersion="16F73" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
@@ -576,6 +577,7 @@
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
+
                             <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Yeah! No more lesson today." textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="34g-Zl-igP">
                                 <rect key="frame" x="54" y="206" width="266" height="26"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="21"/>
@@ -583,8 +585,8 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="time" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="BOi-lA-5Zq">
-                                <rect key="frame" x="167" y="322" width="40" height="24"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="20"/>
+                                <rect key="frame" x="165.5" y="322" width="43" height="24"/>
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="20"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
@@ -609,6 +611,7 @@
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
+
                             <constraint firstItem="fgJ-ut-fcb" firstAttribute="leading" secondItem="hIH-at-N4H" secondAttribute="leadingMargin" constant="98" id="5Tg-0a-0KX"/>
                             <constraint firstItem="3bO-Er-hMG" firstAttribute="top" secondItem="Wdg-H4-6o8" secondAttribute="bottom" constant="24" id="62p-6e-PGh"/>
                             <constraint firstItem="3bO-Er-hMG" firstAttribute="centerX" secondItem="GHp-Ig-qa7" secondAttribute="centerX" id="7hf-Hx-Ndv"/>
@@ -629,6 +632,7 @@
                             <constraint firstItem="Kiu-aQ-ra1" firstAttribute="centerX" secondItem="BOi-lA-5Zq" secondAttribute="centerX" id="nQQ-Fn-yTC"/>
                             <constraint firstItem="3bO-Er-hMG" firstAttribute="trailing" secondItem="hIH-at-N4H" secondAttribute="trailingMargin" id="o2B-ms-6KH"/>
                             <constraint firstItem="GHp-Ig-qa7" firstAttribute="centerX" secondItem="vfT-gg-BOK" secondAttribute="centerX" id="qDs-Mo-xsG"/>
+
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="Now" id="xuA-ec-vxj">
