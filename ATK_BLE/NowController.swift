@@ -395,7 +395,6 @@ class NowController: UIViewController,UIPopoverPresentationControllerDelegate, C
     }
     func changeLabel() {
         self.currentTimeLabel.text = "You have taken attendance \nfor \(self.currentLesson.catalog!)"
-        self.currentTimeLabel.font = UIFont.boldSystemFont(ofSize: 20)
         self.currentTimeLabel.textColor = UIColor(red: 0.1412, green: 0.6078, blue: 0, alpha: 1.0)
     }
     
