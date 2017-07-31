@@ -173,9 +173,11 @@ class checkLesson{
                 GlobalData.currentLesson = currentLesson!
                 return true
             }else{
+                GlobalData.currentLesson.ldateid = nil
                 return false
             }
         }else{
+            GlobalData.currentLesson.ldateid = nil
             return false
         }
     }

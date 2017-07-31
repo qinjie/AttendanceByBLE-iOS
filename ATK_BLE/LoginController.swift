@@ -300,7 +300,16 @@ class LoginController: UIViewController {
         
     }
     
+    @IBAction func usernameEnterPressed(_ sender: UITextField) {
+        passwordTxt.becomeFirstResponder()
+    }
     
+    @IBAction func passwordEnterPressed(_ sender: UITextField) {
+        if usernameTxt.text == "" || passwordTxt.text == ""{
+        }else{
+            self.login()
+        }
+    }
     /*
      // MARK: - Navigation
      

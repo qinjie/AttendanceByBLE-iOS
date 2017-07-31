@@ -47,7 +47,6 @@ class NowController: UIViewController,UIPopoverPresentationControllerDelegate, C
         GlobalData.timetable.sort(by: {$0.start_time! < $1.start_time!})
         broadcastLabel.isHidden = true
         setupImageView()
-        
         locationManager.delegate = self
         bluetoothManager.delegate = self
         bluetoothManager = CBPeripheralManager.init(delegate: self, queue: nil)
@@ -178,8 +177,8 @@ class NowController: UIViewController,UIPopoverPresentationControllerDelegate, C
     }
     @objc private func success() {
         self.currentTimeLabel.text = "You have taken attendance \nfor \(self.currentLesson.catalog!)"
-        self.currentTimeLabel.textColor = UIColor(red: 0, green: 50, blue: 0, alpha: 1.0)
-        self.currentTimeLabel.font = UIFont.boldSystemFont(ofSize: 16.0)
+        self.currentTimeLabel.textColor = UIColor(red: 0.1412, green: 0.6078, blue: 0, alpha: 1.0)
+        self.currentTimeLabel.font = UIFont.boldSystemFont(ofSize: 20.0)
         
     }
     
@@ -280,6 +279,9 @@ class NowController: UIViewController,UIPopoverPresentationControllerDelegate, C
         
         if bluetoothManager.state == .poweredOn {
             print("broadcasting")
+            let mDate = Date().addingTimeInterval(TimeInterval(5.0))
+            let atimer = Timer(fireAt: mDate, interval: 0, target: self, selector: #selector(mcheckAttendance), userInfo: nil, repeats: false)
+            RunLoop.main.add(atimer, forMode: RunLoopMode.commonModes)
             let major = UInt16(Int(UserDefaults.standard.string(forKey: "major")!)!)as CLBeaconMajorValue
             let minor = UInt16(Int(UserDefaults.standard.string(forKey: "minor")!)!)as CLBeaconMinorValue
             uuid = NSUUID(uuidString: GlobalData.lessonUUID[currentLesson.lesson_id!]!)as UUID?
@@ -302,6 +304,10 @@ class NowController: UIViewController,UIPopoverPresentationControllerDelegate, C
             self.present(alert, animated: true, completion: nil)
             
         }
+    }
+    
+    @objc func mcheckAttendance(){
+        checkAttendance.checkAttendance()
     }
     
     private func testSendNoti() {
@@ -377,7 +383,9 @@ class NowController: UIViewController,UIPopoverPresentationControllerDelegate, C
                     GlobalData.detectClassmateObserver = true
                 }
         }else{
+            currentLesson = nil
             if checkLesson.checkNextLesson() == true{
+                nextLessonRefresh()
                 let nLesson = GlobalData.nextLesson
                 //Estimate the next lesson time
                 subjectLabel.text = nLesson.subject! + " " + nLesson.catalog!
@@ -392,6 +400,20 @@ class NowController: UIViewController,UIPopoverPresentationControllerDelegate, C
             }
         }
         updateLabels()
+    }
+    
+    private func nextLessonRefresh(){
+        let nLesson = GlobalData.nextLesson
+        let date = Format.Format(date: Date(), format: "HH:mm:ss")
+        let start_time = Format.Format(string: nLesson.start_time!, format: "HH:mm:ss")
+        let calendar = Calendar.current.dateComponents([.hour,.minute,.second], from: Format.Format(string: date, format: "HH:mm:ss"), to: start_time)
+        let interval = Double(calendar.hour!*3600 + calendar.minute!*60 + calendar.second!)
+        if interval > 0 {
+            
+            let nTimer = Timer.scheduledTimer(timeInterval: interval, target: self, selector: #selector(checkTime), userInfo: nil, repeats: false)
+            RunLoop.main.add(nTimer, forMode: RunLoopMode.commonModes)
+        }
+        
     }
     func changeLabel() {
         self.currentTimeLabel.text = "You have taken attendance \nfor \(self.currentLesson.catalog!)"
