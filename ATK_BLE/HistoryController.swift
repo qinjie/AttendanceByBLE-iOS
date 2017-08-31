@@ -65,27 +65,26 @@ class HistoryController: UITableViewController {
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! LessonCell
         
         let historyInDay = GlobalData.attendance.filter({$0.ldate == historyDate[indexPath.section]})
-        let history = historyInDay[indexPath.row]
-        let lesson = GlobalData.timetable.filter({$0.lesson_id == history.lesson_id}).first
+        let lesson = historyInDay[indexPath.row]
         
         cell.lesson = lesson
         cell.venue.isHidden = true
         cell.iconView.isHidden = false
-        if history.status != nil {
-            if history.status == 0 {
+        if lesson.status != nil {
+            if lesson.status == 0 {
                 cell.iconView.image = #imageLiteral(resourceName: "green")
-                cell.arrivingtimeLabel.text = history.recorded_time
+                cell.arrivingtimeLabel.text = lesson.recorded_time
                 cell.arrivingtimeLabel.isHidden = false
             }
                 
-            else if history.status == -1{
+            else if lesson.status == -1{
                 cell.iconView.image = #imageLiteral(resourceName: "red")
                 cell.arrivingtimeLabel.isHidden = true
             }
                 
             else{
                 cell.iconView.image = #imageLiteral(resourceName: "yellow")
-                cell.arrivingtimeLabel.text = history.recorded_time
+                cell.arrivingtimeLabel.text = lesson.recorded_time
                 cell.arrivingtimeLabel.isHidden = false
             }
             

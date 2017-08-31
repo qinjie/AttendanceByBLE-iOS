@@ -34,11 +34,12 @@ class NowController: UIViewController,UIPopoverPresentationControllerDelegate, C
     var bluetoothManager = CBPeripheralManager()
     var isGrantedNotificationAccess = false
     
-    let lecturerMajor: Int! = 0
-    let lecturerMinor: Int! = 0
+    var lecturerMajor: Int! = 0
+    var lecturerMinor: Int! = 0
     var uuid: UUID!
     var dataDictionary = NSDictionary()
     var classmate = Classmate()
+    var lecturer = Lecturer()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -62,7 +63,7 @@ class NowController: UIViewController,UIPopoverPresentationControllerDelegate, C
     }
     
     @objc func setupTimer(){
-        
+        UserDefaults.standard.set("10", forKey: "notification time")
         var date = Format.Format(date: Date(), format: "HH:mm:ss")
         let upcomingLesson = GlobalData.today.filter({$0.start_time! > date})
         for i in upcomingLesson{
@@ -130,9 +131,9 @@ class NowController: UIViewController,UIPopoverPresentationControllerDelegate, C
             "Content-Type" : "application/json"
         ]
         Alamofire.request(Constant.URLchangedevice, method: .post, parameters: parameters, encoding: JSONEncoding.default, headers: headers).responseJSON(completionHandler: { (response:DataResponse) in
-
+            
             print("Changed device result: " + String(describing: response.response!.statusCode))
-
+            
         })
     }
     
@@ -169,7 +170,6 @@ class NowController: UIViewController,UIPopoverPresentationControllerDelegate, C
     private func setupImageView(){
         
         imageView.isUserInteractionEnabled = false
-        
         let singleTap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(broadcastSignal))
         singleTap.numberOfTapsRequired = 1
         imageView.addGestureRecognizer(singleTap)
@@ -190,21 +190,7 @@ class NowController: UIViewController,UIPopoverPresentationControllerDelegate, C
             return
         }
         if currentLesson != nil {
-            if Constant.change_device == true{
-                let alertController = UIAlertController(title: "New Device", message: "Cannot take attendance with this device\nNew device can attendance after the day register", preferredStyle: .alert)
-                let okAction = UIAlertAction(title: "OK", style: .default, handler: nil)
-                alertController.addAction(okAction)
-                self.present(alertController, animated: false, completion: nil)
-            }else{
-                imageView.animationImages = [
-                    #imageLiteral(resourceName: "blue_1"),
-                    #imageLiteral(resourceName: "blue_2"),
-                    #imageLiteral(resourceName: "blue_3")
-                ]
-                imageView.animationDuration = 0.5
-                imageView.startAnimating()
-                broadcast()
-            }
+            broadcast()
         }
         else{
             updateLabels()
@@ -248,10 +234,13 @@ class NowController: UIViewController,UIPopoverPresentationControllerDelegate, C
         }
     }
     
-    private func detectLecturer() {
+    @objc private func detectLecturer() {
         uuid = NSUUID(uuidString: GlobalData.lessonUUID[currentLesson.lesson_id!]!)as UUID?
-        let lecturerRegion = CLBeaconRegion(proximityUUID: uuid, major: UInt16(lecturerMajor)as CLBeaconMajorValue, minor: UInt16(lecturerMinor)as CLBeaconMinorValue, identifier: GlobalData.currentLecturerId.description)
+        let lecturerRegion = CLBeaconRegion(proximityUUID: uuid, major: UInt16(GlobalData.currentLecturerMajor)as CLBeaconMajorValue, minor: UInt16(GlobalData.currentLecturerMinor)as CLBeaconMinorValue, identifier: GlobalData.currentLecturerId.description)
         locationManager.startMonitoring(for: lecturerRegion)
+        print(uuid)
+        print(GlobalData.currentLecturerMajor)
+        print(GlobalData.currentLecturerMinor)    
     }
     
     func peripheralManagerDidUpdateState(_ peripheral: CBPeripheralManager) {
@@ -278,6 +267,20 @@ class NowController: UIViewController,UIPopoverPresentationControllerDelegate, C
     func broadcast() {
         
         if bluetoothManager.state == .poweredOn {
+            if Constant.change_device == true{
+                let alertController = UIAlertController(title: "New Device", message: "Cannot take attendance with this device\nNew device can attendance after the day register", preferredStyle: .alert)
+                let okAction = UIAlertAction(title: "OK", style: .default, handler: nil)
+                alertController.addAction(okAction)
+                self.present(alertController, animated: false, completion: nil)
+            }else{
+                imageView.animationImages = [
+                    #imageLiteral(resourceName: "blue_1"),
+                    #imageLiteral(resourceName: "blue_2"),
+                    #imageLiteral(resourceName: "blue_3")
+                ]
+                imageView.animationDuration = 0.5
+                imageView.startAnimating()
+            }
             print("broadcasting")
             let mDate = Date().addingTimeInterval(TimeInterval(5.0))
             let atimer = Timer(fireAt: mDate, interval: 0, target: self, selector: #selector(mcheckAttendance), userInfo: nil, repeats: false)
@@ -347,7 +350,6 @@ class NowController: UIViewController,UIPopoverPresentationControllerDelegate, C
         print("fg did determine state!!!!!")
         switch(state) {
         case .inside:print("fg inside\(region.identifier)")
-                        self.broadcast()
         case .outside:print("fg outside\(region.identifier)")
         case .unknown:print("fg unknown\(region.identifier)")
         }
@@ -358,30 +360,33 @@ class NowController: UIViewController,UIPopoverPresentationControllerDelegate, C
         nextLesson = 1
         //check if today have lessons
         if checkLesson.checkCurrentLesson() == true {
-                currentLesson = GlobalData.currentLesson
-                subjectLabel.text = currentLesson.subject! + " " + currentLesson.catalog!
-                classLabel.text = currentLesson.class_section
-                timeLabel.text = displayTime.display(time: currentLesson.start_time!) + " - " + displayTime.display(time: currentLesson.end_time!)
-                venueLabel.text = currentLesson.venueName
-                currentTimeLabel.textColor = UIColor.gray
-                currentTimeLabel.text = "Waiting for \nbeacons from classmates"
-                GlobalData.currentLesson = currentLesson
-                imageView.image = #imageLiteral(resourceName: "bluetooth_on")
-
-                checkAttendance.checkAttendance()
-                
-                
-                print("Self.classmatesall \(GlobalData.classmates.count)!")
-                //print("Current Lesson : \(GlobalData.lessonUUID)")
-                self.classmate = GlobalData.classmates.filter({($0.lesson_id! == currentLesson.lesson_id!)}).first!
-                
-                print("Students  \(String(describing: self.classmate.student_id?.count))")
-                print("\(String(describing: GlobalData.currentLesson.catalog))")
-                print(UserDefaults.standard.string(forKey: "student_id")!)
-                if GlobalData.detectClassmateObserver != true{
-                    NotificationCenter.default.addObserver(self, selector: #selector(detectClassmate), name: NSNotification.Name(rawValue: "detect classmate"), object: nil)
-                    GlobalData.detectClassmateObserver = true
-                }
+            currentLesson = GlobalData.currentLesson
+            subjectLabel.text = currentLesson.subject! + " " + currentLesson.catalog!
+            classLabel.text = currentLesson.class_section
+            timeLabel.text = displayTime.display(time: currentLesson.start_time!) + " - " + displayTime.display(time: currentLesson.end_time!)
+            venueLabel.text = currentLesson.venueName
+            currentTimeLabel.textColor = UIColor.gray
+            currentTimeLabel.text = "Waiting for \nbeacons from classmates"
+            GlobalData.currentLesson = currentLesson
+            imageView.image = #imageLiteral(resourceName: "bluetooth_on")
+            
+            checkAttendance.checkAttendance()
+            
+            
+            print("Self.classmatesall \(GlobalData.classmates.count)!")
+            //print("Current Lesson : \(GlobalData.lessonUUID)")
+            self.lecturer = GlobalData.lecturers.filter({$0.lec_id == currentLesson.lecturer_id}).first!
+            GlobalData.currentLecturerId = lecturer.lec_id!
+            GlobalData.currentLecturerMajor = lecturer.major!
+            GlobalData.currentLecturerMinor = lecturer.minor!
+            /*self.classmate = GlobalData.classmates.filter({($0.lesson_id! == currentLesson.lesson_id!)}).first!
+            print("Students  \(String(describing: self.classmate.student_id?.count))")*/
+            print("\(String(describing: GlobalData.currentLesson.catalog))")
+            print(UserDefaults.standard.string(forKey: "student_id")!)
+            if GlobalData.detectLecturerObserver != true{
+                NotificationCenter.default.addObserver(self, selector: #selector(detectLecturer), name: NSNotification.Name(rawValue: "detect lecturer"), object: nil)
+                GlobalData.detectLecturerObserver = true
+            }
         }else{
             currentLesson = nil
             if checkLesson.checkNextLesson() == true{
@@ -412,6 +417,7 @@ class NowController: UIViewController,UIPopoverPresentationControllerDelegate, C
             
             let nTimer = Timer.scheduledTimer(timeInterval: interval, target: self, selector: #selector(checkTime), userInfo: nil, repeats: false)
             RunLoop.main.add(nTimer, forMode: RunLoopMode.commonModes)
+            
         }
         
     }
@@ -476,6 +482,7 @@ class NowController: UIViewController,UIPopoverPresentationControllerDelegate, C
         Alamofire.request(Constant.URLstudentlogin, method: .post, parameters: parameters, encoding: JSONEncoding.default, headers: nil).responseJSON { (response:DataResponse) in
             let code = response.response?.statusCode
             spinnerIndicator.removeFromSuperview()
+            print("Status code : " + String(describing: code))
             if code == 200{
                 if let json = response.result.value as? [String:AnyObject]{
                     UserDefaults.standard.set(json["token"], forKey: "token")
@@ -484,7 +491,7 @@ class NowController: UIViewController,UIPopoverPresentationControllerDelegate, C
                     if status != 10{
                         Constant.change_device = true
                     }else{
-                        NotificationCenter.default.post(name: NSNotification.Name(rawValue:"detect classmate"), object: nil)
+                        NotificationCenter.default.post(name: NSNotification.Name(rawValue:"detect lecturer"), object: nil)
                     }
                 }
             }
@@ -516,7 +523,7 @@ class NowController: UIViewController,UIPopoverPresentationControllerDelegate, C
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-       
+        
     }
     /*
      // MARK: - Navigation

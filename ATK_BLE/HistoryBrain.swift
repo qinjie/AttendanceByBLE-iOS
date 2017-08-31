@@ -24,8 +24,6 @@ class HistoryBrain{
         var tempHistory = [Lesson]()
         var ldate = ""
         for i in GlobalData.attendance{
-            let lesson = GlobalData.timetable.first(where: {$0.lesson_id == i.lesson_id})
-            i.start_time = lesson?.start_time
             if i.ldate != ldate{
                 tempHistory.sort(by: {$0.start_time!<$1.start_time!})
                 for i in tempHistory{
@@ -34,7 +32,9 @@ class HistoryBrain{
                 tempHistory.removeAll()
                 ldate = i.ldate!
             }
-            tempHistory.append(i)
+            if i.start_time != nil{
+                tempHistory.append(i)
+            }
         }
         GlobalData.attendance = history
     }

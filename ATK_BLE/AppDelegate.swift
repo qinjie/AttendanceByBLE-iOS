@@ -14,11 +14,12 @@ import UserNotifications
 import AVFoundation
 
 @UIApplicationMain
-class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate, UNUserNotificationCenterDelegate {
+class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate, UNUserNotificationCenterDelegate,CBPeripheralManagerDelegate {
     
     var window: UIWindow?
     var locationManager = CLLocationManager()
     var identifier : UIBackgroundTaskIdentifier! = UIBackgroundTaskInvalid
+    var bluetoothManager = CBPeripheralManager()
     var id1 = ""
     var id2 = ""
     
@@ -27,6 +28,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
         
         self.locationManager.delegate = self
         self.locationManager.requestAlwaysAuthorization()
+        bluetoothManager.delegate = self
+        bluetoothManager = CBPeripheralManager.init(delegate: self, queue: nil)
         
         if UserDefaults.standard.string(forKey: "student_id") != nil{
             self.loadData()
@@ -48,6 +51,20 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
         NotificationCenter.default.addObserver(self, selector: #selector(userFailed), name: Notification.Name(rawValue: "userFailed"), object: nil)
         return true
     }
+    
+    func peripheralManagerDidUpdateState(_ peripheral: CBPeripheralManager) {
+        var status = ""
+        switch peripheral.state {
+        case .poweredOff: status = "Bluetooth Status: \n Turned Off"
+        case .poweredOn: status = "Bluetooth Status: \n Turned On"
+        case .resetting: status = "Bluetooth Status: \n Resetting"
+        case .unauthorized: status = "BLuetooth Status: \n Not Authorized"
+        case .unsupported: status = "Bluetooth Status: \n Not Supported"
+        default: status = "Bluetooth Status: \n Unknown"
+        }
+        print(status)
+    }
+    
     func locationManager(_ manager: CLLocationManager, didStartMonitoringFor region: CLRegion) {
         print("Start bg monitoring \(region.identifier) region")
         
@@ -63,11 +80,24 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
         case .inside:
             print("inside !!!!!")
             checkAttendance.checkAttendance()
+            //checkStudent(id: Int(region.identifier)!)
             Constant.identifier = region.identifier
             NotificationCenter.default.addObserver(self,selector: #selector(takeAttendance), name: NSNotification.Name(rawValue: "notTaken"), object: nil)
         case .outside: print("Outside bg \(region.identifier)")
             NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "notTaken"), object: nil)
         case .unknown: print("Unknown")
+        }
+    }
+    
+    private func checkStudent(id:Int){
+        var check = false
+        for i in GlobalData.tempStudents{
+            if i.id == id{
+                check = true
+            }
+        }
+        if check == false{
+            NotificationCenter.default.post(name: NSNotification.Name(rawValue: "notTaken"), object: nil)
         }
     }
     
@@ -106,7 +136,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
                     let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 1.0, repeats: false)
                     let content = notification.notiContent(title: "successful", body: "You have successfully taken attendance")
                     notification.addNotification(trigger: trigger, content: content, identifier: "a")
-                    
+                    //Save record locally
+                    let tempStudent = TempStudents()
+                    tempStudent.id = Int(Constant.identifier)
+                    GlobalData.tempStudents.append(tempStudent)
+                    NSKeyedArchiver.archiveRootObject(GlobalData.tempStudents, toFile: filePath.tempStudents)
                 }
                 if let data = response.result.value{
                     print("///////////////result below////////////")
@@ -151,7 +185,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
     }
     
     func applicationWillEnterForeground(_ application: UIApplication) {
-        NotificationCenter.default.post(name: NSNotification.Name(rawValue: "enter foreground"), object: nil)
+        if UserDefaults.standard.string(forKey: "student_id") != nil{
+            NotificationCenter.default.post(name: NSNotification.Name(rawValue: "enter foreground"), object: nil)
+        }
         // Called as part of the transition from the background to the active state; here you can undo many of the changes made on entering the background.
         /*if identifier != UIBackgroundTaskInvalid {
          endBackgroundTask()
@@ -186,9 +222,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
             GlobalData.classmates = classmates
         }
         
+        if let lecturers = NSKeyedUnarchiver.unarchiveObject(withFile: filePath.lecturerPath) as? [Lecturer]{
+            GlobalData.lecturers = lecturers
+        }
+        
         if let lessonuuid = NSKeyedUnarchiver.unarchiveObject(withFile: filePath.lessonuuidPath) as? [Int : String]{
             GlobalData.lessonUUID = lessonuuid
         }
+        
         if let history = NSKeyedUnarchiver.unarchiveObject(withFile: filePath.historyPath) as? [History]{
             GlobalData.history = history
         }
@@ -196,6 +237,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
         if let historyDT = NSKeyedUnarchiver.unarchiveObject(withFile: filePath.historyDTPath) as? [Lesson]{
             GlobalData.attendance = historyDT
             HistoryBrain.arrangeHistory()
+        }
+        
+        if let tempStudents = NSKeyedUnarchiver.unarchiveObject(withFile: filePath.tempStudents) as? [TempStudents]{
+            GlobalData.tempStudents = tempStudents
         }
         
     }

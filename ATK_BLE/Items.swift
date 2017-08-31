@@ -23,6 +23,7 @@ struct Constant{
     
     static let URLclassmate = baseURL + "api/web/index.php/v1/timetable/get-student"
     static let URLallClassmate = baseURL + "api/web/index.php/v1/timetable/get-all-student"
+    static let URLallLecturer = baseURL + "api/web/index.php/v1/lecturer/beaconlist?expand=beacon"
     
     static let URLatk = baseURL + "api/web/index.php/v1/beacon-attendance-student/student-attendance"
     static let URLattendance = baseURL + "api/web/index.php/v1/attendance"
@@ -62,7 +63,9 @@ struct GlobalData{
     static var nextLesson = Lesson()
     static var nextLessonTime = String()
     static var classmates = [Classmate]()
+    static var lecturers = [Lecturer]()
     static var history = [History]()
+    static var tempStudents = [TempStudents]()
     
     static var attendance = [Lesson]()
     static var currentDateStr = ""
@@ -71,7 +74,7 @@ struct GlobalData{
     static var currentLecturerId = 0
     static var myAttendance = [Int]()
     
-    static var detectClassmateObserver = Bool()
+    static var detectLecturerObserver = Bool()
     
 }
 

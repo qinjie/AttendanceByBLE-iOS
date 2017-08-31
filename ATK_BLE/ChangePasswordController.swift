@@ -69,7 +69,7 @@ class ChangePasswordController: UIViewController {
                 case 200:
                     self.performSegue(withIdentifier: "change password", sender: nil)
                 default:
-                    let alert = UIAlertController(title: "Change Password", message: "Error", preferredStyle: .alert)
+                    let alert = UIAlertController(title: "Error", message: "Password not correct", preferredStyle: .alert)
                     alert.addAction(UIAlertAction(title: "OK", style: .default, handler: { (action:UIAlertAction) in
                         alert.dismiss(animated: false, completion: nil)
                     }))

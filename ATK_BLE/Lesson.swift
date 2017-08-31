@@ -16,11 +16,14 @@ class Lesson : NSObject, NSCoding {
     var venueName: String?
     var location: String?
     var class_section: String?
+    
     var lecturer: String?
     var lecOffice: String?
     var lecPhone: String?
     var lecAcad: String?
     var lecEmail: String?
+    var lecturer_id: Int?
+    
     var ldate: String?
     var weekday: String?
     var ldateid: Int?
@@ -31,7 +34,7 @@ class Lesson : NSObject, NSCoding {
     var start_time: String?
     var end_time: String?
     
-    var lecturer_id: Int?
+    
     var status: Int?
     var recorded_time: String?
     
@@ -123,6 +126,24 @@ class Lesson : NSObject, NSCoding {
     
 }
 
+class TempStudents : NSObject, NSCoding{
+    
+    var id : Int?
+    
+    override init(){
+        id = 0
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        id = aDecoder.decodeObject(forKey: "id") as! Int?
+    }
+    
+    func encode(with aCoder: NSCoder) {
+        aCoder.encode(id, forKey: "id")
+    }
+    
+}
+
 class Venue{
     
     var id = 0
@@ -163,6 +184,42 @@ class History: NSObject, NSCoding{
         aCoder.encode(present, forKey: "present")
         aCoder.encode(late, forKey: "late")
     }
+}
+
+class Lecturer: NSObject, NSCoding{
+    
+    var lesson_id:Int?
+    var lec_id:Int?
+    var major:Int?
+    var minor:Int?
+    
+    override init(){
+        
+        lesson_id = 0
+        lec_id = 0
+        major = 0
+        minor = 0
+        
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        
+        lesson_id = aDecoder.decodeObject(forKey: "lesson_id") as! Int?
+        lec_id = aDecoder.decodeObject(forKey: "lec_id") as! Int?
+        major = aDecoder.decodeObject(forKey: "major") as! Int?
+        minor =  aDecoder.decodeObject(forKey: "minor") as! Int?
+        
+    }
+    
+    func encode(with aCoder: NSCoder) {
+        
+        aCoder.encode(lesson_id, forKey: "lesson_id")
+        aCoder.encode(lec_id, forKey: "lec_id")
+        aCoder.encode(major, forKey: "major")
+        aCoder.encode(minor, forKey: "minor")
+        
+    }
+    
 }
 
 class Classmate: NSObject, NSCoding{
