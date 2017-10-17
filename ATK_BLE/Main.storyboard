@@ -881,6 +881,21 @@
                                     <action selector="stepperPressed:" destination="nYD-5n-sHE" eventType="valueChanged" id="4R3-f4-lF3"/>
                                 </connections>
                             </stepper>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="2Un-eI-dR0">
+                                <rect key="frame" x="16" y="460" width="343" height="139"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <prototypes>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="cell" id="Eue-LI-L8X" customClass="UserInfoCell" customModule="ATK_BLE" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="28" width="343" height="44"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="Eue-LI-L8X" id="X7y-C3-f5f">
+                                            <rect key="frame" x="0.0" y="0.0" width="343" height="43.5"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                        </tableViewCellContentView>
+                                    </tableViewCell>
+                                </prototypes>
+                            </tableView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
@@ -891,6 +906,7 @@
                         <outlet property="myImageView" destination="fJy-2e-E7I" id="ml0-9N-TVW"/>
                         <outlet property="notificationTime" destination="Ghw-hD-JsR" id="aP8-qp-AqC"/>
                         <outlet property="stepper" destination="MuR-pW-Q8L" id="bBu-jN-Zaj"/>
+                        <outlet property="tableView" destination="2Un-eI-dR0" id="DDv-Ch-o7b"/>
                         <outlet property="username" destination="kE4-ic-PaA" id="Wii-hk-Rnw"/>
                         <segue destination="BYZ-38-t0r" kind="presentation" identifier="sign out" id="b94-xA-FyH"/>
                     </connections>
@@ -985,6 +1001,6 @@
     </resources>
     <inferredMetricsTieBreakers>
         <segue reference="zG7-cK-laq"/>
-        <segue reference="mYg-nF-PZP"/>
+        <segue reference="b94-xA-FyH"/>
     </inferredMetricsTieBreakers>
 </document>
