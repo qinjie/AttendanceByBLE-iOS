@@ -8,5 +8,6 @@ target 'ATK_BLE' do
   # Pods for ATK_BLE
   pod 'Alamofire'
   pod 'SwiftyJSON'
+  pod 'SwiftyTimer'
 
 end

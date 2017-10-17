@@ -21,7 +21,7 @@
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSBluetoothPeripheralUsageDescription</key>
-	<string>Advertisement would like to use bluetooth.</string>
+	<string>Transmit beacon signal to take attendance</string>
 	<key>NSLocationAlwaysUsageDescription</key>
 	<string>Need permission to mornitor beacon</string>
 	<key>UIBackgroundModes</key>
@@ -43,5 +43,9 @@
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
 	</array>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>Mornitor beacons to take attendance</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Mornitor beacons to take attendance</string>
 </dict>
 </plist>

@@ -140,31 +140,29 @@ struct alamofire{
 struct checkAttendance{
     
     static func checkAttendance() {
-        let token = UserDefaults.standard.string(forKey: "token")
-        let header:HTTPHeaders = [
-            "Authorization" : "Bearer " + token!
-        ]
-        let parameter:Parameters = ["lesson_date_id":GlobalData.currentLesson.ldateid!]
-        print(GlobalData.currentLesson.ldateid!)
-        
-        Alamofire.request(Constant.URLcheckAttandance,method: .post, parameters: parameter, encoding: JSONEncoding.default, headers: header).responseJSON(completionHandler: { (response:DataResponse) in
-            if let JSON = response.result.value as? Int{
-                print("JSON below")
-                print(JSON)
-                if(JSON >= 0) {
-                    print("/////////taken already")
-                    NotificationCenter.default.post(name: NSNotification.Name(rawValue: "taken"), object: nil)
+        if GlobalData.currentLesson.ldateid != nil{
+            let token = UserDefaults.standard.string(forKey: "token")
+            let header:HTTPHeaders = [
+                "Authorization" : "Bearer " + token!
+            ]
+            let parameter:Parameters = ["lesson_date_id":GlobalData.currentLesson.ldateid!]
+            print(GlobalData.currentLesson.ldateid!)
+            
+            Alamofire.request(Constant.URLcheckAttandance,method: .post, parameters: parameter, encoding: JSONEncoding.default, headers: header).responseJSON(completionHandler: { (response:DataResponse) in
+                if let JSON = response.result.value as? Int{
+                    print("JSON below")
+                    print(JSON)
+                    if(JSON >= 0) {
+                        print("/////////taken already")
+                        NotificationCenter.default.post(name: NSNotification.Name(rawValue: "taken"), object: nil)
+                    }
+                    else {
+                        NotificationCenter.default.post(name: NSNotification.Name(rawValue: "notTaken"), object: nil)
+                    }
+                    
                 }
-                else {
-                    print("JSON not > or = 0")
-                }
-                
-            }
-                //check if JSON is nil
-            else {
-                NotificationCenter.default.post(name: NSNotification.Name(rawValue: "notTaken"), object: nil)
-            }
-        })
+            })
+        }
     }
 }
 

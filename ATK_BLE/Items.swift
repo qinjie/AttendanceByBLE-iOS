@@ -62,6 +62,7 @@ struct GlobalData{
     static var currentLesson = Lesson()
     static var nextLesson = Lesson()
     static var nextLessonTime = String()
+    static var lastLesson = Lesson()
     static var classmates = [Classmate]()
     static var lecturers = [Lecturer]()
     static var history = [History]()
@@ -74,7 +75,6 @@ struct GlobalData{
     static var currentLecturerId = 0
     static var myAttendance = [Int]()
     
-    static var detectLecturerObserver = Bool()
     
 }
 

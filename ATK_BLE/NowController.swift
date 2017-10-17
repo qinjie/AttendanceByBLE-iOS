@@ -88,6 +88,7 @@ class NowController: UIViewController,UIPopoverPresentationControllerDelegate, C
         NotificationCenter.default.addObserver(self, selector: #selector(setupTimer), name: NSNotification.Name(rawValue: "stepper changed"), object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(checkTime), name: NSNotification.Name(rawValue: "done loading timetable"), object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(checkTime), name: NSNotification.Name(rawValue: "enter foreground"), object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(detectLecturer), name: NSNotification.Name(rawValue: "update time"), object: nil)
         NotificationCenter.default.addObserver(self,selector: #selector(success), name: NSNotification.Name(rawValue: "atksuccesfully"), object: nil)
         NotificationCenter.default.addObserver(self,selector: #selector(changeLabel), name: NSNotification.Name(rawValue: "taken"), object: nil)
         NotificationCenter.default.addObserver(self,selector: #selector(enableImageView), name: NSNotification.Name(rawValue: "enable imageView"), object: nil)
@@ -356,6 +357,7 @@ class NowController: UIViewController,UIPopoverPresentationControllerDelegate, C
     }
     
     @objc private func checkTime(){
+        print("checking time")
         self.setupTitle()
         nextLesson = 1
         //check if today have lessons
@@ -369,10 +371,6 @@ class NowController: UIViewController,UIPopoverPresentationControllerDelegate, C
             currentTimeLabel.text = "Waiting for \nbeacons from classmates"
             GlobalData.currentLesson = currentLesson
             imageView.image = #imageLiteral(resourceName: "bluetooth_on")
-            
-            checkAttendance.checkAttendance()
-            
-            
             print("Self.classmatesall \(GlobalData.classmates.count)!")
             //print("Current Lesson : \(GlobalData.lessonUUID)")
             self.lecturer = GlobalData.lecturers.filter({$0.lec_id == currentLesson.lecturer_id}).first!
@@ -383,10 +381,8 @@ class NowController: UIViewController,UIPopoverPresentationControllerDelegate, C
             print("Students  \(String(describing: self.classmate.student_id?.count))")*/
             print("\(String(describing: GlobalData.currentLesson.catalog))")
             print(UserDefaults.standard.string(forKey: "student_id")!)
-            if GlobalData.detectLecturerObserver != true{
-                NotificationCenter.default.addObserver(self, selector: #selector(detectLecturer), name: NSNotification.Name(rawValue: "detect lecturer"), object: nil)
-                GlobalData.detectLecturerObserver = true
-            }
+            NotificationCenter.default.removeObserver(self, name: Notification.Name(rawValue:"detect lecturer"), object: nil)
+            NotificationCenter.default.addObserver(self, selector: #selector(detectLecturer), name: Notification.Name(rawValue: "detect lecturer"), object: nil)
         }else{
             currentLesson = nil
             if checkLesson.checkNextLesson() == true{
@@ -462,12 +458,14 @@ class NowController: UIViewController,UIPopoverPresentationControllerDelegate, C
             currentTimeLabel.isHidden = false
             imageView.isHidden = false
             broadcastLabel.isHidden = false
+            broadcastLabel.isUserInteractionEnabled = true
             
         }
     }
     
     private func checkUserInBackGround(){
         
+        print("Checking user in background")
         let this_device = UIDevice.current.identifierForVendor?.uuidString
         let parameters:[String:Any] = [
             "username" : UserDefaults.standard.string(forKey: "username")!,

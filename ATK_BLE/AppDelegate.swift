@@ -12,6 +12,7 @@ import CoreLocation
 import Alamofire
 import UserNotifications
 import AVFoundation
+import SwiftyTimer
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate, UNUserNotificationCenterDelegate,CBPeripheralManagerDelegate {
@@ -22,16 +23,18 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
     var bluetoothManager = CBPeripheralManager()
     var id1 = ""
     var id2 = ""
+    var backgroundTask:UIBackgroundTaskIdentifier = UIBackgroundTaskInvalid
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
         
-        self.locationManager.delegate = self
-        self.locationManager.requestAlwaysAuthorization()
+        locationManager.delegate = self
+        locationManager.requestAlwaysAuthorization()
+        
         bluetoothManager.delegate = self
         bluetoothManager = CBPeripheralManager.init(delegate: self, queue: nil)
         
-        if UserDefaults.standard.string(forKey: "student_id") != nil{
+       if UserDefaults.standard.string(forKey: "student_id") != nil{
             self.loadData()
             let mainStoryboard: UIStoryboard = UIStoryboard(name: "Main", bundle: nil)
             let home:UITabBarController = (mainStoryboard.instantiateViewController(withIdentifier: "home") as? UITabBarController)!
@@ -82,6 +85,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
             checkAttendance.checkAttendance()
             //checkStudent(id: Int(region.identifier)!)
             Constant.identifier = region.identifier
+            NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "notTaken"), object: nil)
             NotificationCenter.default.addObserver(self,selector: #selector(takeAttendance), name: NSNotification.Name(rawValue: "notTaken"), object: nil)
         case .outside: print("Outside bg \(region.identifier)")
             NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "notTaken"), object: nil)
@@ -130,7 +134,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
                 if (statusCode == 200){
                     GlobalData.myAttendance.append(GlobalData.currentLesson.ldateid!)
                     NotificationCenter.default.post(name: NSNotification.Name(rawValue: "atksuccesfully"), object: nil)
-                    print("gl\(GlobalData.attendance)")
                     let systemSoundID: SystemSoundID = 1315
                     AudioServicesPlaySystemSound(systemSoundID)
                     let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 1.0, repeats: false)
@@ -168,25 +171,38 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
     func locationManager(_ manager: CLLocationManager, didExitRegion region: CLRegion) {
         print("bg did exit region!!!   \(region.identifier)")
     }
+    
+    func registerBackgroundTask() {
+        backgroundTask = UIApplication.shared.beginBackgroundTask { [weak self] in
+            self?.endBackgroundTask()
+        }
+        assert(backgroundTask != UIBackgroundTaskInvalid)
+    }
+    
+    func endBackgroundTask() {
+        print("Background task ended.")
+        UIApplication.shared.endBackgroundTask(backgroundTask)
+        backgroundTask = UIBackgroundTaskInvalid
+    }
+    
     func applicationWillResignActive(_ application: UIApplication) {
         // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
         // Use this method to pause ongoing tasks, disable timers, and invalidate graphics rendering callbacks. Games should use this method to pause the game.
     }
     
     func applicationDidEnterBackground(_ application: UIApplication) {
-        NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "notTaken"), object: nil)
+        registerBackgroundTask()
+        GlobalData.lastLesson = GlobalData.currentLesson
         // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later.
         // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
-    }
-    
-    func endBackgroundTask() {
-        UIApplication.shared.endBackgroundTask(identifier)
-        self.identifier = UIBackgroundTaskInvalid
     }
     
     func applicationWillEnterForeground(_ application: UIApplication) {
         if UserDefaults.standard.string(forKey: "student_id") != nil{
             NotificationCenter.default.post(name: NSNotification.Name(rawValue: "enter foreground"), object: nil)
+            Timer.after(3, {
+                NotificationCenter.default.post(name: Notification.Name(rawValue:"detect lecturer"), object: nil)
+            })
         }
         // Called as part of the transition from the background to the active state; here you can undo many of the changes made on entering the background.
         /*if identifier != UIBackgroundTaskInvalid {
