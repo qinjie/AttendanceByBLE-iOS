@@ -8,10 +8,10 @@
 
 /* Begin PBXBuildFile section */
 		3CE89EF5A7A07C1622FF4DCA /* Pods_ATK_BLE.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8730CE69BF02DA57AF883CE4 /* Pods_ATK_BLE.framework */; };
-		C3D8650A1F95DFC5001FB1F2 /* UserInfoCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3D865081F95DFC5001FB1F2 /* UserInfoCell.swift */; };
-		C3D8650B1F95DFC5001FB1F2 /* UserInfoCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = C3D865091F95DFC5001FB1F2 /* UserInfoCell.xib */; };
 		E10957C01F187D4400B55AAC /* Functions.swift in Sources */ = {isa = PBXBuildFile; fileRef = E10957BF1F187D4400B55AAC /* Functions.swift */; };
 		E10957C21F188AA800B55AAC /* FilePath.swift in Sources */ = {isa = PBXBuildFile; fileRef = E10957C11F188AA800B55AAC /* FilePath.swift */; };
+		E14448F11F971A1300DF6E75 /* UserInfoCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E14448EF1F971A1300DF6E75 /* UserInfoCell.swift */; };
+		E14448F21F971A1300DF6E75 /* UserInfoCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = E14448F01F971A1300DF6E75 /* UserInfoCell.xib */; };
 		E15349FE1F1360EE00957D8D /* HistoryBrain.swift in Sources */ = {isa = PBXBuildFile; fileRef = E15349FD1F1360EE00957D8D /* HistoryBrain.swift */; };
 		E1A979261F09DFAC0050431A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1A979181F09DFAC0050431A /* AppDelegate.swift */; };
 		E1A979271F09DFAC0050431A /* Items.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1A979191F09DFAC0050431A /* Items.swift */; };
@@ -36,10 +36,10 @@
 		38841AAF1E690C0E004EF33D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		8730CE69BF02DA57AF883CE4 /* Pods_ATK_BLE.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ATK_BLE.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		A480AF68145EB8C64A5ACCB4 /* Pods-ATK_BLE.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ATK_BLE.release.xcconfig"; path = "Pods/Target Support Files/Pods-ATK_BLE/Pods-ATK_BLE.release.xcconfig"; sourceTree = "<group>"; };
-		C3D865081F95DFC5001FB1F2 /* UserInfoCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserInfoCell.swift; sourceTree = "<group>"; };
-		C3D865091F95DFC5001FB1F2 /* UserInfoCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = UserInfoCell.xib; sourceTree = "<group>"; };
 		E10957BF1F187D4400B55AAC /* Functions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Functions.swift; sourceTree = "<group>"; };
 		E10957C11F188AA800B55AAC /* FilePath.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FilePath.swift; sourceTree = "<group>"; };
+		E14448EF1F971A1300DF6E75 /* UserInfoCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserInfoCell.swift; sourceTree = "<group>"; };
+		E14448F01F971A1300DF6E75 /* UserInfoCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = UserInfoCell.xib; sourceTree = "<group>"; };
 		E15349FD1F1360EE00957D8D /* HistoryBrain.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HistoryBrain.swift; sourceTree = "<group>"; };
 		E1A979181F09DFAC0050431A /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		E1A979191F09DFAC0050431A /* Items.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Items.swift; sourceTree = "<group>"; };
@@ -161,8 +161,8 @@
 			isa = PBXGroup;
 			children = (
 				E1A979381F09E2400050431A /* LessonCell.swift */,
-				C3D865081F95DFC5001FB1F2 /* UserInfoCell.swift */,
-				C3D865091F95DFC5001FB1F2 /* UserInfoCell.xib */,
+				E14448EF1F971A1300DF6E75 /* UserInfoCell.swift */,
+				E14448F01F971A1300DF6E75 /* UserInfoCell.xib */,
 			);
 			name = TableViewCell;
 			sourceTree = "<group>";
@@ -236,7 +236,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C3D8650B1F95DFC5001FB1F2 /* UserInfoCell.xib in Resources */,
+				E14448F21F971A1300DF6E75 /* UserInfoCell.xib in Resources */,
 				E1A979311F09DFAC0050431A /* Main.storyboard in Resources */,
 				E1A979321F09DFAC0050431A /* LaunchScreen.storyboard in Resources */,
 				E1A979301F09DFAC0050431A /* Assets.xcassets in Resources */,
@@ -306,7 +306,7 @@
 				E1A979271F09DFAC0050431A /* Items.swift in Sources */,
 				E1A9792D1F09DFAC0050431A /* LessonDetailController.swift in Sources */,
 				E1A9792A1F09DFAC0050431A /* TimetableController.swift in Sources */,
-				C3D8650A1F95DFC5001FB1F2 /* UserInfoCell.swift in Sources */,
+				E14448F11F971A1300DF6E75 /* UserInfoCell.swift in Sources */,
 				E1A9793A1F09E2400050431A /* LessonCell.swift in Sources */,
 				E1A9792E1F09DFAC0050431A /* LoginController.swift in Sources */,
 				E1FB8BE41F0F48D500E087CB /* HistoryByLessonController.swift in Sources */,
@@ -432,7 +432,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				DEVELOPMENT_TEAM = EH5BAL5EWL;
 				INFOPLIST_FILE = ATK_BLE/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 10.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.3;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.ATK-BLE";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -451,7 +451,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				DEVELOPMENT_TEAM = EH5BAL5EWL;
 				INFOPLIST_FILE = ATK_BLE/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 10.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.3;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.ATK-BLE";
 				PRODUCT_NAME = "$(TARGET_NAME)";

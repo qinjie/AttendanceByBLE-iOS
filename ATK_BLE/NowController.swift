@@ -63,7 +63,9 @@ class NowController: UIViewController,UIPopoverPresentationControllerDelegate, C
     }
     
     @objc func setupTimer(){
-        UserDefaults.standard.set("10", forKey: "notification time")
+        if UserDefaults.standard.string(forKey: "notification time") == nil{
+            UserDefaults.standard.set("10", forKey: "notification time")
+        }
         var date = Format.Format(date: Date(), format: "HH:mm:ss")
         let upcomingLesson = GlobalData.today.filter({$0.start_time! > date})
         for i in upcomingLesson{
@@ -92,7 +94,13 @@ class NowController: UIViewController,UIPopoverPresentationControllerDelegate, C
         NotificationCenter.default.addObserver(self,selector: #selector(success), name: NSNotification.Name(rawValue: "atksuccesfully"), object: nil)
         NotificationCenter.default.addObserver(self,selector: #selector(changeLabel), name: NSNotification.Name(rawValue: "taken"), object: nil)
         NotificationCenter.default.addObserver(self,selector: #selector(enableImageView), name: NSNotification.Name(rawValue: "enable imageView"), object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(enableImageView), name: Notification.Name(rawValue: "taken"), object: nil)
         
+    }
+    
+    @objc func disableImage(){
+        imageView.isUserInteractionEnabled = false
+        imageView.image = #imageLiteral(resourceName: "bluetooth_off")
     }
     
     @objc func enableImageView(){
@@ -184,14 +192,12 @@ class NowController: UIViewController,UIPopoverPresentationControllerDelegate, C
     }
     
     @objc private func broadcastSignal() {
-        if imageView.isAnimating{
-            imageView.stopAnimating()
-            imageView.image = #imageLiteral(resourceName: "bluetooth_on")
-            //bluetoothManager.stopAdvertising()
-            return
-        }
         if currentLesson != nil {
-            broadcast()
+            if imageView.isAnimating{
+                
+            }else{
+                broadcast()
+            }
         }
         else{
             updateLabels()
@@ -208,31 +214,6 @@ class NowController: UIViewController,UIPopoverPresentationControllerDelegate, C
     func stopBroadcast() {
         bluetoothManager.stopAdvertising()
         self.imageView.stopAnimating()
-    }
-    
-    @objc func detectClassmate() {
-        uuid = NSUUID(uuidString: GlobalData.lessonUUID[currentLesson.lesson_id!]!)as UUID?
-        print("Current lesson: \(uuid)")
-        if ((classmate.student_id?.count)! == 0)
-        {
-            print("classmate is 0")
-        }
-        else if ((classmate.student_id?.count)! > 20){
-            print("more than 20")
-            for i in 0 ..< 20 {
-                let newRegion = CLBeaconRegion(proximityUUID: uuid , major: UInt16(classmate.major![i]) as CLBeaconMajorValue, minor: UInt16((classmate.minor?[i])!) as CLBeaconMinorValue, identifier: (classmate.student_id?[i].description)!)
-                locationManager.startMonitoring(for: newRegion)
-            }
-        }
-        else{
-            print("less than 20")
-            for i in 0 ..< (classmate.student_id?.count)!  {
-                let newRegion = CLBeaconRegion(proximityUUID: uuid , major: UInt16(classmate.major![i]) as CLBeaconMajorValue, minor: UInt16((classmate.minor?[i])!) as CLBeaconMinorValue, identifier: (classmate.student_id?[i].description)!)
-                
-                locationManager.startMonitoring(for: newRegion)
-            }
-            
-        }
     }
     
     @objc private func detectLecturer() {
@@ -293,7 +274,7 @@ class NowController: UIViewController,UIPopoverPresentationControllerDelegate, C
             dataDictionary = beaconRegion.peripheralData(withMeasuredPower: nil)
             bluetoothManager.startAdvertising(dataDictionary as?[String: Any])
             
-            let date = Date().addingTimeInterval(TimeInterval(10))
+            let date = Date().addingTimeInterval(TimeInterval(120))
             let timer = Timer(fireAt: date, interval: 0, target: self, selector: #selector(stopBroadcast), userInfo: nil, repeats: false)
             RunLoop.main.add(timer, forMode: RunLoopMode.commonModes)
         }
@@ -362,6 +343,8 @@ class NowController: UIViewController,UIPopoverPresentationControllerDelegate, C
         nextLesson = 1
         //check if today have lessons
         if checkLesson.checkCurrentLesson() == true {
+            
+            checkAttendance.checkAttendance()
             currentLesson = GlobalData.currentLesson
             subjectLabel.text = currentLesson.subject! + " " + currentLesson.catalog!
             classLabel.text = currentLesson.class_section
