@@ -27,6 +27,8 @@
 		E1A979311F09DFAC0050431A /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E1A979231F09DFAC0050431A /* Main.storyboard */; };
 		E1A979321F09DFAC0050431A /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E1A979241F09DFAC0050431A /* LaunchScreen.storyboard */; };
 		E1A9793A1F09E2400050431A /* LessonCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1A979381F09E2400050431A /* LessonCell.swift */; };
+		E1E58F341F986F4800CAEA28 /* LessonDetailCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1E58F321F986F4800CAEA28 /* LessonDetailCell.swift */; };
+		E1E58F351F986F4800CAEA28 /* LessonDetailCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = E1E58F331F986F4800CAEA28 /* LessonDetailCell.xib */; };
 		E1FB8BE41F0F48D500E087CB /* HistoryByLessonController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1FB8BE31F0F48D500E087CB /* HistoryByLessonController.swift */; };
 /* End PBXBuildFile section */
 
@@ -56,6 +58,8 @@
 		E1A979241F09DFAC0050431A /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
 		E1A979351F09E1ED0050431A /* ATK_BLE-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "ATK_BLE-Bridging-Header.h"; sourceTree = "<group>"; };
 		E1A979381F09E2400050431A /* LessonCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LessonCell.swift; sourceTree = "<group>"; };
+		E1E58F321F986F4800CAEA28 /* LessonDetailCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LessonDetailCell.swift; sourceTree = "<group>"; };
+		E1E58F331F986F4800CAEA28 /* LessonDetailCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = LessonDetailCell.xib; sourceTree = "<group>"; };
 		E1FB8BE31F0F48D500E087CB /* HistoryByLessonController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HistoryByLessonController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -161,10 +165,28 @@
 			isa = PBXGroup;
 			children = (
 				E1A979381F09E2400050431A /* LessonCell.swift */,
+				E1E58F311F986F2E00CAEA28 /* LessonDetailCell */,
+				E1E58F281F9864C400CAEA28 /* UserInfoCell */,
+			);
+			name = TableViewCell;
+			sourceTree = "<group>";
+		};
+		E1E58F281F9864C400CAEA28 /* UserInfoCell */ = {
+			isa = PBXGroup;
+			children = (
 				E14448EF1F971A1300DF6E75 /* UserInfoCell.swift */,
 				E14448F01F971A1300DF6E75 /* UserInfoCell.xib */,
 			);
-			name = TableViewCell;
+			name = UserInfoCell;
+			sourceTree = "<group>";
+		};
+		E1E58F311F986F2E00CAEA28 /* LessonDetailCell */ = {
+			isa = PBXGroup;
+			children = (
+				E1E58F321F986F4800CAEA28 /* LessonDetailCell.swift */,
+				E1E58F331F986F4800CAEA28 /* LessonDetailCell.xib */,
+			);
+			name = LessonDetailCell;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -202,7 +224,7 @@
 				TargetAttributes = {
 					38841A9F1E690C0E004EF33D = {
 						CreatedOnToolsVersion = 8.2.1;
-						DevelopmentTeam = EH5BAL5EWL;
+						DevelopmentTeam = EBWK75HAK4;
 						LastSwiftMigration = 0820;
 						ProvisioningStyle = Automatic;
 						SystemCapabilities = {
@@ -239,6 +261,7 @@
 				E14448F21F971A1300DF6E75 /* UserInfoCell.xib in Resources */,
 				E1A979311F09DFAC0050431A /* Main.storyboard in Resources */,
 				E1A979321F09DFAC0050431A /* LaunchScreen.storyboard in Resources */,
+				E1E58F351F986F4800CAEA28 /* LessonDetailCell.xib in Resources */,
 				E1A979301F09DFAC0050431A /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -310,6 +333,7 @@
 				E1A9793A1F09E2400050431A /* LessonCell.swift in Sources */,
 				E1A9792E1F09DFAC0050431A /* LoginController.swift in Sources */,
 				E1FB8BE41F0F48D500E087CB /* HistoryByLessonController.swift in Sources */,
+				E1E58F341F986F4800CAEA28 /* LessonDetailCell.swift in Sources */,
 				E1A979291F09DFAC0050431A /* NowController.swift in Sources */,
 				E1A9792C1F09DFAC0050431A /* ChangePasswordController.swift in Sources */,
 				E1A9792B1F09DFAC0050431A /* HistoryController.swift in Sources */,
@@ -430,11 +454,11 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
-				DEVELOPMENT_TEAM = EH5BAL5EWL;
+				DEVELOPMENT_TEAM = EBWK75HAK4;
 				INFOPLIST_FILE = ATK_BLE/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.3;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = "com.ATK-BLE";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.ATK-BLE1";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "ATK_BLE-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -449,11 +473,11 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
-				DEVELOPMENT_TEAM = EH5BAL5EWL;
+				DEVELOPMENT_TEAM = EBWK75HAK4;
 				INFOPLIST_FILE = ATK_BLE/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.3;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = "com.ATK-BLE";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.ATK-BLE1";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "ATK_BLE-Bridging-Header.h";
 				SWIFT_VERSION = 3.0;

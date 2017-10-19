@@ -5,7 +5,7 @@
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13173"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13174"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -28,8 +28,8 @@
                     <stepper opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" maximumValue="100" translatesAutoresizingMaskIntoConstraints="NO" id="jFI-d0-skO">
                         <rect key="frame" x="213" y="7.5" width="94" height="29"/>
                     </stepper>
-                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="wordWrap" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Oqm-hY-yyQ">
-                        <rect key="frame" x="96" y="12.5" width="39.5" height="19.5"/>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="asd asd asd ad ads ads ad ada das asd" textAlignment="natural" lineBreakMode="wordWrap" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Oqm-hY-yyQ">
+                        <rect key="frame" x="96" y="0.0" width="224" height="44"/>
                         <fontDescription key="fontDescription" type="system" pointSize="16"/>
                         <nil key="textColor"/>
                         <nil key="highlightedColor"/>
@@ -37,11 +37,13 @@
                 </subviews>
                 <constraints>
                     <constraint firstItem="jFI-d0-skO" firstAttribute="centerY" secondItem="H2p-sc-9uM" secondAttribute="centerY" id="ES9-oC-BEQ"/>
-                    <constraint firstItem="Oqm-hY-yyQ" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="96" id="H8j-qO-jC7"/>
+                    <constraint firstItem="Oqm-hY-yyQ" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" id="G9h-Wj-TNw"/>
                     <constraint firstAttribute="trailing" secondItem="jFI-d0-skO" secondAttribute="trailing" constant="13" id="JaQ-YU-TkS"/>
                     <constraint firstItem="jlf-lc-ZaA" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="8" id="Jnx-eu-FTa"/>
+                    <constraint firstAttribute="trailing" secondItem="Oqm-hY-yyQ" secondAttribute="trailing" id="Q58-v1-YdW"/>
+                    <constraint firstAttribute="bottom" secondItem="Oqm-hY-yyQ" secondAttribute="bottom" constant="-0.5" id="S03-Gx-cw8"/>
+                    <constraint firstItem="Oqm-hY-yyQ" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="96" id="T2q-IT-uS8"/>
                     <constraint firstItem="jlf-lc-ZaA" firstAttribute="centerY" secondItem="H2p-sc-9uM" secondAttribute="centerY" id="dTb-yl-ckW"/>
-                    <constraint firstItem="Oqm-hY-yyQ" firstAttribute="centerY" secondItem="H2p-sc-9uM" secondAttribute="centerY" id="yFO-JR-YTf"/>
                 </constraints>
             </tableViewCellContentView>
             <viewLayoutGuide key="safeArea" id="njF-e1-oar"/>

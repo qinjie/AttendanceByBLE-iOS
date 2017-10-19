@@ -67,6 +67,7 @@ struct GlobalData{
     static var lecturers = [Lecturer]()
     static var history = [History]()
     static var tempStudents = [TempStudents]()
+    static var currentHistoryLesson = Lesson()
     
     static var attendance = [Lesson]()
     static var currentDateStr = ""

@@ -23,17 +23,6 @@ class LessonCell: UITableViewCell {
         }
     }
     
-    /*let lessonPhoto: UIImageView = {
-        
-        let imageView = UIImageView()
-        imageView.contentMode = .scaleAspectFit
-        
-        imageView.image = UIImage(named: "yoo2")
-        
-        imageView.layer.cornerRadius = 34
-        imageView.layer.masksToBounds = true
-        return imageView
-    }()*/
     
     let lecturer: UILabel = {
         let label = UILabel()
@@ -42,12 +31,6 @@ class LessonCell: UITableViewCell {
         label.font = UIFont.systemFont(ofSize: 15)
         return label
     }()
-    
-    /*let dividerLineView:UIView = {
-            let view = UIView()
-        view.backgroundColor = UIColor(red: 0.0, green: 0.36, blue: 0.16, alpha: 0.5)
-        return view
-    }()*/
     
     let subjectLabel:UILabel = {
         let label = UILabel()
@@ -98,14 +81,6 @@ class LessonCell: UITableViewCell {
         imageView.sizeThatFits(CGSize(width: 50, height: 50))
         return imageView
     }()
-    
-    /*let statusImage: UIImageView = {
-        let imageView = UIImageView()
-        imageView.contentMode = .scaleAspectFill
-        imageView.layer.cornerRadius = 10
-        imageView.layer.masksToBounds = true
-        return imageView
-    }()*/
     
     override func awakeFromNib() {
         super.awakeFromNib()

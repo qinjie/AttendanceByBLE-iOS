@@ -24,6 +24,8 @@ class MoreController: UIViewController, UITableViewDelegate, UITableViewDataSour
         
         tableView.delegate = self
         tableView.dataSource = self
+        tableView.tableFooterView = UIView(frame: .zero)
+        tableView.allowsSelection = false
         
         value.removeAll()
         value.append(UserDefaults.standard.string(forKey: "name")!)
@@ -50,18 +52,41 @@ class MoreController: UIViewController, UITableViewDelegate, UITableViewDataSour
         
     }
     
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        if indexPath.row == 2{
+            return 80
+        }else{
+            return 40
+        }
+    }
+    
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! UserInfoCell
-        
+        cell.value.numberOfLines = 1
         if indexPath.row == 2{
+            cell.value.numberOfLines = 3
+            cell.value.lineBreakMode = .byWordWrapping
             cell.commonInit(labelText: self.label[indexPath.row], valueText: self.value[indexPath.row], stepperBool: false)
         }else if indexPath.row == 3{
             cell.commonInit(labelText: self.label[indexPath.row], valueText: self.value[indexPath.row], stepperBool: true)
         }else{
             cell.commonInit(labelText: self.label[indexPath.row], valueText: self.value[indexPath.row], stepperBool: false)
         }
-        
         return cell
+        /*if indexPath.row == 2{
+            let cell = Bundle.main.loadNibNamed("AddressCell", owner: self, options: nil)?.first as! AddressCell
+            cell.commonInit(labelText: label[indexPath.row], valueText: value[indexPath.row])
+            return cell
+            
+        }else if indexPath.row == 3{
+            let cell = Bundle.main.loadNibNamed("UserInfoCell", owner: self, options: nil)?.first as! UserInfoCell
+            cell.commonInit(labelText: label[indexPath.row], valueText: value[indexPath.row], stepperBool: true)
+            return cell
+        }else{
+            let cell = Bundle.main.loadNibNamed("UserInfoCell", owner: self, options: nil)?.first as! UserInfoCell
+            cell.commonInit(labelText: label[indexPath.row], valueText: value[indexPath.row], stepperBool: false)
+            return cell
+        }*/
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
