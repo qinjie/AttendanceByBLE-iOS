@@ -13,6 +13,8 @@ import Alamofire
 import UserNotifications
 import AVFoundation
 import SwiftyTimer
+import SwiftyBeaver
+let log = SwiftyBeaver.self
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate, UNUserNotificationCenterDelegate,CBPeripheralManagerDelegate {
@@ -44,14 +46,29 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
         UNUserNotificationCenter.current().requestAuthorization(options: [.alert]) {
             (success, error) in
             if success {
-                print("granted noti")
+                log.info("granted noti")
             }
             else {
-                print("denided noti")
+                log.info("denided noti")
             }
         }
         
         NotificationCenter.default.addObserver(self, selector: #selector(userFailed), name: Notification.Name(rawValue: "userFailed"), object: nil)
+        
+        //add log destinations.
+        let console = ConsoleDestination() // log to Xcode Console
+        let file = FileDestination() // log to default swiftybeaver.log file
+        let cloud = SBPlatformDestination(appID: "0G8vQ1", appSecret: "ieuq2buxAk4hOpxs6xhekpAizbbdlhsG", encryptionKey: "nFjc1oWmxr3morgyouJrtn1xzd0sNzg4")
+        // use custom format and set console output to short time, log level & message
+        console.format = "$DHH:mm:ss$d $L $M"
+        //use this for JSON output: console.format = "$J"
+        
+        //add the destinations to SwifyBeaver
+        log.addDestination(console)
+        log.addDestination(file)
+        //file.logFileURL = URL(fileURLWithPath: "/tmp/swiftybeaver.log")
+        log.addDestination(cloud)
+        
         return true
     }
     
@@ -65,31 +82,32 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
         case .unsupported: status = "Bluetooth Status: \n Not Supported"
         default: status = "Bluetooth Status: \n Unknown"
         }
-        print(status)
+        log.info(status)
     }
     
+    
     func locationManager(_ manager: CLLocationManager, didStartMonitoringFor region: CLRegion) {
-        print("Start bg monitoring \(region.identifier) region")
+        log.info("Start bg monitoring \(region.identifier) region")
         
     }
     func locationManager(_ manager: CLLocationManager, didStopMonitoringFor region: CLRegion) {
-        print("Stop bg monitoring \(region.identifier) region")
+        log.info("Stop bg monitoring \(region.identifier) region")
     }
     
     func locationManager(_ manager: CLLocationManager, didDetermineState state: CLRegionState, for region: CLRegion){
         
-        print("bg did determine state \(region.identifier)" )
+        log.info("bg did determine state \(region.identifier)" )
         switch state {
         case .inside:
-            print("inside !!!!!")
+            log.info("inside !!!!!")
             checkAttendance.checkAttendance()
             //checkStudent(id: Int(region.identifier)!)
             Constant.identifier = region.identifier
             NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "notTaken"), object: nil)
             NotificationCenter.default.addObserver(self,selector: #selector(takeAttendance), name: NSNotification.Name(rawValue: "notTaken"), object: nil)
-        case .outside: print("Outside bg \(region.identifier)")
+        case .outside: log.info("Outside bg \(region.identifier)")
             NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "notTaken"), object: nil)
-        case .unknown: print("Unknown")
+        case .unknown: log.info("Unknown")
         }
     }
     
@@ -109,7 +127,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
         if Constant.change_device == true{
             
         }else{
-            print(" bg Inside \(Constant.identifier)");
+            log.info(" bg Inside \(Constant.identifier)");
             Constant.token = UserDefaults.standard.string(forKey: "token")!
             Constant.student_id = UserDefaults.standard.integer(forKey: "student_id")
             
@@ -122,7 +140,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
             
             let parameters: [String: Any] = ["data": [para1]]
             
-            print(parameters)
+            log.info(parameters)
             let headers: HTTPHeaders = [
                 "Authorization": "Bearer " + Constant.token,
                 "Content-Type": "application/json"
@@ -146,8 +164,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
                     NSKeyedArchiver.archiveRootObject(GlobalData.tempStudents, toFile: filePath.tempStudents)
                 }
                 if let data = response.result.value{
-                    print("///////////////result below////////////")
-                    print(data)
+                    log.info("///////////////result below////////////")
+                    log.info(data)
                 }
                 
             }
@@ -165,11 +183,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
         completionHandler([.alert,.badge,.sound])
     }
     func locationManager(_ manager: CLLocationManager, didEnterRegion region: CLRegion) {
-        print(" bg enter region!!!  \(region.identifier)" )
+        log.info(" bg enter region!!!  \(region.identifier)" )
     }
     
     func locationManager(_ manager: CLLocationManager, didExitRegion region: CLRegion) {
-        print("bg did exit region!!!   \(region.identifier)")
+        log.info("bg did exit region!!!   \(region.identifier)")
     }
     
     func registerBackgroundTask() {
@@ -180,7 +198,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
     }
     
     func endBackgroundTask() {
-        print("Background task ended.")
+        log.info("Background task ended.")
         UIApplication.shared.endBackgroundTask(backgroundTask)
         backgroundTask = UIBackgroundTaskInvalid
     }

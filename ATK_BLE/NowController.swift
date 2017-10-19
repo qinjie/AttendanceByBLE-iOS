@@ -133,7 +133,7 @@ class NowController: UIViewController,UIPopoverPresentationControllerDelegate, C
         ]
         Alamofire.request(Constant.URLchangedevice, method: .post, parameters: parameters, encoding: JSONEncoding.default, headers: headers).responseJSON(completionHandler: { (response:DataResponse) in
             
-            print("Changed device result: " + String(describing: response.response!.statusCode))
+            log.info("Changed device result: " + String(describing: response.response!.statusCode))
             
         })
     }
@@ -212,20 +212,20 @@ class NowController: UIViewController,UIPopoverPresentationControllerDelegate, C
     
     @objc func detectClassmate() {
         uuid = NSUUID(uuidString: GlobalData.lessonUUID[currentLesson.lesson_id!]!)as UUID?
-        print("Current lesson: \(uuid)")
+        log.info("Current lesson: \(uuid)")
         if ((classmate.student_id?.count)! == 0)
         {
-            print("classmate is 0")
+            log.info("classmate is 0")
         }
         else if ((classmate.student_id?.count)! > 20){
-            print("more than 20")
+            log.info("more than 20")
             for i in 0 ..< 20 {
                 let newRegion = CLBeaconRegion(proximityUUID: uuid , major: UInt16(classmate.major![i]) as CLBeaconMajorValue, minor: UInt16((classmate.minor?[i])!) as CLBeaconMinorValue, identifier: (classmate.student_id?[i].description)!)
                 locationManager.startMonitoring(for: newRegion)
             }
         }
         else{
-            print("less than 20")
+            log.info("less than 20")
             for i in 0 ..< (classmate.student_id?.count)!  {
                 let newRegion = CLBeaconRegion(proximityUUID: uuid , major: UInt16(classmate.major![i]) as CLBeaconMajorValue, minor: UInt16((classmate.minor?[i])!) as CLBeaconMinorValue, identifier: (classmate.student_id?[i].description)!)
                 
@@ -239,9 +239,9 @@ class NowController: UIViewController,UIPopoverPresentationControllerDelegate, C
         uuid = NSUUID(uuidString: GlobalData.lessonUUID[currentLesson.lesson_id!]!)as UUID?
         let lecturerRegion = CLBeaconRegion(proximityUUID: uuid, major: UInt16(GlobalData.currentLecturerMajor)as CLBeaconMajorValue, minor: UInt16(GlobalData.currentLecturerMinor)as CLBeaconMinorValue, identifier: GlobalData.currentLecturerId.description)
         locationManager.startMonitoring(for: lecturerRegion)
-        print(uuid)
-        print(GlobalData.currentLecturerMajor)
-        print(GlobalData.currentLecturerMinor)    
+        log.info(uuid)
+        log.info(GlobalData.currentLecturerMajor)
+        log.info(GlobalData.currentLecturerMinor)
     }
     
     func peripheralManagerDidUpdateState(_ peripheral: CBPeripheralManager) {
@@ -254,7 +254,7 @@ class NowController: UIViewController,UIPopoverPresentationControllerDelegate, C
         case .unsupported: status = "Bluetooth Status: \n Not Supported"
         default: status = "Bluetooth Status: \n Unknown"
         }
-        print(status)
+        log.info(status)
     }
     
     func broadcastTime(time:Int) {
@@ -282,7 +282,7 @@ class NowController: UIViewController,UIPopoverPresentationControllerDelegate, C
                 imageView.animationDuration = 0.5
                 imageView.startAnimating()
             }
-            print("broadcasting")
+            log.info("broadcasting")
             let mDate = Date().addingTimeInterval(TimeInterval(5.0))
             let atimer = Timer(fireAt: mDate, interval: 0, target: self, selector: #selector(mcheckAttendance), userInfo: nil, repeats: false)
             RunLoop.main.add(atimer, forMode: RunLoopMode.commonModes)
@@ -323,11 +323,11 @@ class NowController: UIViewController,UIPopoverPresentationControllerDelegate, C
     
     
     func locationManager(_ manager: CLLocationManager, didStartMonitoringFor region: CLRegion) {
-        print("Started monitoring \(region.identifier) region")
+        log.info("Started monitoring \(region.identifier) region")
     }
     
     func locationManager(_ manager: CLLocationManager, didStopMonitoringFor region: CLRegion) {
-        print("Stop monitoring \(region.identifier) region")
+        log.info("Stop monitoring \(region.identifier) region")
     }
     
     
@@ -344,20 +344,20 @@ class NowController: UIViewController,UIPopoverPresentationControllerDelegate, C
     
     func locationManager(_ manager: CLLocationManager, didEnterRegion region: CLRegion) {
         if (region is CLBeaconRegion) {
-            print("did enter region!!! \(region.identifier)")
+            log.info("did enter region!!! \(region.identifier)")
         }
     }
     func locationManager(_ manager: CLLocationManager, didDetermineState state: CLRegionState, for region: CLRegion) {
-        print("fg did determine state!!!!!")
+        log.info("fg did determine state!!!!!")
         switch(state) {
-        case .inside:print("fg inside\(region.identifier)")
-        case .outside:print("fg outside\(region.identifier)")
-        case .unknown:print("fg unknown\(region.identifier)")
+        case .inside:log.info("fg inside\(region.identifier)")
+        case .outside:log.info("fg outside\(region.identifier)")
+        case .unknown:log.info("fg unknown\(region.identifier)")
         }
     }
     
     @objc private func checkTime(){
-        print("checking time")
+        log.info("checking time")
         self.setupTitle()
         nextLesson = 1
         //check if today have lessons
@@ -371,7 +371,7 @@ class NowController: UIViewController,UIPopoverPresentationControllerDelegate, C
             currentTimeLabel.text = "Waiting for \nbeacons from classmates"
             GlobalData.currentLesson = currentLesson
             imageView.image = #imageLiteral(resourceName: "bluetooth_on")
-            print("Self.classmatesall \(GlobalData.classmates.count)!")
+            log.info("Self.classmatesall \(GlobalData.classmates.count)!")
             //print("Current Lesson : \(GlobalData.lessonUUID)")
             self.lecturer = GlobalData.lecturers.filter({$0.lec_id == currentLesson.lecturer_id}).first!
             GlobalData.currentLecturerId = lecturer.lec_id!
@@ -379,8 +379,8 @@ class NowController: UIViewController,UIPopoverPresentationControllerDelegate, C
             GlobalData.currentLecturerMinor = lecturer.minor!
             /*self.classmate = GlobalData.classmates.filter({($0.lesson_id! == currentLesson.lesson_id!)}).first!
             print("Students  \(String(describing: self.classmate.student_id?.count))")*/
-            print("\(String(describing: GlobalData.currentLesson.catalog))")
-            print(UserDefaults.standard.string(forKey: "student_id")!)
+            log.info("\(String(describing: GlobalData.currentLesson.catalog))")
+            log.info(UserDefaults.standard.string(forKey: "student_id")!)
             NotificationCenter.default.removeObserver(self, name: Notification.Name(rawValue:"detect lecturer"), object: nil)
             NotificationCenter.default.addObserver(self, selector: #selector(detectLecturer), name: Notification.Name(rawValue: "detect lecturer"), object: nil)
         }else{
@@ -465,7 +465,7 @@ class NowController: UIViewController,UIPopoverPresentationControllerDelegate, C
     
     private func checkUserInBackGround(){
         
-        print("Checking user in background")
+        log.info("Checking user in background")
         let this_device = UIDevice.current.identifierForVendor?.uuidString
         let parameters:[String:Any] = [
             "username" : UserDefaults.standard.string(forKey: "username")!,
@@ -480,7 +480,7 @@ class NowController: UIViewController,UIPopoverPresentationControllerDelegate, C
         Alamofire.request(Constant.URLstudentlogin, method: .post, parameters: parameters, encoding: JSONEncoding.default, headers: nil).responseJSON { (response:DataResponse) in
             let code = response.response?.statusCode
             spinnerIndicator.removeFromSuperview()
-            print("Status code : " + String(describing: code))
+            log.info("Status code : " + String(describing: code))
             if code == 200{
                 if let json = response.result.value as? [String:AnyObject]{
                     UserDefaults.standard.set(json["token"], forKey: "token")
