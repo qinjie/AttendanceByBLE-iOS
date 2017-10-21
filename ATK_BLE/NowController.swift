@@ -82,6 +82,19 @@ class NowController: UIViewController,UIPopoverPresentationControllerDelegate, C
             
         }
         
+        for i in upcomingLesson{
+            date = Format.Format(date: Date(), format: "HH:mm:ss")
+            let start_time = Format.Format(string: i.start_time!, format: "HH:mm:ss")
+            let calendar = Calendar.current.dateComponents([.hour,.minute,.second], from: Format.Format(string: date, format: "HH:mm:ss"), to: start_time)
+            let interval = Double(calendar.hour!*3600 + calendar.minute!*60 + calendar.second!)
+            if interval > 0 {
+                let notificationContent = notification.notiContent(title: "Lesson started", body: "Please open your app to take attendance")
+                let trigger = UNTimeIntervalNotificationTrigger(timeInterval: interval, repeats: false)
+                notification.addNotification(trigger: trigger, content: notificationContent, identifier: String(describing:i.ldateid)+"lesson time")
+            }
+            
+        }
+        
     }
     
     private func addObservers(){
@@ -100,7 +113,7 @@ class NowController: UIViewController,UIPopoverPresentationControllerDelegate, C
     
     @objc func disableImage(){
         imageView.isUserInteractionEnabled = false
-        imageView.image = #imageLiteral(resourceName: "bluetooth_off")
+        imageView.image = #imageLiteral(resourceName: "blue-off")
     }
     
     @objc func enableImageView(){
@@ -158,11 +171,6 @@ class NowController: UIViewController,UIPopoverPresentationControllerDelegate, C
         // Dispose of any resources that can be recreated.
     }
     
-    @IBAction private func userInfobutton(_ sender: UIButton) {
-        showUserInfo()
-        
-    }
-    
     func adaptivePresentationStyle(for controller: UIPresentationController) -> UIModalPresentationStyle {
         return .none
     }
@@ -185,7 +193,7 @@ class NowController: UIViewController,UIPopoverPresentationControllerDelegate, C
         
     }
     @objc private func success() {
-        self.currentTimeLabel.text = "You have taken attendance \nfor \(self.currentLesson.catalog!)"
+        self.currentTimeLabel.text = "Your attendance is taken"
         self.currentTimeLabel.textColor = UIColor(red: 0.1412, green: 0.6078, blue: 0, alpha: 1.0)
         self.currentTimeLabel.font = UIFont.boldSystemFont(ofSize: 20.0)
         
@@ -211,7 +219,7 @@ class NowController: UIViewController,UIPopoverPresentationControllerDelegate, C
         app.open(url!, options: ["string":""], completionHandler: nil)
     }
     
-    func stopBroadcast() {
+    @objc func stopBroadcast() {
         bluetoothManager.stopAdvertising()
         self.imageView.stopAnimating()
     }
@@ -246,7 +254,7 @@ class NowController: UIViewController,UIPopoverPresentationControllerDelegate, C
         let timer = Timer(fireAt: date, interval: 0, target: self, selector: #selector(broadcast), userInfo: nil, repeats: false)
         RunLoop.main.add(timer, forMode: RunLoopMode.commonModes)
     }
-    func broadcast() {
+    @objc func broadcast() {
         
         if bluetoothManager.state == .poweredOn {
             if Constant.change_device == true{
@@ -256,9 +264,9 @@ class NowController: UIViewController,UIPopoverPresentationControllerDelegate, C
                 self.present(alertController, animated: false, completion: nil)
             }else{
                 imageView.animationImages = [
-                    #imageLiteral(resourceName: "blue_1"),
-                    #imageLiteral(resourceName: "blue_2"),
-                    #imageLiteral(resourceName: "blue_3")
+                    #imageLiteral(resourceName: "blue-1"),
+                    #imageLiteral(resourceName: "blue-2"),
+                    #imageLiteral(resourceName: "blue-3")
                 ]
                 imageView.animationDuration = 0.5
                 imageView.startAnimating()
@@ -353,7 +361,7 @@ class NowController: UIViewController,UIPopoverPresentationControllerDelegate, C
             currentTimeLabel.textColor = UIColor.gray
             currentTimeLabel.text = "Waiting for \nbeacons from classmates"
             GlobalData.currentLesson = currentLesson
-            imageView.image = #imageLiteral(resourceName: "bluetooth_on")
+            imageView.image = #imageLiteral(resourceName: "blue-on")
             log.info("Self.classmatesall \(GlobalData.classmates.count)!")
             //print("Current Lesson : \(GlobalData.lessonUUID)")
             self.lecturer = GlobalData.lecturers.filter({$0.lec_id == currentLesson.lecturer_id}).first!
@@ -400,7 +408,7 @@ class NowController: UIViewController,UIPopoverPresentationControllerDelegate, C
         }
         
     }
-    func changeLabel() {
+    @objc func changeLabel() {
         self.currentTimeLabel.text = "You have taken attendance \nfor \(self.currentLesson.catalog!)"
         self.currentTimeLabel.textColor = UIColor(red: 0.1412, green: 0.6078, blue: 0, alpha: 1.0)
     }
@@ -428,7 +436,7 @@ class NowController: UIViewController,UIPopoverPresentationControllerDelegate, C
             imageView.isHidden = false
             broadcastLabel.isHidden = false
             currentTimeLabel.textColor = UIColor.gray
-            imageView.image = #imageLiteral(resourceName: "bluetooth_off")
+            imageView.image = #imageLiteral(resourceName: "blue-off")
             broadcastLabel.textColor = UIColor.gray
             
         }else{
@@ -492,15 +500,6 @@ class NowController: UIViewController,UIPopoverPresentationControllerDelegate, C
                 }
             }
         }
-    }
-    
-    private func showUserInfo(){
-        let username = UserDefaults.standard.string(forKey: "username")!
-        let card = UserDefaults.standard.string(forKey: "card")!
-        if(self.presentedViewController == nil) {
-            displayAlert(title: "Name: \(username)", message: "Student id: \(card)")
-        }
-        
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {

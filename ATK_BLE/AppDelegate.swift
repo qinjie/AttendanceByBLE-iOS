@@ -123,7 +123,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
         }
     }
     
-    func takeAttendance() {
+    @objc func takeAttendance() {
         if Constant.change_device == true{
             
         }else{
@@ -180,7 +180,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
     }
     
     func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
-        completionHandler([.alert,.badge,.sound])
+        if UIApplication.shared.applicationState == .active { // In iOS 10 if app is in foreground do nothing.
+            completionHandler([])
+        } else { // If app is not active you can show banner, sound and badge.
+            completionHandler([.alert, .badge, .sound])
+        }
     }
     func locationManager(_ manager: CLLocationManager, didEnterRegion region: CLRegion) {
         log.info(" bg enter region!!!  \(region.identifier)" )
