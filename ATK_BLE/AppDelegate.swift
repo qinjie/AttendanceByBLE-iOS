@@ -12,6 +12,8 @@ import CoreLocation
 import Alamofire
 import UserNotifications
 import AVFoundation
+import Firebase
+import FirebaseMessaging
 import SwiftyTimer
 import SwiftyBeaver
 let log = SwiftyBeaver.self
@@ -42,8 +44,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
             let home:UITabBarController = (mainStoryboard.instantiateViewController(withIdentifier: "home") as? UITabBarController)!
             self.window?.rootViewController = home
         }
-        UNUserNotificationCenter.current().delegate = self
-        UNUserNotificationCenter.current().requestAuthorization(options: [.alert]) {
+        /*UNUserNotificationCenter.current().delegate = self
+        UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound]) {
             (success, error) in
             if success {
                 log.info("granted noti")
@@ -51,7 +53,27 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
             else {
                 log.info("denided noti")
             }
+            guard success else {return}
+            self.getNotificationSettings()
         }
+        let type: UIUserNotificationType = [UIUserNotificationType.alert, .badge, .sound]
+        let settings = UIUserNotificationSettings(types: type, categories: nil)
+        application.registerUserNotificationSettings(settings)*/
+        if #available(iOS 10.0, *) {
+            // For iOS 10 display notification (sent via APNS)
+            UNUserNotificationCenter.current().delegate = self
+            
+            let authOptions: UNAuthorizationOptions = [.alert, .badge, .sound]
+            UNUserNotificationCenter.current().requestAuthorization(
+                options: authOptions,
+                completionHandler: {_, _ in })
+        } else {
+            let settings: UIUserNotificationSettings =
+                UIUserNotificationSettings(types: [.alert, .badge, .sound], categories: nil)
+            application.registerUserNotificationSettings(settings)
+        }
+        
+        application.registerForRemoteNotifications()
         
         NotificationCenter.default.addObserver(self, selector: #selector(userFailed), name: Notification.Name(rawValue: "userFailed"), object: nil)
         
@@ -69,7 +91,80 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
         //file.logFileURL = URL(fileURLWithPath: "/tmp/swiftybeaver.log")
         log.addDestination(cloud)
         
+        if let notification = launchOptions?[.remoteNotification] as? [String: AnyObject] {
+            let aps = notification["aps"] as! [String: AnyObject]
+            log.info(aps)
+        }
+        FirebaseApp.configure()
         return true
+    }
+    func messaging(_ messaging: Messaging, didRefreshRegistrationToken fcmToken: String) {
+        print("Firebase registration token: \(fcmToken)")
+    }
+
+    func getNotificationSettings() {
+        UNUserNotificationCenter.current().getNotificationSettings{(settings) in
+            print("Notification settings: \(settings)")
+        
+        }
+    }
+    //use the device token as "address" to deliver notifications to the correct devices
+    func application(_ application: UIApplication,
+                     didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
+        let tokenParts = deviceToken.map { data -> String in
+            return String(format: "%02.2hhx", data)
+        }
+        
+        let token = tokenParts.joined()
+        print("Device Token: \(token)")
+       
+        Messaging.messaging().apnsToken = deviceToken
+        
+    }
+    
+    func application(_ application: UIApplication,
+                     didFailToRegisterForRemoteNotificationsWithError error: Error) {
+        print("Failed to register: \(error)")
+    }
+    func application(application: UIApplication, didReceiveRemoteNotification userInfo: [NSObject : AnyObject]) {
+        print("//////////////////////////////+\(userInfo)")
+   
+
+    }
+    func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable: Any]) {
+        // If you are receiving a notification message while your app is in the background,
+        // this callback will not be fired till the user taps on the notification launching the application.
+        // TODO: Handle data of notification
+        
+        // With swizzling disabled you must let Messaging know about the message, for Analytics
+        // Messaging.messaging().appDidReceiveMessage(userInfo)
+        
+        // Print message ID.
+       
+            print("Message ID: \(userInfo)")
+    
+        
+        // Print full message.
+        print(userInfo)
+    }
+    
+    func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable: Any],
+                     fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
+        // If you are receiving a notification message while your app is in the background,
+        // this callback will not be fired till the user taps on the notification launching the application.
+        // TODO: Handle data of notification
+        
+        // With swizzling disabled you must let Messaging know about the message, for Analytics
+        // Messaging.messaging().appDidReceiveMessage(userInfo)
+        
+     
+            print("Message ID: \(userInfo)")
+    
+        
+        // Print full message.
+        print(userInfo)
+        
+        completionHandler(UIBackgroundFetchResult.newData)
     }
     
     func peripheralManagerDidUpdateState(_ peripheral: CBPeripheralManager) {
