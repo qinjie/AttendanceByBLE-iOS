@@ -14,14 +14,16 @@ import UserNotifications
 import AVFoundation
 import Firebase
 import FirebaseMessaging
+import FirebaseInstanceID
 import SwiftyTimer
 import SwiftyBeaver
 let log = SwiftyBeaver.self
 
 @UIApplicationMain
-class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate, UNUserNotificationCenterDelegate,CBPeripheralManagerDelegate {
+class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate, UNUserNotificationCenterDelegate,CBPeripheralManagerDelegate, MessagingDelegate {
     
     var window: UIWindow?
+    let gcmMessageIDKey = "gcm.message_id"
     var locationManager = CLLocationManager()
     var identifier : UIBackgroundTaskIdentifier! = UIBackgroundTaskInvalid
     var bluetoothManager = CBPeripheralManager()
@@ -44,6 +46,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
             let home:UITabBarController = (mainStoryboard.instantiateViewController(withIdentifier: "home") as? UITabBarController)!
             self.window?.rootViewController = home
         }
+        UNUserNotificationCenter.current().delegate = self
+        Messaging.messaging().delegate = self
+        Messaging.messaging().shouldEstablishDirectChannel = true
         /*UNUserNotificationCenter.current().delegate = self
         UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound]) {
             (success, error) in
@@ -61,8 +66,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
         application.registerUserNotificationSettings(settings)*/
         if #available(iOS 10.0, *) {
             // For iOS 10 display notification (sent via APNS)
-            UNUserNotificationCenter.current().delegate = self
-            
+           
             let authOptions: UNAuthorizationOptions = [.alert, .badge, .sound]
             UNUserNotificationCenter.current().requestAuthorization(
                 options: authOptions,
@@ -74,7 +78,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
         }
         
         application.registerForRemoteNotifications()
-        
+        NotificationCenter.default.addObserver(self, selector: #selector(self.tokenRefreshNotificaiton),
+                                               name: NSNotification.Name.InstanceIDTokenRefresh, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(userFailed), name: Notification.Name(rawValue: "userFailed"), object: nil)
         
         //add log destinations.
@@ -101,7 +106,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
     func messaging(_ messaging: Messaging, didRefreshRegistrationToken fcmToken: String) {
         print("Firebase registration token: \(fcmToken)")
     }
-
+    @objc func tokenRefreshNotificaiton(notification: NSNotification) {
+         let refreshedToken = InstanceID.instanceID().token()!
+            print("InstanceID token: \(refreshedToken)")
+            //User.sharedUser.googleUID = refreshedToken
+            Messaging.messaging().shouldEstablishDirectChannel = true
+        
+    }
     func getNotificationSettings() {
         UNUserNotificationCenter.current().getNotificationSettings{(settings) in
             print("Notification settings: \(settings)")
@@ -117,17 +128,25 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
         
         let token = tokenParts.joined()
         print("Device Token: \(token)")
-       
+   
         Messaging.messaging().apnsToken = deviceToken
-        
+        Messaging.messaging().setAPNSToken(deviceToken, type: MessagingAPNSTokenType.unknown)
+        InstanceID.instanceID()
     }
-    
+    @nonobjc func application(_ application: UIApplication, didRegister notificationSettings: UNNotificationSettings)
+    {
+        application.registerForRemoteNotifications()
+    }
+    func application(received: MessagingRemoteMessage){
+        print("%@", received.appData)
+    }
     func application(_ application: UIApplication,
                      didFailToRegisterForRemoteNotificationsWithError error: Error) {
         print("Failed to register: \(error)")
     }
     func application(application: UIApplication, didReceiveRemoteNotification userInfo: [NSObject : AnyObject]) {
         print("//////////////////////////////+\(userInfo)")
+        Messaging.messaging().appDidReceiveMessage(userInfo)
    
 
     }
@@ -137,11 +156,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
         // TODO: Handle data of notification
         
         // With swizzling disabled you must let Messaging know about the message, for Analytics
-        // Messaging.messaging().appDidReceiveMessage(userInfo)
+        Messaging.messaging().appDidReceiveMessage(userInfo)
         
         // Print message ID.
-       
-            print("Message ID: \(userInfo)")
+        if let messageID = userInfo[gcmMessageIDKey] {
+            print("00000000000000 Message ID: \(messageID)")
+        }
+        print("Message ID: \(userInfo)")
     
         
         // Print full message.
@@ -155,12 +176,21 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
         // TODO: Handle data of notification
         
         // With swizzling disabled you must let Messaging know about the message, for Analytics
-        // Messaging.messaging().appDidReceiveMessage(userInfo)
-        
-     
+        Messaging.messaging().appDidReceiveMessage(userInfo)
+        if let messageID = userInfo[gcmMessageIDKey] {
+            print("1111111111Message ID: \(messageID)")
+        }
             print("Message ID: \(userInfo)")
-    
-        
+       /* if (userInfo["subject"] != nil && userInfo["to_user_ids"] != nil){
+            
+            let notification = UILocalNotification()
+            notification.alertBody = userInfo["subject"] as? String // text that will be displayed in the notification
+            notification.alertAction = "open" // text that is displayed after "slide to..." on the lock screen - defaults to "slide to view"
+            notification.fireDate = NSDate.init() // todo item due date (when notification will be fired). immediately here
+            notification.soundName = UILocalNotificationDefaultSoundName // play default sound
+            UIApplication.sharedApplication().scheduleLocalNotification(notification)
+        }
+    }*/
         // Print full message.
         print(userInfo)
         
@@ -280,7 +310,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
         } else { // If app is not active you can show banner, sound and badge.
             completionHandler([.alert, .badge, .sound])
         }
-    }
+        }
     func locationManager(_ manager: CLLocationManager, didEnterRegion region: CLRegion) {
         log.info(" bg enter region!!!  \(region.identifier)" )
     }
@@ -329,6 +359,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
     
     func applicationDidBecomeActive(_ application: UIApplication) {
         // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
+        Messaging.messaging().shouldEstablishDirectChannel = true
     }
     
     func applicationWillTerminate(_ application: UIApplication) {

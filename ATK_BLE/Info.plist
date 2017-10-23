@@ -26,6 +26,8 @@
 	<string>Mornitor beacons to take attendance</string>
 	<key>NSLocationAlwaysUsageDescription</key>
 	<string>Need permission to mornitor beacon</string>
+	<key>FirebaseAppDelegateProxyEnabled</key>
+	<false/>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>Mornitor beacons to take attendance</string>
 	<key>UIBackgroundModes</key>
@@ -35,6 +37,8 @@
 		<string>fetch</string>
 		<string>remote-notification</string>
 	</array>
+	<key>LSApplicationCategoryType</key>
+	<string></string>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>
