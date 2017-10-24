@@ -98,6 +98,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
         //file.logFileURL = URL(fileURLWithPath: "/tmp/swiftybeaver.log")
         log.addDestination(cloud)
         
+        updateLogFile()
+        
         if let notification = launchOptions?[.remoteNotification] as? [String: AnyObject] {
             let aps = notification["aps"] as! [String: AnyObject]
             log.info(aps)
@@ -105,6 +107,64 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
         
         return true
     }
+    private func updateLogFile() {
+        let cacheDirURL = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask)[0]
+        let fileURL = cacheDirURL.appendingPathComponent("swiftybeaver").appendingPathExtension("log")
+        let pathString = fileURL.path
+        print("File Path: \(fileURL.path)")
+        var readString = ""
+        do{
+            readString = try String(contentsOf: fileURL)
+        }
+        catch let error as NSError {
+            print("Failed to read file")
+            print(error)
+        }
+        print("~~~~~~~~~~~~~~~`Contents of file \(readString)")
+        
+        let headers: HTTPHeaders = [
+            "Content-Type" : "application/json"
+        ]
+        let parameters: [String: Any] = [
+            "file": pathString
+        ]
+       Alamofire.request(Constant.URLLogFile, method: .post, parameters: parameters, headers: headers).responseJSON {
+            (response: DataResponse) in
+            if let result = response.result.value as? [[String: AnyObject]] {
+                print("#################\(result)")
+            }
+            else {
+                print("########################")
+            }
+            let rrr =  response.response?.statusCode
+            print("^^^^^^^^^^^^^^^^^^^\(String(describing:rrr))")
+        }
+        
+       /* Alamofire.upload(MultipartFormData: { (MultipartFormData) in
+            for (key, value) in parameters {
+                MultipartFormData.append("\(value)".data(using: String.Encoding.utf8)!, withName: key as String)
+            }
+        }, usingThreshold: UInt16.init(), to: Constant.URLLogFile, headers: headers) {
+            (result) in
+            switch result {
+            case .success(let upload, _, _):
+                upload.responseJSON { response in
+                    print("Successfully uploaded")
+                    if let err = response.error {
+                        onError?(err)
+                        return
+                    }
+                    onCompletion?(nil)
+                }
+            case.failure(let error): print("Error in upload: \(error.localizedDescription)")
+                onError?(error)
+            }
+        }*/
+      
+      
+        
+    }
+    
     func messaging(_ messaging: Messaging, didRefreshRegistrationToken fcmToken: String) {
         print("Firebase registration token: \(fcmToken)")
     }
@@ -118,7 +178,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
     func getNotificationSettings() {
         UNUserNotificationCenter.current().getNotificationSettings{(settings) in
             print("Notification settings: \(settings)")
-            
         }
     }
     //use the device token as "address" to deliver notifications to the correct devices
@@ -127,7 +186,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
         let tokenParts = deviceToken.map { data -> String in
             return String(format: "%02.2hhx", data)
         }
-        
         let token = tokenParts.joined()
         print("Device Token: \(token)")
         
@@ -136,7 +194,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
         Messaging.messaging().setAPNSToken(deviceToken, type: MessagingAPNSTokenType.prod)
         InstanceID.instanceID()
         let take = Messaging.messaging().fcmToken
-        print("***************\(String(describing:take))")
+        log.info("FCMToken \(String(describing:take))")
     }
     @nonobjc func application(_ application: UIApplication, didRegister notificationSettings: UNNotificationSettings)
     {
@@ -155,7 +213,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
         
         
     }
-    
     func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
         print("Handle push from background or closed")
         // if you set a member variable in didReceiveRemoteNotification, you  will know if this is from closed or background
@@ -179,7 +236,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
         // Print full message.
         print(userInfo)
     }
-    
     func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable: Any],
                      fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
         // If you are receiving a notification message while your app is in the background,
@@ -220,8 +276,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
         }
         log.info(status)
     }
-    
-    
     func locationManager(_ manager: CLLocationManager, didStartMonitoringFor region: CLRegion) {
         log.info("Start bg monitoring \(region.identifier) region")
         
