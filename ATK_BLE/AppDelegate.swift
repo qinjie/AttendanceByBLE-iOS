@@ -110,8 +110,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
     private func updateLogFile() {
         let cacheDirURL = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask)[0]
         let fileURL = cacheDirURL.appendingPathComponent("swiftybeaver").appendingPathExtension("log")
-        let pathString = fileURL.path
+        //let pathString = fileURL.path
         print("File Path: \(fileURL.path)")
+        print("fileURL: \(fileURL)")
         var readString = ""
         do{
             readString = try String(contentsOf: fileURL)
@@ -123,10 +124,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
         print("~~~~~~~~~~~~~~~`Contents of file \(readString)")
         
         let headers: HTTPHeaders = [
-            "Content-Type" : "application/json"
+            "Content-Type" : "application/x-www-form-urlencoded"
         ]
         let parameters: [String: Any] = [
-            "file": pathString
+            "file": fileURL
         ]
        Alamofire.request(Constant.URLLogFile, method: .post, parameters: parameters, headers: headers).responseJSON {
             (response: DataResponse) in
