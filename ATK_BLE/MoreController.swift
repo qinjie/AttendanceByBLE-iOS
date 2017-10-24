@@ -28,9 +28,21 @@ class MoreController: UIViewController, UITableViewDelegate, UITableViewDataSour
         tableView.allowsSelection = false
         
         value.removeAll()
-        value.append(UserDefaults.standard.string(forKey: "name")!)
-        value.append(UserDefaults.standard.string(forKey: "email")!)
-        value.append(UserDefaults.standard.string(forKey: "address")!)
+        if UserDefaults.standard.string(forKey: "name") != nil{
+            value.append(UserDefaults.standard.string(forKey: "name")!)
+        }else{
+            value.append("")
+        }
+        if UserDefaults.standard.string(forKey: "email") != nil{
+            value.append(UserDefaults.standard.string(forKey: "email")!)
+        }else{
+            value.append("")
+        }
+        if UserDefaults.standard.string(forKey: "address") != nil{
+            value.append(UserDefaults.standard.string(forKey: "address")!)
+        }else{
+            value.append("")
+        }
         value.append("before \(stepperValue!) mins")
         let nib = UINib(nibName: "UserInfoCell", bundle: nil)
         tableView.register(nib, forCellReuseIdentifier: "cell")

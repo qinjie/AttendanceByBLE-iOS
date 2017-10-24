@@ -153,8 +153,15 @@ class NowController: UIViewController,UIPopoverPresentationControllerDelegate, C
             "Content-Type" : "application/json"
         ]
         Alamofire.request(Constant.URLchangedevice, method: .post, parameters: parameters, encoding: JSONEncoding.default, headers: headers).responseJSON(completionHandler: { (response:DataResponse) in
-            
             log.info("Changed device result: " + String(describing: response.response!.statusCode))
+            if response.response?.statusCode != 200{
+                let alertController = UIAlertController(title: "Device already in used", message: "This device is linked to another student's account.", preferredStyle: .alert)
+                let okAction = UIAlertAction(title: "OK", style: .default, handler: { (action:UIAlertAction) in
+                    alertController.dismiss(animated: false, completion: nil)
+                })
+                alertController.addAction(okAction)
+                self.present(alertController, animated: false, completion: nil)
+            }
             
         })
     }

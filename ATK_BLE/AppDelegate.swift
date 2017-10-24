@@ -69,6 +69,19 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
         //file.logFileURL = URL(fileURLWithPath: "/tmp/swiftybeaver.log")
         log.addDestination(cloud)
         
+        let cacheDirURL = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask)[0]
+        let fileURL = cacheDirURL.appendingPathComponent("swiftybeaver").appendingPathExtension("log")
+    
+        print("File Path: \(fileURL.path)")
+        var readString = ""
+        do{
+            readString = try String(contentsOf: fileURL)
+        }catch let error as NSError{
+            print("Failed to read file")
+            print(error)
+        }
+        print("~~~~~~~~~~~~~~~Contents of file \(readString)")
+        
         return true
     }
     
@@ -133,8 +146,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
             
             let para1: Parameters = [
                 "lesson_date_id": GlobalData.currentLesson.ldateid!,
-                "student_id_1": Constant.student_id,
-                "student_id_2": Constant.identifier,
+                "lecturer_id": Constant.identifier,
+                "student_id": Constant.student_id,
                 ]
             
             
