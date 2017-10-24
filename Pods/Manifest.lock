@@ -41,6 +41,7 @@ DEPENDENCIES:
   - Alamofire
   - Firebase/Core
   - Firebase/Messaging
+  - FirebaseInstanceID
   - SwiftyBeaver
   - SwiftyJSON
   - SwiftyTimer
@@ -59,6 +60,6 @@ SPEC CHECKSUMS:
   SwiftyJSON: c2842d878f95482ffceec5709abc3d05680c0220
   SwiftyTimer: 2efd74b060d69ad4f1496baf5bbedbe132125fcf
 
-PODFILE CHECKSUM: 50dd3690c926d60a1f2111123a5c890ffe270be0
+PODFILE CHECKSUM: 0e9c23c0509048a26da1e7538f15be52a906134c
 
 COCOAPODS: 1.3.1

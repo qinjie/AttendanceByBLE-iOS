@@ -12,5 +12,6 @@ target 'ATK_BLE' do
   pod ‘SwiftyBeaver’
   pod ‘Firebase/Core’
   pod ‘Firebase/Messaging’
+  pod ‘FirebaseInstanceID’
 
 end

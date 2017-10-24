@@ -40,33 +40,34 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
         bluetoothManager.delegate = self
         bluetoothManager = CBPeripheralManager.init(delegate: self, queue: nil)
         
-       if UserDefaults.standard.string(forKey: "student_id") != nil{
+        if UserDefaults.standard.string(forKey: "student_id") != nil{
             self.loadData()
             let mainStoryboard: UIStoryboard = UIStoryboard(name: "Main", bundle: nil)
             let home:UITabBarController = (mainStoryboard.instantiateViewController(withIdentifier: "home") as? UITabBarController)!
             self.window?.rootViewController = home
         }
         UNUserNotificationCenter.current().delegate = self
+        FirebaseApp.configure()
         Messaging.messaging().delegate = self
         Messaging.messaging().shouldEstablishDirectChannel = true
         /*UNUserNotificationCenter.current().delegate = self
-        UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound]) {
-            (success, error) in
-            if success {
-                log.info("granted noti")
-            }
-            else {
-                log.info("denided noti")
-            }
-            guard success else {return}
-            self.getNotificationSettings()
-        }
-        let type: UIUserNotificationType = [UIUserNotificationType.alert, .badge, .sound]
-        let settings = UIUserNotificationSettings(types: type, categories: nil)
-        application.registerUserNotificationSettings(settings)*/
+         UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound]) {
+         (success, error) in
+         if success {
+         log.info("granted noti")
+         }
+         else {
+         log.info("denided noti")
+         }
+         guard success else {return}
+         self.getNotificationSettings()
+         }
+         let type: UIUserNotificationType = [UIUserNotificationType.alert, .badge, .sound]
+         let settings = UIUserNotificationSettings(types: type, categories: nil)
+         application.registerUserNotificationSettings(settings)*/
         if #available(iOS 10.0, *) {
             // For iOS 10 display notification (sent via APNS)
-           
+            
             let authOptions: UNAuthorizationOptions = [.alert, .badge, .sound]
             UNUserNotificationCenter.current().requestAuthorization(
                 options: authOptions,
@@ -78,6 +79,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
         }
         
         application.registerForRemoteNotifications()
+        
         NotificationCenter.default.addObserver(self, selector: #selector(self.tokenRefreshNotificaiton),
                                                name: NSNotification.Name.InstanceIDTokenRefresh, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(userFailed), name: Notification.Name(rawValue: "userFailed"), object: nil)
@@ -100,23 +102,23 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
             let aps = notification["aps"] as! [String: AnyObject]
             log.info(aps)
         }
-        FirebaseApp.configure()
+        
         return true
     }
     func messaging(_ messaging: Messaging, didRefreshRegistrationToken fcmToken: String) {
         print("Firebase registration token: \(fcmToken)")
     }
     @objc func tokenRefreshNotificaiton(notification: NSNotification) {
-         let refreshedToken = InstanceID.instanceID().token()!
-            print("InstanceID token: \(refreshedToken)")
-            //User.sharedUser.googleUID = refreshedToken
-            Messaging.messaging().shouldEstablishDirectChannel = true
+        let refreshedToken = InstanceID.instanceID().token()!
+        print("InstanceID token: \(refreshedToken)")
+        //User.sharedUser.googleUID = refreshedToken
+        Messaging.messaging().shouldEstablishDirectChannel = true
         
     }
     func getNotificationSettings() {
         UNUserNotificationCenter.current().getNotificationSettings{(settings) in
             print("Notification settings: \(settings)")
-        
+            
         }
     }
     //use the device token as "address" to deliver notifications to the correct devices
@@ -128,10 +130,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
         
         let token = tokenParts.joined()
         print("Device Token: \(token)")
-   
+        
         Messaging.messaging().apnsToken = deviceToken
         Messaging.messaging().setAPNSToken(deviceToken, type: MessagingAPNSTokenType.unknown)
+        Messaging.messaging().setAPNSToken(deviceToken, type: MessagingAPNSTokenType.prod)
         InstanceID.instanceID()
+        let take = Messaging.messaging().fcmToken
+        print("***************\(String(describing:take))")
     }
     @nonobjc func application(_ application: UIApplication, didRegister notificationSettings: UNNotificationSettings)
     {
@@ -147,8 +152,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
     func application(application: UIApplication, didReceiveRemoteNotification userInfo: [NSObject : AnyObject]) {
         print("//////////////////////////////+\(userInfo)")
         Messaging.messaging().appDidReceiveMessage(userInfo)
-   
-
+        
+        
+    }
+    
+    func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
+        print("Handle push from background or closed")
+        // if you set a member variable in didReceiveRemoteNotification, you  will know if this is from closed or background
+        print("\(response.notification.request.content.userInfo)")
     }
     func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable: Any]) {
         // If you are receiving a notification message while your app is in the background,
@@ -163,7 +174,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
             print("00000000000000 Message ID: \(messageID)")
         }
         print("Message ID: \(userInfo)")
-    
+        
         
         // Print full message.
         print(userInfo)
@@ -180,17 +191,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
         if let messageID = userInfo[gcmMessageIDKey] {
             print("1111111111Message ID: \(messageID)")
         }
-            print("Message ID: \(userInfo)")
-       /* if (userInfo["subject"] != nil && userInfo["to_user_ids"] != nil){
-            
-            let notification = UILocalNotification()
-            notification.alertBody = userInfo["subject"] as? String // text that will be displayed in the notification
-            notification.alertAction = "open" // text that is displayed after "slide to..." on the lock screen - defaults to "slide to view"
-            notification.fireDate = NSDate.init() // todo item due date (when notification will be fired). immediately here
-            notification.soundName = UILocalNotificationDefaultSoundName // play default sound
-            UIApplication.sharedApplication().scheduleLocalNotification(notification)
-        }
-    }*/
+        print("Message ID: \(userInfo)")
+        /* if (userInfo["subject"] != nil && userInfo["to_user_ids"] != nil){
+         
+         let notification = UILocalNotification()
+         notification.alertBody = userInfo["subject"] as? String // text that will be displayed in the notification
+         notification.alertAction = "open" // text that is displayed after "slide to..." on the lock screen - defaults to "slide to view"
+         notification.fireDate = NSDate.init() // todo item due date (when notification will be fired). immediately here
+         notification.soundName = UILocalNotificationDefaultSoundName // play default sound
+         UIApplication.sharedApplication().scheduleLocalNotification(notification)
+         }
+         }*/
         // Print full message.
         print(userInfo)
         
@@ -231,7 +242,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
             NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "notTaken"), object: nil)
             NotificationCenter.default.addObserver(self,selector: #selector(takeAttendance), name: NSNotification.Name(rawValue: "notTaken"), object: nil)
         case .outside: log.info("Outside bg \(region.identifier)")
-            NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "notTaken"), object: nil)
+        NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "notTaken"), object: nil)
         case .unknown: log.info("Unknown")
         }
     }
@@ -294,7 +305,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
                 }
                 
             }
-
+            
         }
         
     }
@@ -310,7 +321,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
         } else { // If app is not active you can show banner, sound and badge.
             completionHandler([.alert, .badge, .sound])
         }
-        }
+        //completionHandler([.alert, .badge, .sound])
+    }
+    func userNotificationCenter(_ center: UNUserNotificationCenter, didReceived response: UNNotificationResponse, withCompletionHandler: @escaping (() -> Void) ){
+        print("background notification received!!!!!!")
+    }
     func locationManager(_ manager: CLLocationManager, didEnterRegion region: CLRegion) {
         log.info(" bg enter region!!!  \(region.identifier)" )
     }
@@ -350,6 +365,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
             Timer.after(3, {
                 NotificationCenter.default.post(name: Notification.Name(rawValue:"detect lecturer"), object: nil)
             })
+            UIApplication.shared.applicationIconBadgeNumber = 0
         }
         // Called as part of the transition from the background to the active state; here you can undo many of the changes made on entering the background.
         /*if identifier != UIBackgroundTaskInvalid {
