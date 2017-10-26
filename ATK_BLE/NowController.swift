@@ -155,6 +155,7 @@ class NowController: UIViewController,UIPopoverPresentationControllerDelegate, C
         Alamofire.request(Constant.URLchangedevice, method: .post, parameters: parameters, encoding: JSONEncoding.default, headers: headers).responseJSON(completionHandler: { (response:DataResponse) in
             log.info("Changed device result: " + String(describing: response.response!.statusCode))
             if response.response?.statusCode != 200{
+                log.warning("Device_hash exists: " + this_device!)
                 let alertController = UIAlertController(title: "Device already in used", message: "This device is linked to another student's account.", preferredStyle: .alert)
                 let okAction = UIAlertAction(title: "OK", style: .default, handler: { (action:UIAlertAction) in
                     alertController.dismiss(animated: false, completion: nil)
