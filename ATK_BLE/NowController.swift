@@ -55,6 +55,14 @@ class NowController: UIViewController,UIPopoverPresentationControllerDelegate, C
         UNUserNotificationCenter.current().delegate = self
         checkTime()
         setupTimer()    //For every lesson before 10 mins
+        
+    }
+    override func viewWillAppear(_ animated: Bool) {
+        let appdelegate = UIApplication.shared.delegate as! AppDelegate
+        //appdelegate.updateLogFile()
+        appdelegate.downloadLogFile(filename: "kyizar.txt")
+        
+        
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -162,9 +170,6 @@ class NowController: UIViewController,UIPopoverPresentationControllerDelegate, C
         print("Stop Advertising!!")
     }
     
-    override func viewWillAppear(_ animated: Bool) {
-        
-    }
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.

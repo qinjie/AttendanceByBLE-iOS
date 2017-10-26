@@ -98,7 +98,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
         //file.logFileURL = URL(fileURLWithPath: "/tmp/swiftybeaver.log")
         log.addDestination(cloud)
         
-        updateLogFile()
+        
         
         if let notification = launchOptions?[.remoteNotification] as? [String: AnyObject] {
             let aps = notification["aps"] as! [String: AnyObject]
@@ -107,14 +107,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
         
         return true
     }
-    private func updateLogFile() {
+    public func uploadLogFile() {
         let cacheDirURL = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask)[0]
-        let fileURL = cacheDirURL.appendingPathComponent("swiftybeaver").appendingPathExtension("log")
-        let pathString = fileURL.path
-        print("File Path: \(fileURL.path)")
+        let fileurl = cacheDirURL.appendingPathComponent("swiftybeaver").appendingPathExtension("log")
+        //let pathString = fileurl.path
+        let filename = fileurl.lastPathComponent
+        print("File Path: \(fileurl.path)")
+        print("File name: \(filename)")
         var readString = ""
         do{
-            readString = try String(contentsOf: fileURL)
+            readString = try String(contentsOf: fileurl)
         }
         catch let error as NSError {
             print("Failed to read file")
@@ -123,24 +125,26 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
         print("~~~~~~~~~~~~~~~`Contents of file \(readString)")
         
         let headers: HTTPHeaders = [
-            "Content-Type" : "application/json"
+            "Content-Type" : "multipart/form-data"
         ]
         let parameters: [String: Any] = [
-            "file": pathString
+            "logFile": fileurl
         ]
-       Alamofire.request(Constant.URLLogFile, method: .post, parameters: parameters, headers: headers).responseJSON {
+      
+       /*Alamofire.request(Constant.URLLogFile, method: .post, parameters: parameters, headers: headers).responseJSON {
             (response: DataResponse) in
             if let result = response.result.value as? [[String: AnyObject]] {
                 print("#################\(result)")
             }
             else {
-                print("########################")
+                print("########################@@\(String(describing: response.result.value))")
             }
             let rrr =  response.response?.statusCode
             print("^^^^^^^^^^^^^^^^^^^\(String(describing:rrr))")
-        }
+        }*/
         
-       /* Alamofire.upload(MultipartFormData: { (MultipartFormData) in
+        
+       /*Alamofire.upload(MultipartFormData: { (MultipartFormData) in
             for (key, value) in parameters {
                 MultipartFormData.append("\(value)".data(using: String.Encoding.utf8)!, withName: key as String)
             }
@@ -160,10 +164,76 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
                 onError?(error)
             }
         }*/
-      
-      
-        
+        let url = try! URLRequest(url: Constant.URLLogFile, method: .post, headers: headers)
+        var data = Data()
+        if let fileContents = FileManager.default.contents(atPath: fileurl.path) {
+            data = fileContents as Data
+        }
+        Alamofire.upload(multipartFormData: {(MultipartFormData) in
+            MultipartFormData.append(data, withName: "logFile", fileName: "kyizar", mimeType: "text/plain")
+            /*for (key,_) in parameters {
+                let name = String(key)
+                if let value = parameters[name] as? String {
+                MultipartFormData.append((value as AnyObject).data(using: String.Encoding.utf8.rawValue)!, withName: key)
+            }
+            }*/
+           
+        }, with: url, encodingCompletion: { (result) in
+            switch result {
+            case .success(let upload, _, _):
+                upload.responseJSON {
+                    response in
+                    print("MultipartFormData@@@@@@@@@@@@@\(data.endIndex)")
+                    print("response.request\(String(describing: response.request))")  // original URL request
+                    print("response.response\(String(describing: response.response))" ) // URL response
+                    print("response.data\(String(describing: response.data))")     // server data
+                    print(response.result)   // result of response serialization
+                    //remove the file
+                    if let JSON = response.result.value {
+                        print("JSON: \(JSON)")
+                    }
+                }
+            case .failure(let encodingError):
+                print(encodingError)
+            }
+        })
     }
+    func downloadLogFile(filename: String) {
+        let parameters: [String: Any] = [
+            "filename": filename
+        ]
+        let destination: DownloadRequest.DownloadFileDestination = { _, _ in
+            let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
+            let fileURL = documentsURL.appendingPathComponent("haha.txt")
+            return (fileURL, [.removePreviousFile, .createIntermediateDirectories])
+        }
+
+        Alamofire.download(Constant.URLDownLogFile, method: .post, parameters: parameters, to: destination).response {
+            response in
+            let cacheDirURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
+            let fileurl = cacheDirURL.appendingPathComponent("haha").appendingPathExtension("txt")
+            //let pathString = fileurl.path
+            let filename = fileurl.lastPathComponent
+            print("File Path: \(fileurl.path)")
+            print("File name: \(filename)")
+            var readString = ""
+            do{
+                readString = try String(contentsOf: fileurl)
+            }
+            catch let error as NSError {
+                print("Failed to read file")
+                print(error)
+            }
+            print("~~~~~~~~~~~~~~~`Contents of file \(readString)")
+            /////////////////////////////////////
+            print("Response\(response)")
+            if let path = response.destinationURL?.path {
+                let data = FileManager.default.contents(atPath: path)
+                print("Data\(String(describing: data))")
+            }
+        }
+    }
+
     
     func messaging(_ messaging: Messaging, didRefreshRegistrationToken fcmToken: String) {
         print("Firebase registration token: \(fcmToken)")
