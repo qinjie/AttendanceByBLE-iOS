@@ -123,54 +123,23 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
             print(error)
         }
         print("~~~~~~~~~~~~~~~`Contents of file \(readString)")
-        
         let headers: HTTPHeaders = [
             "Content-Type" : "multipart/form-data"
         ]
-        let parameters: [String: Any] = [
-            "logFile": fileurl
-        ]
       
-       /*Alamofire.request(Constant.URLLogFile, method: .post, parameters: parameters, headers: headers).responseJSON {
-            (response: DataResponse) in
-            if let result = response.result.value as? [[String: AnyObject]] {
-                print("#################\(result)")
-            }
-            else {
-                print("########################@@\(String(describing: response.result.value))")
-            }
-            let rrr =  response.response?.statusCode
-            print("^^^^^^^^^^^^^^^^^^^\(String(describing:rrr))")
-        }*/
-        
-        
-       /*Alamofire.upload(MultipartFormData: { (MultipartFormData) in
-            for (key, value) in parameters {
-                MultipartFormData.append("\(value)".data(using: String.Encoding.utf8)!, withName: key as String)
-            }
-        }, usingThreshold: UInt16.init(), to: Constant.URLLogFile, headers: headers) {
-            (result) in
-            switch result {
-            case .success(let upload, _, _):
-                upload.responseJSON { response in
-                    print("Successfully uploaded")
-                    if let err = response.error {
-                        onError?(err)
-                        return
-                    }
-                    onCompletion?(nil)
-                }
-            case.failure(let error): print("Error in upload: \(error.localizedDescription)")
-                onError?(error)
-            }
-        }*/
         let url = try! URLRequest(url: Constant.URLLogFile, method: .post, headers: headers)
         var data = Data()
         if let fileContents = FileManager.default.contents(atPath: fileurl.path) {
             data = fileContents as Data
         }
+        let date = Date()
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyyMMdd"
+        let result = formatter.string(from: date)
+        let Name = "iOS_\(result)_\((GlobalData.currentLesson.lesson_id)!)_\(UserDefaults.standard.string(forKey: "student_id")!)"
+        print("Name&&&&&&&&&&&&&&&&\(Name)")
         Alamofire.upload(multipartFormData: {(MultipartFormData) in
-            MultipartFormData.append(data, withName: "logFile", fileName: "kyizar", mimeType: "text/plain")
+            MultipartFormData.append(data, withName: "logFile", fileName: Name, mimeType: "text/plain")
             /*for (key,_) in parameters {
                 let name = String(key)
                 if let value = parameters[name] as? String {
@@ -197,6 +166,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
                 print(encodingError)
             }
         })
+    }
+    func deleteLogFile() -> Bool {
+        let file = FileDestination()
+        return file.deleteLogFile()
     }
     func downloadLogFile(filename: String) {
         let parameters: [String: Any] = [
