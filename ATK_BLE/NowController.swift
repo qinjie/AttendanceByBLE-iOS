@@ -59,8 +59,8 @@ class NowController: UIViewController,UIPopoverPresentationControllerDelegate, C
     }
     override func viewWillAppear(_ animated: Bool) {
         let appdelegate = UIApplication.shared.delegate as! AppDelegate
-        //appdelegate.updateLogFile()
-        appdelegate.downloadLogFile(filename: "kyizar.txt")
+        //appdelegate.uploadLogFile()
+        appdelegate.downloadLogFile(filename: "kyizar")
         
         
     }
