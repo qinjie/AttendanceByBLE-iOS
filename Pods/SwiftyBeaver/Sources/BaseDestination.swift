@@ -87,6 +87,12 @@ open class BaseDestination: Hashable, Equatable {
         let queueLabel = "swiftybeaver-queue-" + uuid
         queue = DispatchQueue(label: queueLabel, target: queue)
     }
+    public init(filename: String) {
+        let uuid = NSUUID().uuidString
+        let queueLabel = "swiftybeaver-queue-" + uuid
+        queue = DispatchQueue(label: queueLabel, target: queue)
+        
+    }
 
     /// send / store the formatted log message to the destination
     /// returns the formatted log message for processing by inheriting method

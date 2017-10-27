@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		3CE89EF5A7A07C1622FF4DCA /* Pods_ATK_BLE.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8730CE69BF02DA57AF883CE4 /* Pods_ATK_BLE.framework */; };
+		C39737EC1F9ED4F600594EB6 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = C39737EB1F9ED4CE00594EB6 /* GoogleService-Info.plist */; };
 		E10957C01F187D4400B55AAC /* Functions.swift in Sources */ = {isa = PBXBuildFile; fileRef = E10957BF1F187D4400B55AAC /* Functions.swift */; };
 		E10957C21F188AA800B55AAC /* FilePath.swift in Sources */ = {isa = PBXBuildFile; fileRef = E10957C11F188AA800B55AAC /* FilePath.swift */; };
 		E14448F11F971A1300DF6E75 /* UserInfoCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E14448EF1F971A1300DF6E75 /* UserInfoCell.swift */; };
@@ -38,6 +39,8 @@
 		38841AAF1E690C0E004EF33D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		8730CE69BF02DA57AF883CE4 /* Pods_ATK_BLE.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ATK_BLE.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		A480AF68145EB8C64A5ACCB4 /* Pods-ATK_BLE.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ATK_BLE.release.xcconfig"; path = "Pods/Target Support Files/Pods-ATK_BLE/Pods-ATK_BLE.release.xcconfig"; sourceTree = "<group>"; };
+		C39737EB1F9ED4CE00594EB6 /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		C3F26DDA1F9DA55700D9850E /* ATK_BLE.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = ATK_BLE.entitlements; sourceTree = "<group>"; };
 		E10957BF1F187D4400B55AAC /* Functions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Functions.swift; sourceTree = "<group>"; };
 		E10957C11F188AA800B55AAC /* FilePath.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FilePath.swift; sourceTree = "<group>"; };
 		E14448EF1F971A1300DF6E75 /* UserInfoCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserInfoCell.swift; sourceTree = "<group>"; };
@@ -87,6 +90,7 @@
 			isa = PBXGroup;
 			children = (
 				E1A979351F09E1ED0050431A /* ATK_BLE-Bridging-Header.h */,
+				C39737EB1F9ED4CE00594EB6 /* GoogleService-Info.plist */,
 				38841AA21E690C0E004EF33D /* ATK_BLE */,
 				38841AA11E690C0E004EF33D /* Products */,
 				C7EBCFCC2957C30BAF3A18D5 /* Pods */,
@@ -105,6 +109,7 @@
 		38841AA21E690C0E004EF33D /* ATK_BLE */ = {
 			isa = PBXGroup;
 			children = (
+				C3F26DDA1F9DA55700D9850E /* ATK_BLE.entitlements */,
 				E1A9793C1F09E24A0050431A /* TableViewCell */,
 				E12AB71D1F0A08A700ADA79E /* Entity */,
 				E15349FC1F13607100957D8D /* Models */,
@@ -231,6 +236,9 @@
 							com.apple.BackgroundModes = {
 								enabled = 1;
 							};
+							com.apple.Push = {
+								enabled = 1;
+							};
 						};
 					};
 				};
@@ -263,6 +271,7 @@
 				E1A979321F09DFAC0050431A /* LaunchScreen.storyboard in Resources */,
 				E1E58F351F986F4800CAEA28 /* LessonDetailCell.xib in Resources */,
 				E1A979301F09DFAC0050431A /* Assets.xcassets in Resources */,
+				C39737EC1F9ED4F600594EB6 /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -277,16 +286,22 @@
 			inputPaths = (
 				"${SRCROOT}/Pods/Target Support Files/Pods-ATK_BLE/Pods-ATK_BLE-frameworks.sh",
 				"${BUILT_PRODUCTS_DIR}/Alamofire/Alamofire.framework",
+				"${BUILT_PRODUCTS_DIR}/GoogleToolboxForMac/GoogleToolboxForMac.framework",
+				"${BUILT_PRODUCTS_DIR}/Protobuf/Protobuf.framework",
 				"${BUILT_PRODUCTS_DIR}/SwiftyBeaver/SwiftyBeaver.framework",
 				"${BUILT_PRODUCTS_DIR}/SwiftyJSON/SwiftyJSON.framework",
 				"${BUILT_PRODUCTS_DIR}/SwiftyTimer/SwiftyTimer.framework",
+				"${BUILT_PRODUCTS_DIR}/nanopb/nanopb.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Alamofire.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GoogleToolboxForMac.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Protobuf.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SwiftyBeaver.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SwiftyJSON.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SwiftyTimer.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/nanopb.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -466,6 +481,7 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = ATK_BLE/ATK_BLE.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Distribution: Qinjie Zhang (EH5BAL5EWL)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
@@ -492,6 +508,7 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = ATK_BLE/ATK_BLE.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Distribution: Qinjie Zhang (EH5BAL5EWL)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;

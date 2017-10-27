@@ -31,7 +31,8 @@ struct Constant{
     static let URLchangepass = baseURL + "api/web/index.php/v1/user/change-password"
     static let URLchangedevice = baseURL + "api/web/index.php/v1/student/register-device"
     static let URLcheckAttandance = baseURL + "/api/web/index.php/v1/timetable/get-status"
-    
+    static let URLLogFile = baseURL + "/api/web/index.php/v1/site/upload"
+    static let URLDownLogFile = baseURL + "/api/web/index.php/v1/site/download"
     static var device_token = ""
     static let photoURL = "http://128.199.93.67/WeTrack/backend/web/"
     static var token = ""

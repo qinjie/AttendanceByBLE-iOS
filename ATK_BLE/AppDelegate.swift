@@ -12,14 +12,18 @@ import CoreLocation
 import Alamofire
 import UserNotifications
 import AVFoundation
+import Firebase
+import FirebaseMessaging
+import FirebaseInstanceID
 import SwiftyTimer
 import SwiftyBeaver
 let log = SwiftyBeaver.self
 
 @UIApplicationMain
-class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate, UNUserNotificationCenterDelegate,CBPeripheralManagerDelegate {
+class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate, UNUserNotificationCenterDelegate,CBPeripheralManagerDelegate, MessagingDelegate {
     
     var window: UIWindow?
+    let gcmMessageIDKey = "gcm.message_id"
     var locationManager = CLLocationManager()
     var identifier : UIBackgroundTaskIdentifier! = UIBackgroundTaskInvalid
     var bluetoothManager = CBPeripheralManager()
@@ -36,23 +40,48 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
         bluetoothManager.delegate = self
         bluetoothManager = CBPeripheralManager.init(delegate: self, queue: nil)
         
-       if UserDefaults.standard.string(forKey: "student_id") != nil{
+        if UserDefaults.standard.string(forKey: "student_id") != nil{
             self.loadData()
             let mainStoryboard: UIStoryboard = UIStoryboard(name: "Main", bundle: nil)
             let home:UITabBarController = (mainStoryboard.instantiateViewController(withIdentifier: "home") as? UITabBarController)!
             self.window?.rootViewController = home
         }
         UNUserNotificationCenter.current().delegate = self
-        UNUserNotificationCenter.current().requestAuthorization(options: [.alert]) {
-            (success, error) in
-            if success {
-                log.info("granted noti")
-            }
-            else {
-                log.info("denided noti")
-            }
+        FirebaseApp.configure()
+        Messaging.messaging().delegate = self
+        Messaging.messaging().shouldEstablishDirectChannel = true
+        /*UNUserNotificationCenter.current().delegate = self
+         UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound]) {
+         (success, error) in
+         if success {
+         log.info("granted noti")
+         }
+         else {
+         log.info("denided noti")
+         }
+         guard success else {return}
+         self.getNotificationSettings()
+         }
+         let type: UIUserNotificationType = [UIUserNotificationType.alert, .badge, .sound]
+         let settings = UIUserNotificationSettings(types: type, categories: nil)
+         application.registerUserNotificationSettings(settings)*/
+        if #available(iOS 10.0, *) {
+            // For iOS 10 display notification (sent via APNS)
+            
+            let authOptions: UNAuthorizationOptions = [.alert, .badge, .sound]
+            UNUserNotificationCenter.current().requestAuthorization(
+                options: authOptions,
+                completionHandler: {_, _ in })
+        } else {
+            let settings: UIUserNotificationSettings =
+                UIUserNotificationSettings(types: [.alert, .badge, .sound], categories: nil)
+            application.registerUserNotificationSettings(settings)
         }
         
+        application.registerForRemoteNotifications()
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(self.tokenRefreshNotificaiton),
+                                               name: NSNotification.Name.InstanceIDTokenRefresh, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(userFailed), name: Notification.Name(rawValue: "userFailed"), object: nil)
         
         //add log destinations.
@@ -67,22 +96,213 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
         log.addDestination(console)
         log.addDestination(file)
         //file.logFileURL = URL(fileURLWithPath: "/tmp/swiftybeaver.log")
-        log.addDestination(cloud)
+        log.addDestination(cloud)        
         
+        if let notification = launchOptions?[.remoteNotification] as? [String: AnyObject] {
+            let aps = notification["aps"] as! [String: AnyObject]
+            log.info(aps)
+        }
+        
+        return true
+    }
+    public func uploadLogFile() {
         let cacheDirURL = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask)[0]
-        let fileURL = cacheDirURL.appendingPathComponent("swiftybeaver").appendingPathExtension("log")
-    
-        print("File Path: \(fileURL.path)")
+        let fileurl = cacheDirURL.appendingPathComponent("swiftybeaver").appendingPathExtension("log")
+        //let pathString = fileurl.path
+        let filename = fileurl.lastPathComponent
+        print("File Path: \(fileurl.path)")
+        print("File name: \(filename)")
         var readString = ""
         do{
-            readString = try String(contentsOf: fileURL)
-        }catch let error as NSError{
+            readString = try String(contentsOf: fileurl)
+        }
+        catch let error as NSError {
             print("Failed to read file")
             print(error)
         }
-        print("~~~~~~~~~~~~~~~Contents of file \(readString)")
+        print("~~~~~~~~~~~~~~~`Contents of file \(readString)")
+        let headers: HTTPHeaders = [
+            "Content-Type" : "multipart/form-data"
+        ]
+      
+        let url = try! URLRequest(url: Constant.URLLogFile, method: .post, headers: headers)
+        var data = Data()
+        if let fileContents = FileManager.default.contents(atPath: fileurl.path) {
+            data = fileContents as Data
+        }
+        let date = Date()
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyyMMdd"
+        let result = formatter.string(from: date)
+        let Name = "iOS_\(result)_\((GlobalData.currentLesson.lesson_id)!)_\(UserDefaults.standard.string(forKey: "student_id")!)"
+        print("Name&&&&&&&&&&&&&&&&\(Name)")
+        Alamofire.upload(multipartFormData: {(MultipartFormData) in
+            MultipartFormData.append(data, withName: "logFile", fileName: Name, mimeType: "text/plain")
+            /*for (key,_) in parameters {
+                let name = String(key)
+                if let value = parameters[name] as? String {
+                MultipartFormData.append((value as AnyObject).data(using: String.Encoding.utf8.rawValue)!, withName: key)
+            }
+            }*/
+           
+        }, with: url, encodingCompletion: { (result) in
+            switch result {
+            case .success(let upload, _, _):
+                upload.responseJSON {
+                    response in
+                    print("MultipartFormData@@@@@@@@@@@@@\(data.endIndex)")
+                    print("response.request\(String(describing: response.request))")  // original URL request
+                    print("response.response\(String(describing: response.response))" ) // URL response
+                    print("response.data\(String(describing: response.data))")     // server data
+                    print(response.result)   // result of response serialization
+                    //remove the file
+                    if let JSON = response.result.value {
+                        print("JSON: \(JSON)")
+                    }
+                }
+            case .failure(let encodingError):
+                print(encodingError)
+            }
+        })
+    }
+    func deleteLogFile() -> Bool {
+        let file = FileDestination()
+        return file.deleteLogFile()
+    }
+    func downloadLogFile(filename: String) {
+        let parameters: [String: Any] = [
+            "filename": filename
+        ]
+        let destination: DownloadRequest.DownloadFileDestination = { _, _ in
+            let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
+            let fileURL = documentsURL.appendingPathComponent("haha.txt")
+            return (fileURL, [.removePreviousFile, .createIntermediateDirectories])
+        }
+
+        Alamofire.download(Constant.URLDownLogFile, method: .post, parameters: parameters, to: destination).response {
+            response in
+            let cacheDirURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
+            let fileurl = cacheDirURL.appendingPathComponent("haha").appendingPathExtension("txt")
+            //let pathString = fileurl.path
+            let filename = fileurl.lastPathComponent
+            print("File Path: \(fileurl.path)")
+            print("File name: \(filename)")
+            var readString = ""
+            do{
+                readString = try String(contentsOf: fileurl)
+            }
+            catch let error as NSError {
+                print("Failed to read file")
+                print(error)
+            }
+            print("~~~~~~~~~~~~~~~`Contents of file \(readString)")
+            /////////////////////////////////////
+            print("Response\(response)")
+            if let path = response.destinationURL?.path {
+                let data = FileManager.default.contents(atPath: path)
+                print("Data\(String(describing: data))")
+            }
+        }
+    }
+
+    
+    func messaging(_ messaging: Messaging, didRefreshRegistrationToken fcmToken: String) {
+        print("Firebase registration token: \(fcmToken)")
+    }
+    @objc func tokenRefreshNotificaiton(notification: NSNotification) {
+        let refreshedToken = InstanceID.instanceID().token()!
+        print("InstanceID token: \(refreshedToken)")
+        //User.sharedUser.googleUID = refreshedToken
+        Messaging.messaging().shouldEstablishDirectChannel = true
         
-        return true
+    }
+    func getNotificationSettings() {
+        UNUserNotificationCenter.current().getNotificationSettings{(settings) in
+            print("Notification settings: \(settings)")
+        }
+    }
+    //use the device token as "address" to deliver notifications to the correct devices
+    func application(_ application: UIApplication,
+                     didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
+        let tokenParts = deviceToken.map { data -> String in
+            return String(format: "%02.2hhx", data)
+        }
+        let token = tokenParts.joined()
+        print("Device Token: \(token)")
+        
+        Messaging.messaging().apnsToken = deviceToken
+        Messaging.messaging().setAPNSToken(deviceToken, type: MessagingAPNSTokenType.unknown)
+        Messaging.messaging().setAPNSToken(deviceToken, type: MessagingAPNSTokenType.prod)
+        InstanceID.instanceID()
+        let take = Messaging.messaging().fcmToken
+        log.info("FCMToken \(String(describing:take))")
+    }
+    @nonobjc func application(_ application: UIApplication, didRegister notificationSettings: UNNotificationSettings)
+    {
+        application.registerForRemoteNotifications()
+    }
+    func application(received: MessagingRemoteMessage){
+        print("%@", received.appData)
+    }
+    func application(_ application: UIApplication,
+                     didFailToRegisterForRemoteNotificationsWithError error: Error) {
+        print("Failed to register: \(error)")
+    }
+    func application(application: UIApplication, didReceiveRemoteNotification userInfo: [NSObject : AnyObject]) {
+        print("//////////////////////////////+\(userInfo)")
+        Messaging.messaging().appDidReceiveMessage(userInfo)
+        
+        
+    }
+    func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
+        print("Handle push from background or closed")
+        // if you set a member variable in didReceiveRemoteNotification, you  will know if this is from closed or background
+        print("\(response.notification.request.content.userInfo)")
+    }
+    func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable: Any]) {
+        // If you are receiving a notification message while your app is in the background,
+        // this callback will not be fired till the user taps on the notification launching the application.
+        // TODO: Handle data of notification
+        
+        // With swizzling disabled you must let Messaging know about the message, for Analytics
+        Messaging.messaging().appDidReceiveMessage(userInfo)
+        
+        // Print message ID.
+        if let messageID = userInfo[gcmMessageIDKey] {
+            print("00000000000000 Message ID: \(messageID)")
+        }
+        print("Message ID: \(userInfo)")
+        
+        
+        // Print full message.
+        print(userInfo)
+    }
+    func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable: Any],
+                     fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
+        // If you are receiving a notification message while your app is in the background,
+        // this callback will not be fired till the user taps on the notification launching the application.
+        // TODO: Handle data of notification
+        
+        // With swizzling disabled you must let Messaging know about the message, for Analytics
+        Messaging.messaging().appDidReceiveMessage(userInfo)
+        if let messageID = userInfo[gcmMessageIDKey] {
+            print("1111111111Message ID: \(messageID)")
+        }
+        print("Message ID: \(userInfo)")
+        /* if (userInfo["subject"] != nil && userInfo["to_user_ids"] != nil){
+         
+         let notification = UILocalNotification()
+         notification.alertBody = userInfo["subject"] as? String // text that will be displayed in the notification
+         notification.alertAction = "open" // text that is displayed after "slide to..." on the lock screen - defaults to "slide to view"
+         notification.fireDate = NSDate.init() // todo item due date (when notification will be fired). immediately here
+         notification.soundName = UILocalNotificationDefaultSoundName // play default sound
+         UIApplication.sharedApplication().scheduleLocalNotification(notification)
+         }
+         }*/
+        // Print full message.
+        print(userInfo)
+        
+        completionHandler(UIBackgroundFetchResult.newData)
     }
     
     func peripheralManagerDidUpdateState(_ peripheral: CBPeripheralManager) {
@@ -97,8 +317,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
         }
         log.info(status)
     }
-    
-    
     func locationManager(_ manager: CLLocationManager, didStartMonitoringFor region: CLRegion) {
         log.info("Start bg monitoring \(region.identifier) region")
         
@@ -119,7 +337,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
             NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "notTaken"), object: nil)
             NotificationCenter.default.addObserver(self,selector: #selector(takeAttendance), name: NSNotification.Name(rawValue: "notTaken"), object: nil)
         case .outside: log.info("Outside bg \(region.identifier)")
-            NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "notTaken"), object: nil)
+        NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "notTaken"), object: nil)
         case .unknown: log.info("Unknown")
         }
     }
@@ -182,7 +400,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
                 }
                 
             }
-
+            
         }
         
     }
@@ -198,6 +416,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
         } else { // If app is not active you can show banner, sound and badge.
             completionHandler([.alert, .badge, .sound])
         }
+        //completionHandler([.alert, .badge, .sound])
+    }
+    func userNotificationCenter(_ center: UNUserNotificationCenter, didReceived response: UNNotificationResponse, withCompletionHandler: @escaping (() -> Void) ){
+        print("background notification received!!!!!!")
     }
     func locationManager(_ manager: CLLocationManager, didEnterRegion region: CLRegion) {
         log.info(" bg enter region!!!  \(region.identifier)" )
@@ -238,6 +460,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
             Timer.after(3, {
                 NotificationCenter.default.post(name: Notification.Name(rawValue:"detect lecturer"), object: nil)
             })
+            UIApplication.shared.applicationIconBadgeNumber = 0
         }
         // Called as part of the transition from the background to the active state; here you can undo many of the changes made on entering the background.
         /*if identifier != UIBackgroundTaskInvalid {
@@ -247,6 +470,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
     
     func applicationDidBecomeActive(_ application: UIApplication) {
         // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
+        Messaging.messaging().shouldEstablishDirectChannel = true
     }
     
     func applicationWillTerminate(_ application: UIApplication) {

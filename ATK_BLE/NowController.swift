@@ -53,9 +53,21 @@ class NowController: UIViewController,UIPopoverPresentationControllerDelegate, C
         bluetoothManager = CBPeripheralManager.init(delegate: self, queue: nil)
         locationManager.requestAlwaysAuthorization()
         UNUserNotificationCenter.current().delegate = self
-        
         checkTime()
         setupTimer()    //For every lesson before 10 mins
+        
+    }
+    override func viewWillAppear(_ animated: Bool) {
+        let appdelegate = UIApplication.shared.delegate as! AppDelegate
+        appdelegate.uploadLogFile()
+        //let result = appdelegate.deleteLogFile()
+        //if (result){
+         ///   print("LOG FILE DELETED")
+        //}
+   
+        //appdelegate.downloadLogFile(filename: "kyizar")
+        
+        
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -171,9 +183,6 @@ class NowController: UIViewController,UIPopoverPresentationControllerDelegate, C
         print("Stop Advertising!!")
     }
     
-    override func viewWillAppear(_ animated: Bool) {
-        
-    }
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
@@ -417,7 +426,7 @@ class NowController: UIViewController,UIPopoverPresentationControllerDelegate, C
         
     }
     @objc func changeLabel() {
-        self.currentTimeLabel.text = "You have taken attendance \nfor \(self.currentLesson.catalog!)"
+        self.currentTimeLabel.text = "Your attendance is taken"
         self.currentTimeLabel.textColor = UIColor(red: 0.1412, green: 0.6078, blue: 0, alpha: 1.0)
     }
     

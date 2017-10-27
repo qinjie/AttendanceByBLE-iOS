@@ -10,5 +10,8 @@ target 'ATK_BLE' do
   pod 'SwiftyJSON'
   pod 'SwiftyTimer'
   pod ‘SwiftyBeaver’
+  pod ‘Firebase/Core’
+  pod ‘Firebase/Messaging’
+  pod ‘FirebaseInstanceID’
 
 end
