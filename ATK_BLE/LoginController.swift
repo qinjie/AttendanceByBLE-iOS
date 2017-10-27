@@ -10,15 +10,26 @@ import UIKit
 import Alamofire
 import UserNotifications
 
-class LoginController: UIViewController {
+class LoginController: UIViewController, UITextFieldDelegate {
     
     @IBOutlet weak var usernameTxt: UITextField!
     @IBOutlet weak var passwordTxt: UITextField!
+    @IBOutlet var keyboardHeightLayoutConstraint: NSLayoutConstraint?
     
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
         hideKeyboardWhenTappedAround()
+        usernameTxt.delegate = self
+        passwordTxt.delegate = self
+        usernameTxt.returnKeyType = .done
+        passwordTxt.returnKeyType = .done
+        usernameTxt.addTarget(self, action: #selector(usernameDonePressed), for: .editingDidEnd)
+        passwordTxt.addTarget(self, action: #selector(passwordDonePressed), for: .editingDidEnd)
+        
+        removeKeyBoardNotification()
+        registerKeyBoardNotification()
+        
         if let username = UserDefaults.standard.string(forKey: "username"){
             usernameTxt.text = username
         }else{
@@ -82,8 +93,13 @@ class LoginController: UIViewController {
                     Constant.student_id = JSON[ "id"] as! Int
                     Constant.major = JSON["major"] as! Int
                     Constant.minor = JSON["minor"] as! Int
-                    Constant.device_hash = JSON["device_hash"] as! String
-                    UserDefaults.standard.set(Constant.device_hash, forKey: "device_hash")
+                    if let device_hash = JSON["device_hash"] as? String{
+                        Constant.device_hash = device_hash
+                        UserDefaults.standard.set(Constant.device_hash, forKey: "device_hash")
+                    }else{
+                        Constant.device_hash = ""
+                        UserDefaults.standard.set(Constant.device_hash, forKey: "device_hash")
+                    }
                     //Check if the device is new
                     if Constant.device_hash != this_device{
                         Constant.change_device = true
@@ -251,6 +267,7 @@ class LoginController: UIViewController {
                 NSKeyedArchiver.archiveRootObject(GlobalData.classmates, toFile: filePath.classmatePath)
                 
                 print("Done loading classmates")
+                self.removeKeyBoardNotification()
                 self.performSegue(withIdentifier: "sign in", sender: nil)
                 
             }else{
@@ -313,15 +330,49 @@ class LoginController: UIViewController {
         
     }
     
-    @IBAction func usernameEnterPressed(_ sender: UITextField) {
+    @objc func usernameDonePressed() {
         passwordTxt.becomeFirstResponder()
+        
     }
     
-    @IBAction func passwordEnterPressed(_ sender: UITextField) {
+    @objc func passwordDonePressed() {
         if usernameTxt.text == "" || passwordTxt.text == ""{
         }else{
             self.login()
         }
+    }
+    
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        textField.resignFirstResponder()
+        return true
+    }
+    
+    @objc func keyboardNotification(notification: NSNotification) {
+        if let userInfo = notification.userInfo {
+            let endFrame = (userInfo[UIKeyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue
+            let duration:TimeInterval = (userInfo[UIKeyboardAnimationDurationUserInfoKey] as? NSNumber)?.doubleValue ?? 0
+            let animationCurveRawNSN = userInfo[UIKeyboardAnimationCurveUserInfoKey] as? NSNumber
+            let animationCurveRaw = animationCurveRawNSN?.uintValue ?? UIViewAnimationOptions.curveEaseInOut.rawValue
+            let animationCurve:UIViewAnimationOptions = UIViewAnimationOptions(rawValue: animationCurveRaw)
+            if (endFrame?.origin.y)! >= UIScreen.main.bounds.size.height {
+                self.keyboardHeightLayoutConstraint?.constant = 30
+            } else {
+                self.keyboardHeightLayoutConstraint?.constant = endFrame?.size.height ?? 0.0
+            }
+            UIView.animate(withDuration: duration,
+                           delay: TimeInterval(0),
+                           options: animationCurve,
+                           animations: { self.view.layoutIfNeeded() },
+                           completion: nil)
+        }
+    }
+    
+    private func removeKeyBoardNotification(){
+        NotificationCenter.default.removeObserver(self, name: NSNotification.Name.UIKeyboardWillChangeFrame, object: nil)
+    }
+    
+    private func registerKeyBoardNotification(){
+        NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardNotification(notification:)), name: NSNotification.Name.UIKeyboardWillChangeFrame, object: nil)
     }
     /*
      // MARK: - Navigation

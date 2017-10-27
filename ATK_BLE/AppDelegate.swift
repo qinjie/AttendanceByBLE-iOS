@@ -96,9 +96,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
         log.addDestination(console)
         log.addDestination(file)
         //file.logFileURL = URL(fileURLWithPath: "/tmp/swiftybeaver.log")
-        log.addDestination(cloud)
-        
-        
+        log.addDestination(cloud)        
         
         if let notification = launchOptions?[.remoteNotification] as? [String: AnyObject] {
             let aps = notification["aps"] as! [String: AnyObject]
@@ -366,8 +364,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
             
             let para1: Parameters = [
                 "lesson_date_id": GlobalData.currentLesson.ldateid!,
-                "student_id_1": Constant.student_id,
-                "student_id_2": Constant.identifier,
+                "lecturer_id": Constant.identifier,
+                "student_id": Constant.student_id,
                 ]
             
             
