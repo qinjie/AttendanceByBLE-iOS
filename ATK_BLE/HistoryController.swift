@@ -33,6 +33,7 @@ class HistoryController: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        tableView.tableFooterView = UIView(frame: .zero)
         historyDate = HistoryBrain.getHistoryDate()
         // Do any additional setup after loading the view.
         

@@ -14,6 +14,7 @@
 		E14448F11F971A1300DF6E75 /* UserInfoCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E14448EF1F971A1300DF6E75 /* UserInfoCell.swift */; };
 		E14448F21F971A1300DF6E75 /* UserInfoCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = E14448F01F971A1300DF6E75 /* UserInfoCell.xib */; };
 		E15349FE1F1360EE00957D8D /* HistoryBrain.swift in Sources */ = {isa = PBXBuildFile; fileRef = E15349FD1F1360EE00957D8D /* HistoryBrain.swift */; };
+		E171F8D71FA805E400A1D29F /* MoreController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E171F8D61FA805E400A1D29F /* MoreController.swift */; };
 		E1A979261F09DFAC0050431A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1A979181F09DFAC0050431A /* AppDelegate.swift */; };
 		E1A979271F09DFAC0050431A /* Items.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1A979191F09DFAC0050431A /* Items.swift */; };
 		E1A979281F09DFAC0050431A /* Lesson.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1A9791A1F09DFAC0050431A /* Lesson.swift */; };
@@ -23,7 +24,6 @@
 		E1A9792C1F09DFAC0050431A /* ChangePasswordController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1A9791E1F09DFAC0050431A /* ChangePasswordController.swift */; };
 		E1A9792D1F09DFAC0050431A /* LessonDetailController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1A9791F1F09DFAC0050431A /* LessonDetailController.swift */; };
 		E1A9792E1F09DFAC0050431A /* LoginController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1A979201F09DFAC0050431A /* LoginController.swift */; };
-		E1A9792F1F09DFAC0050431A /* MoreController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1A979211F09DFAC0050431A /* MoreController.swift */; };
 		E1A979301F09DFAC0050431A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E1A979221F09DFAC0050431A /* Assets.xcassets */; };
 		E1A979311F09DFAC0050431A /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E1A979231F09DFAC0050431A /* Main.storyboard */; };
 		E1A979321F09DFAC0050431A /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E1A979241F09DFAC0050431A /* LaunchScreen.storyboard */; };
@@ -46,6 +46,7 @@
 		E14448EF1F971A1300DF6E75 /* UserInfoCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserInfoCell.swift; sourceTree = "<group>"; };
 		E14448F01F971A1300DF6E75 /* UserInfoCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = UserInfoCell.xib; sourceTree = "<group>"; };
 		E15349FD1F1360EE00957D8D /* HistoryBrain.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HistoryBrain.swift; sourceTree = "<group>"; };
+		E171F8D61FA805E400A1D29F /* MoreController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoreController.swift; sourceTree = "<group>"; };
 		E1A979181F09DFAC0050431A /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		E1A979191F09DFAC0050431A /* Items.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Items.swift; sourceTree = "<group>"; };
 		E1A9791A1F09DFAC0050431A /* Lesson.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Lesson.swift; sourceTree = "<group>"; };
@@ -55,7 +56,6 @@
 		E1A9791E1F09DFAC0050431A /* ChangePasswordController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChangePasswordController.swift; sourceTree = "<group>"; };
 		E1A9791F1F09DFAC0050431A /* LessonDetailController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LessonDetailController.swift; sourceTree = "<group>"; };
 		E1A979201F09DFAC0050431A /* LoginController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginController.swift; sourceTree = "<group>"; };
-		E1A979211F09DFAC0050431A /* MoreController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MoreController.swift; sourceTree = "<group>"; };
 		E1A979221F09DFAC0050431A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		E1A979231F09DFAC0050431A /* Main.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Main.storyboard; sourceTree = "<group>"; };
 		E1A979241F09DFAC0050431A /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -142,7 +142,7 @@
 				E1A9791E1F09DFAC0050431A /* ChangePasswordController.swift */,
 				E1A9791F1F09DFAC0050431A /* LessonDetailController.swift */,
 				E1A979201F09DFAC0050431A /* LoginController.swift */,
-				E1A979211F09DFAC0050431A /* MoreController.swift */,
+				E171F8D61FA805E400A1D29F /* MoreController.swift */,
 			);
 			name = Controllers;
 			sourceTree = "<group>";
@@ -350,8 +350,8 @@
 			files = (
 				E10957C01F187D4400B55AAC /* Functions.swift in Sources */,
 				E10957C21F188AA800B55AAC /* FilePath.swift in Sources */,
-				E1A9792F1F09DFAC0050431A /* MoreController.swift in Sources */,
 				E15349FE1F1360EE00957D8D /* HistoryBrain.swift in Sources */,
+				E171F8D71FA805E400A1D29F /* MoreController.swift in Sources */,
 				E1A979281F09DFAC0050431A /* Lesson.swift in Sources */,
 				E1A979271F09DFAC0050431A /* Items.swift in Sources */,
 				E1A9792D1F09DFAC0050431A /* LessonDetailController.swift in Sources */,

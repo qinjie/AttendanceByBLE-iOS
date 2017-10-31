@@ -118,7 +118,7 @@ struct alamofire{
                     if let lesson = json["lesson"] as? [String:AnyObject]{
                         history.subject = lesson["subject_area"] as? String
                         history.catalog = lesson["catalog_number"] as? String
-                        history.class_section = lesson["catalog_number"] as? String
+                        history.class_section = lesson["class_section"] as? String
                         history.location = lesson["facility"] as? String
                         history.start_time = lesson["start_time"] as? String
                         history.end_time = lesson["end_time"] as? String

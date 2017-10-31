@@ -21,6 +21,8 @@ class HistoryByLessonController: UIViewController, UITableViewDelegate, UITableV
         tableView.delegate = self
         tableView.dataSource = self
         
+        tableView.tableFooterView = UIView(frame: .zero)
+        
         self.title = lesson.catalog
         if GlobalData.attendance.filter({$0.lesson_id == lesson.lesson_id}) != []{
             history = GlobalData.attendance.filter({$0.lesson_id == lesson.lesson_id})
