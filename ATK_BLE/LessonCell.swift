@@ -16,7 +16,7 @@ class LessonCell: UITableViewCell {
             lecturer.text = lesson?.lecturer
             start_time.text = displayTime.display(time: (lesson?.start_time)!)
             end_time.text = displayTime.display(time: (lesson?.end_time)!)
-            venue.text = lesson?.venueName
+            venue.text = lesson?.location
             classNumber.text = lesson?.class_section
             arrivingtimeLabel.isHidden = true
             iconView.isHidden = true

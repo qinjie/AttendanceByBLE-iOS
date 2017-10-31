@@ -1,122 +1,167 @@
 //
 //  MoreController.swift
-//  Attandence Taking System
+//  ATK_BLE
 //
-//  Created by KyawLin on 5/21/17.
-//  Copyright © 2017 KyawLin. All rights reserved.
+//  Created by Kyaw Lin on 31/10/17.
+//  Copyright © 2017 beacon. All rights reserved.
 //
 
 import UIKit
-import Alamofire
-import UserNotifications
 
-class MoreController: UIViewController, UITableViewDelegate, UITableViewDataSource{
-    @IBOutlet weak var myImageView: UIImageView!
-    @IBOutlet weak var tableView: UITableView!
+class MoreController: UITableViewController {
+
+    @IBOutlet weak var username: UILabel!
+    @IBOutlet weak var userImage: UIImageView!
+    @IBOutlet weak var notifiactionLabel: UILabel!
+    @IBOutlet weak var stepper: UIStepper!
+    @IBOutlet weak var email: UILabel!
+    @IBOutlet weak var address: UILabel!
+    @IBOutlet weak var mView: UIView!
+    
     var stepperValue:Int?
-    var label = ["Name:","Email","Address","Notification"]
-    var value = [String]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        myImageView.image = UIImage(named: "student")
+        
+        mView.backgroundColor = UIColor(red: 247/255, green: 247/255, blue: 247/255, alpha: 1)
+        tableView.backgroundColor = UIColor(red: 247/255, green: 247/255, blue: 247/255, alpha: 1)
+        self.tableView.tableFooterView = UIView(frame:.zero)
+        self.tableView.sectionHeaderHeight = 40
+        self.tableView.allowsSelection = false
+        
         stepperValue = Int(UserDefaults.standard.string(forKey: "notification time")!)!
+        stepper.addTarget(self, action: #selector(stepperValueChanged(sender:)), for: .valueChanged)
+        stepper.value = Double(Int(UserDefaults.standard.string(forKey: "notification time")!)!)
+        stepper.minimumValue = 5
+        stepper.maximumValue = 20
+        stepper.stepValue = 5
         
-        tableView.delegate = self
-        tableView.dataSource = self
-        tableView.tableFooterView = UIView(frame: .zero)
-        tableView.allowsSelection = false
+        if let value = UserDefaults.standard.string(forKey: "notification time"){
+            notifiactionLabel.text = "before \(value) mins"
+        }
         
-        value.removeAll()
-        if UserDefaults.standard.string(forKey: "name") != nil{
-            value.append(UserDefaults.standard.string(forKey: "name")!)
+        if let name = UserDefaults.standard.string(forKey: "name"){
+            username.text = name
         }else{
-            value.append("")
+            username.text = ""
         }
-        if UserDefaults.standard.string(forKey: "email") != nil{
-            value.append(UserDefaults.standard.string(forKey: "email")!)
+        if let mEmail = UserDefaults.standard.string(forKey: "email"){
+            email.text = mEmail
         }else{
-            value.append("")
+            email.text = ""
         }
-        if UserDefaults.standard.string(forKey: "address") != nil{
-            value.append(UserDefaults.standard.string(forKey: "address")!)
+        if let mAddress = UserDefaults.standard.string(forKey: "address"){
+            address.text = mAddress
         }else{
-            value.append("")
+            address.text = ""
         }
-        value.append("before \(stepperValue!) mins")
-        let nib = UINib(nibName: "UserInfoCell", bundle: nil)
-        tableView.register(nib, forCellReuseIdentifier: "cell")
-        // Do any additional setup after loading the view.
+        // Uncomment the following line to preserve selection between presentations
+        // self.clearsSelectionOnViewWillAppear = false
+
+        // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
+        // self.navigationItem.rightBarButtonItem = self.editButtonItem
     }
-    
+
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-    
-    @IBAction func signOut(_ sender: UIButton) {
-        
+
+    @IBAction func signoutPressed(_ sender: UIButton) {
         NotificationCenter.default.removeObserver(UIApplication.shared.delegate!)
         UserDefaults.standard.removeObject(forKey: "student_id")
         UserDefaults.standard.set("-", forKey: "email")
         UserDefaults.standard.set("-", forKey: "address")
         self.performSegue(withIdentifier: "sign out", sender: nil)
+    }
+    
+    @objc func stepperValueChanged(sender:UIStepper){
+        let value = Int(sender.value)
+        notifiactionLabel.text = "before \(value) mins"
+        UserDefaults.standard.set(value, forKey: "notification time")
+        NotificationCenter.default.post(name: NSNotification.Name(rawValue: "stepper changed"), object: nil)
+    }
+    
+    override func tableView(_ tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
+        guard let header = view as? UITableViewHeaderFooterView else {return}
+        header.textLabel?.textColor = UIColor.darkGray
+        header.backgroundView?.backgroundColor = UIColor(red: 247/255, green: 247/255, blue: 247/255, alpha: 1)
+        header.textLabel?.font = UIFont.systemFont(ofSize: 15)
+       // header.backgroundColor = UIColor.white
         
-    }
-    
-    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        if indexPath.row == 2{
-            return 80
-        }else{
-            return 40
+        let borderTop = UIView(frame: CGRect(x: 0, y: 0, width: tableView.bounds.size.width, height: 0.5))
+        borderTop.backgroundColor = UIColor.lightGray
+        
+        let borderBottom = UIView(frame: CGRect(x: 0, y: header.bounds.height, width: tableView.bounds.size.width, height: 0.5))
+        borderBottom.backgroundColor = UIColor.lightGray
+        header.addSubview(borderBottom)
+        
+        if section > 0 {
+            header.addSubview(borderTop)
         }
     }
     
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! UserInfoCell
-        cell.value.numberOfLines = 1
-        if indexPath.row == 2{
-            cell.value.numberOfLines = 3
-            cell.value.lineBreakMode = .byWordWrapping
-            cell.commonInit(labelText: self.label[indexPath.row], valueText: self.value[indexPath.row], stepperBool: false)
-        }else if indexPath.row == 3{
-            cell.commonInit(labelText: self.label[indexPath.row], valueText: self.value[indexPath.row], stepperBool: true)
-        }else{
-            cell.commonInit(labelText: self.label[indexPath.row], valueText: self.value[indexPath.row], stepperBool: false)
+    override func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        
+        if indexPath.row == 1{
+            cell.separatorInset = UIEdgeInsets.zero
         }
-        return cell
-        /*if indexPath.row == 2{
-            let cell = Bundle.main.loadNibNamed("AddressCell", owner: self, options: nil)?.first as! AddressCell
-            cell.commonInit(labelText: label[indexPath.row], valueText: value[indexPath.row])
-            return cell
-            
-        }else if indexPath.row == 3{
-            let cell = Bundle.main.loadNibNamed("UserInfoCell", owner: self, options: nil)?.first as! UserInfoCell
-            cell.commonInit(labelText: label[indexPath.row], valueText: value[indexPath.row], stepperBool: true)
-            return cell
-        }else{
-            let cell = Bundle.main.loadNibNamed("UserInfoCell", owner: self, options: nil)?.first as! UserInfoCell
-            cell.commonInit(labelText: label[indexPath.row], valueText: value[indexPath.row], stepperBool: false)
-            return cell
-        }*/
-    }
     
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return label.count
-    }
-    
-    func numberOfSections(in tableView: UITableView) -> Int {
-        return 1
     }
     
     /*
-     // MARK: - Navigation
-     
-     // In a storyboard-based application, you will often want to do a little preparation before navigation
-     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-     // Get the new view controller using segue.destinationViewController.
-     // Pass the selected object to the new view controller.
-     }
-     */
-    
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "reuseIdentifier", for: indexPath)
+
+        // Configure the cell...
+
+        return cell
+    }
+    */
+
+    /*
+    // Override to support conditional editing of the table view.
+    override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+        // Return false if you do not want the specified item to be editable.
+        return true
+    }
+    */
+
+    /*
+    // Override to support editing the table view.
+    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
+        if editingStyle == .delete {
+            // Delete the row from the data source
+            tableView.deleteRows(at: [indexPath], with: .fade)
+        } else if editingStyle == .insert {
+            // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
+        }    
+    }
+    */
+
+    /*
+    // Override to support rearranging the table view.
+    override func tableView(_ tableView: UITableView, moveRowAt fromIndexPath: IndexPath, to: IndexPath) {
+
+    }
+    */
+
+    /*
+    // Override to support conditional rearranging of the table view.
+    override func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
+        // Return false if you do not want the item to be re-orderable.
+        return true
+    }
+    */
+
+    /*
+    // MARK: - Navigation
+
+    // In a storyboard-based application, you will often want to do a little preparation before navigation
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        // Get the new view controller using segue.destinationViewController.
+        // Pass the selected object to the new view controller.
+    }
+    */
+
 }
