@@ -22,6 +22,7 @@ class TimetableController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         tableView.rowHeight = UITableViewAutomaticDimension
+        tableView.tableFooterView = UIView(frame: .zero)
         
         dateFormatter.dateFormat = "MMM dd (E)"
         let title = dateFormatter.string(from: today)

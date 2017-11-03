@@ -392,7 +392,7 @@ class NowController: UIViewController,UIPopoverPresentationControllerDelegate, C
             subjectLabel.text = currentLesson.subject! + " " + currentLesson.catalog!
             classLabel.text = currentLesson.class_section
             timeLabel.text = displayTime.display(time: currentLesson.start_time!) + " - " + displayTime.display(time: currentLesson.end_time!)
-            venueLabel.text = currentLesson.venueName
+            venueLabel.text = currentLesson.location
             currentTimeLabel.textColor = UIColor.gray
             currentTimeLabel.text = "Waiting for \nbeacons from classmates"
             GlobalData.currentLesson = currentLesson
@@ -444,6 +444,7 @@ class NowController: UIViewController,UIPopoverPresentationControllerDelegate, C
         
     }
     @objc func changeLabel() {
+        self.imageView.stopAnimating()
         self.currentTimeLabel.text = "Your attendance is taken"
         self.currentTimeLabel.textColor = UIColor(red: 0.1412, green: 0.6078, blue: 0, alpha: 1.0)
     }

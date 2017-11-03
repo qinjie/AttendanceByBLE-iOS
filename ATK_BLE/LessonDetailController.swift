@@ -66,6 +66,14 @@ class LessonDetailController: UIViewController, UITableViewDelegate, UITableView
         }else{
             presentPer = 0
         }
+        
+        if let mLesson = GlobalData.timetable.filter({$0.lesson_id == lesson.lesson_id}).first{
+            lesson.lecturer = mLesson.lecturer
+            lesson.lecPhone = mLesson.lecPhone
+            lesson.lecEmail = mLesson.lecEmail
+            lesson.lecOffice = mLesson.lecOffice
+        }
+        
         value.append(lesson.catalog!)
         value.append(String(credit))
         value.append(lesson.class_section!)

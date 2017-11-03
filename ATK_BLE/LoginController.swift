@@ -25,7 +25,6 @@ class LoginController: UIViewController, UITextFieldDelegate {
         usernameTxt.returnKeyType = .done
         passwordTxt.returnKeyType = .done
         usernameTxt.addTarget(self, action: #selector(usernameDonePressed), for: .editingDidEnd)
-        passwordTxt.addTarget(self, action: #selector(passwordDonePressed), for: .editingDidEnd)
         
         removeKeyBoardNotification()
         registerKeyBoardNotification()
@@ -334,14 +333,6 @@ class LoginController: UIViewController, UITextFieldDelegate {
         passwordTxt.becomeFirstResponder()
         
     }
-    
-    @objc func passwordDonePressed() {
-        if usernameTxt.text == "" || passwordTxt.text == ""{
-        }else{
-            self.login()
-        }
-    }
-    
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         textField.resignFirstResponder()
         return true
