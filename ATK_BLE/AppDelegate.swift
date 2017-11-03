@@ -18,6 +18,8 @@ import FirebaseInstanceID
 import SwiftyTimer
 import SwiftyBeaver
 let log = SwiftyBeaver.self
+import Foundation
+import SystemConfiguration
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate, UNUserNotificationCenterDelegate,CBPeripheralManagerDelegate, MessagingDelegate {
@@ -104,6 +106,58 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
         }
         
         return true
+    }
+    func isInternetAvailable() -> Bool
+    {
+        var zeroAddress = sockaddr_in()
+        zeroAddress.sin_len = UInt8(MemoryLayout.size(ofValue: zeroAddress))
+        zeroAddress.sin_family = sa_family_t(AF_INET)
+        
+        let defaultRouteReachability = withUnsafePointer(to: &zeroAddress) {
+            $0.withMemoryRebound(to: sockaddr.self, capacity: 1) {zeroSockAddress in
+                SCNetworkReachabilityCreateWithAddress(nil, zeroSockAddress)
+            }
+        }
+        
+        var flags = SCNetworkReachabilityFlags()
+        if !SCNetworkReachabilityGetFlags(defaultRouteReachability!, &flags) {
+            return false
+        }
+        let isReachable = flags.contains(.reachable)
+        let needsConnection = flags.contains(.connectionRequired)
+        return (isReachable && !needsConnection)
+    }
+    
+    public func uploadComment() {
+        let headers: HTTPHeaders = [
+            "Content-Type" : "multipart/form-data"
+        ]
+        var data = Data()
+        data = "aa".data(using: .utf8)!
+        let url = try! URLRequest(url: Constant.URLLogFile, method: .post, headers: headers)
+        let Name = "iOS_\(UserDefaults.standard.string(forKey: "student_id")!)_feedback)"
+        Alamofire.upload(multipartFormData: {(MultipartFormData) in
+            MultipartFormData.append(data, withName: "logFile", fileName: Name, mimeType: "text/plain")
+            
+        }, with: url, encodingCompletion: { (result) in
+            switch result {
+            case .success(let upload, _, _):
+                upload.responseJSON {
+                    response in
+                    print("MultipartFormData@@@@@@@@@@@@@\(data.endIndex)")
+                    print("response.request\(String(describing: response.request))")  // original URL request
+                    print("response.response\(String(describing: response.response))" ) // URL response
+                    print("response.data\(String(describing: response.data))")     // server data
+                    print(response.result)   // result of response serialization
+                    //remove the file
+                    if let JSON = response.result.value {
+                        print("JSON: \(JSON)")
+                    }
+                }
+            case .failure(let encodingError):
+                print(encodingError)
+            }
+        })
     }
     public func uploadLogFile() {
         let cacheDirURL = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask)[0]
