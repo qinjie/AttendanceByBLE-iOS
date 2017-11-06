@@ -62,10 +62,10 @@ class NowController: UIViewController,UIPopoverPresentationControllerDelegate, C
     override func viewWillAppear(_ animated: Bool) {
         let appdelegate = UIApplication.shared.delegate as! AppDelegate
         appdelegate.uploadLogFile()
-        //let result = appdelegate.deleteLogFile()
-        //if (result){
-        ///   print("LOG FILE DELETED")
-        //}
+        /*let result = appdelegate.deleteLogFile()
+        if (result){
+           print("LOG FILE DELETED")
+        }*/
         
         //appdelegate.downloadLogFile(filename: "kyizar")
     }
@@ -218,7 +218,8 @@ class NowController: UIViewController,UIPopoverPresentationControllerDelegate, C
     @objc private func broadcastSignal() {
         if currentLesson != nil {
             if imageView.isAnimating{
-                
+                imageView.stopAnimating()
+                bluetoothManager.stopAdvertising()
             }else{
                 broadcast()
             }
@@ -313,7 +314,7 @@ class NowController: UIViewController,UIPopoverPresentationControllerDelegate, C
                 let alert = UIAlertController(title: "Internet turn on request", message: "Please make sure that your phone has internet connection! ", preferredStyle: UIAlertControllerStyle.alert)
                 alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: { action in
                     self.turnOnData()
-                    //self.broadcast()
+                    self.broadcast()
                     self.dismiss(animated: true, completion: nil)
                 }))
                 alert.addAction(UIAlertAction(title: "Cancel", style: UIAlertActionStyle.cancel, handler: nil))
@@ -325,7 +326,7 @@ class NowController: UIViewController,UIPopoverPresentationControllerDelegate, C
             let alert = UIAlertController(title: "Bluetooth Turn on Request", message: "Please turn on your bluetooth!", preferredStyle: UIAlertControllerStyle.alert)
             alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: { action in
                 self.turnOnBlt()
-                //self.broadcast()
+                self.broadcast()
                 self.dismiss(animated: true, completion: nil)
             }))
             alert.addAction(UIAlertAction(title: "Cancel", style: UIAlertActionStyle.cancel, handler: nil))

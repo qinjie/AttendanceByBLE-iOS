@@ -42,12 +42,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
         bluetoothManager.delegate = self
         bluetoothManager = CBPeripheralManager.init(delegate: self, queue: nil)
         
-        if UserDefaults.standard.string(forKey: "student_id") != nil{
+        /*if UserDefaults.standard.string(forKey: "student_id") != nil{
             self.loadData()
             let mainStoryboard: UIStoryboard = UIStoryboard(name: "Main", bundle: nil)
             let home:UITabBarController = (mainStoryboard.instantiateViewController(withIdentifier: "home") as? UITabBarController)!
             self.window?.rootViewController = home
-        }
+        }*/
         UNUserNotificationCenter.current().delegate = self
         FirebaseApp.configure()
         Messaging.messaging().delegate = self
@@ -92,6 +92,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
         let cloud = SBPlatformDestination(appID: "0G8vQ1", appSecret: "ieuq2buxAk4hOpxs6xhekpAizbbdlhsG", encryptionKey: "nFjc1oWmxr3morgyouJrtn1xzd0sNzg4")
         // use custom format and set console output to short time, log level & message
         console.format = "$DHH:mm:ss$d $L $M"
+        //console.format = "$Dyyy-MM-dd HH:mm:sss$d $N.$F:$l $L: $M"
         //use this for JSON output: console.format = "$J"
         
         //add the destinations to SwifyBeaver
@@ -174,7 +175,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
             print("Failed to read file")
             print(error)
         }
-        print("~~~~~~~~~~~~~~~`Contents of file \(readString)")
+        //print("~~~~~~~~~~~~~~~`Contents of file \(readString)")
         let headers: HTTPHeaders = [
             "Content-Type" : "multipart/form-data"
         ]
@@ -249,7 +250,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
                 print("Failed to read file")
                 print(error)
             }
-            print("~~~~~~~~~~~~~~~`Contents of file \(readString)")
+           // print("~~~~~~~~~~~~~~~`Contents of file \(readString)")
             /////////////////////////////////////
             print("Response\(response)")
             if let path = response.destinationURL?.path {

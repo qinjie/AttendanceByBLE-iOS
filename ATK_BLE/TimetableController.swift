@@ -74,7 +74,7 @@ class TimetableController: UITableViewController {
     }
     
     @IBAction func RefreshButtonPressed(_ sender: UIBarButtonItem) {
-         let appdelegate = UIApplication.shared.delegate as! AppDelegate
+     let appdelegate = UIApplication.shared.delegate as! AppDelegate
         if appdelegate.isInternetAvailable() == true {
         alamofire.loadTimetable()
         NotificationCenter.default.addObserver(self, selector: #selector(refreshTable), name: NSNotification.Name(rawValue: "done loading timetable"), object: nil)
