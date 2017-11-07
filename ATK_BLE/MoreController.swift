@@ -37,7 +37,7 @@ class MoreController: UITableViewController {
         stepper.stepValue = 5
         
         if let value = UserDefaults.standard.string(forKey: "notification time"){
-            notifiactionLabel.text = "before \(value) mins"
+            notifiactionLabel.text = " \(value) mins"
         }
         
         if let name = UserDefaults.standard.string(forKey: "name"){

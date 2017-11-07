@@ -294,42 +294,39 @@ class NowController: UIViewController,UIPopoverPresentationControllerDelegate, C
                 ]
                 imageView.animationDuration = 0.5
                 imageView.startAnimating()
-            }
+                let major = UInt16(Int(UserDefaults.standard.string(forKey: "major")!)!)as CLBeaconMajorValue
+                let minor = UInt16(Int(UserDefaults.standard.string(forKey: "minor")!)!)as CLBeaconMinorValue
+                uuid = NSUUID(uuidString: GlobalData.lessonUUID[currentLesson.lesson_id!]!)as UUID?
+                let beaconRegion = CLBeaconRegion(proximityUUID: uuid!, major: major, minor: minor, identifier: "\(String(describing: UserDefaults.standard.string(forKey: "student_id")!))")
+                dataDictionary = beaconRegion.peripheralData(withMeasuredPower: nil)
+                bluetoothManager.startAdvertising(dataDictionary as?[String: Any])
+                
             log.info("broadcasting")
             let mDate = Date().addingTimeInterval(TimeInterval(5.0))
             let atimer = Timer(fireAt: mDate, interval: 0, target: self, selector: #selector(mcheckAttendance), userInfo: nil, repeats: false)
             RunLoop.main.add(atimer, forMode: RunLoopMode.commonModes)
-            let major = UInt16(Int(UserDefaults.standard.string(forKey: "major")!)!)as CLBeaconMajorValue
-            let minor = UInt16(Int(UserDefaults.standard.string(forKey: "minor")!)!)as CLBeaconMinorValue
-            uuid = NSUUID(uuidString: GlobalData.lessonUUID[currentLesson.lesson_id!]!)as UUID?
-            let beaconRegion = CLBeaconRegion(proximityUUID: uuid!, major: major, minor: minor, identifier: "\(String(describing: UserDefaults.standard.string(forKey: "student_id")!))")
-            dataDictionary = beaconRegion.peripheralData(withMeasuredPower: nil)
-            bluetoothManager.startAdvertising(dataDictionary as?[String: Any])
+           
             
             let date = Date().addingTimeInterval(TimeInterval(120))
             let timer = Timer(fireAt: date, interval: 0, target: self, selector: #selector(stopBroadcast), userInfo: nil, repeats: false)
             RunLoop.main.add(timer, forMode: RunLoopMode.commonModes)
+                }
             }
             else {
                 let alert = UIAlertController(title: "Internet turn on request", message: "Please make sure that your phone has internet connection! ", preferredStyle: UIAlertControllerStyle.alert)
-                alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: { action in
+               /* alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: { action in
                     self.turnOnData()
                     self.broadcast()
                     self.dismiss(animated: true, completion: nil)
-                }))
-                alert.addAction(UIAlertAction(title: "Cancel", style: UIAlertActionStyle.cancel, handler: nil))
+                }))*/
+                alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.cancel, handler: nil))
                 self.present(alert, animated: true, completion: nil)
                 
             }
         }
         else {
             let alert = UIAlertController(title: "Bluetooth Turn on Request", message: "Please turn on your bluetooth!", preferredStyle: UIAlertControllerStyle.alert)
-            alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: { action in
-                self.turnOnBlt()
-                self.broadcast()
-                self.dismiss(animated: true, completion: nil)
-            }))
-            alert.addAction(UIAlertAction(title: "Cancel", style: UIAlertActionStyle.cancel, handler: nil))
+            alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.cancel, handler: nil))
             self.present(alert, animated: true, completion: nil)
             
         }
@@ -395,7 +392,7 @@ class NowController: UIViewController,UIPopoverPresentationControllerDelegate, C
             timeLabel.text = displayTime.display(time: currentLesson.start_time!) + " - " + displayTime.display(time: currentLesson.end_time!)
             venueLabel.text = currentLesson.location
             currentTimeLabel.textColor = UIColor.gray
-            currentTimeLabel.text = "Waiting for \nbeacons from classmates"
+            currentTimeLabel.text = "Waiting for \nLecturer's beacon"
             GlobalData.currentLesson = currentLesson
             imageView.image = #imageLiteral(resourceName: "blue-on")
             log.info("Self.classmatesall \(GlobalData.classmates.count)!")
