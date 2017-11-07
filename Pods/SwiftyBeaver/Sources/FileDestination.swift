@@ -120,6 +120,7 @@ public class FileDestination: BaseDestination {
         }
         return formattedString
     }
+    
 
     deinit {
         // close file handle if set

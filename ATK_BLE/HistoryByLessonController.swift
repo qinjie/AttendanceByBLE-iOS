@@ -12,7 +12,7 @@ class HistoryByLessonController: UIViewController, UITableViewDelegate, UITableV
     
     var lesson:Lesson!
     var history:[Lesson]!
-    var count:Int!
+    var count:Int! = 0
     
     @IBOutlet weak var tableView: UITableView!
     
