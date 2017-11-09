@@ -614,8 +614,8 @@
                                                 <stepper opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" maximumValue="100" translatesAutoresizingMaskIntoConstraints="NO" id="CO2-vC-PqK">
                                                     <rect key="frame" x="312" y="7" width="94" height="29"/>
                                                 </stepper>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Jfc-lF-kbA">
-                                                    <rect key="frame" x="119" y="11" width="193" height="21"/>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Jfc-lF-kbA">
+                                                    <rect key="frame" x="90" y="11" width="193" height="21"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
@@ -623,7 +623,7 @@
                                             </subviews>
                                             <constraints>
                                                 <constraint firstItem="Z4H-jd-LM0" firstAttribute="leading" secondItem="9hq-Gv-YVA" secondAttribute="leading" constant="23" id="6mb-mF-J2m"/>
-                                                <constraint firstItem="Jfc-lF-kbA" firstAttribute="leading" secondItem="9hq-Gv-YVA" secondAttribute="leading" constant="119" id="815-rh-xRa"/>
+                                                <constraint firstItem="Jfc-lF-kbA" firstAttribute="leading" secondItem="9hq-Gv-YVA" secondAttribute="leading" constant="90" id="815-rh-xRa"/>
                                                 <constraint firstItem="Jfc-lF-kbA" firstAttribute="centerY" secondItem="9hq-Gv-YVA" secondAttribute="centerY" id="GH5-Xj-8VQ"/>
                                                 <constraint firstItem="Z4H-jd-LM0" firstAttribute="centerY" secondItem="9hq-Gv-YVA" secondAttribute="centerY" id="dtZ-vK-K4t"/>
                                                 <constraint firstAttribute="trailing" secondItem="CO2-vC-PqK" secondAttribute="trailing" constant="8" id="nAO-NQ-VV7"/>

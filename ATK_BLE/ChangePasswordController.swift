@@ -38,13 +38,16 @@ class ChangePasswordController: UIViewController {
             alertController.addAction(action)
             self.present(alertController, animated: false, completion: nil)
         }else{
+            
             self.changePassword()
         }
         
     }
     
     private func changePassword(){
-        let token = UserDefaults.standard.string(forKey: "token")!
+        let appdelegate = UIApplication.shared.delegate as! AppDelegate
+        if appdelegate.isInternetAvailable() == true {
+            let token = UserDefaults.standard.string(forKey: "token")!
         if newTF.text! == confirmTF.text!{
             let parameters:[String:Any] = [
                 "oldPassword" : oldTF.text!,
@@ -77,7 +80,12 @@ class ChangePasswordController: UIViewController {
                 }
             })
         }
-    }
+        }else {
+            let alert = UIAlertController(title: "Internet turn on request", message: "Please make sure that your phone has internet connection! ", preferredStyle: UIAlertControllerStyle.alert)
+            alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.cancel, handler: nil))
+            self.present(alert, animated: true, completion: nil)
+        }
+        }
     
     @IBAction func confirmPasswordChanged(_ sender: UITextField) {
         if sender.text != newTF.text{

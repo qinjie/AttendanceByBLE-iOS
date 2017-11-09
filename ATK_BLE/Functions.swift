@@ -57,7 +57,6 @@ struct alamofire{
                             GlobalData.lecturers.append(newLecturer)
                             
                         }
-                        
                     }
                     
                     if let lesson_date = json["lesson_date"] as? [String:Any]{

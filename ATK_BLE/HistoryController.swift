@@ -44,12 +44,24 @@ class HistoryController: UITableViewController {
         // Dispose of any resources that can be recreated.
     }
     
-    
     @objc private func refreshHistory() {
+        let appdelegate = UIApplication.shared.delegate as! AppDelegate
+        if appdelegate.isInternetAvailable() == true {
+            alamofire.loadHistory()
+            NotificationCenter.default.addObserver(self, selector: #selector(refreshTable), name: NSNotification.Name(rawValue: "done loading history"), object: nil)
+        }
+        else {
+            let alert = UIAlertController(title: "Internet turn on request", message: "Please make sure that your phone has internet connection! ", preferredStyle: UIAlertControllerStyle.alert)
+            alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.cancel, handler: nil))
+            self.present(alert, animated: true, completion: nil)
+        }
         
-        alamofire.loadHistory()
-        NotificationCenter.default.addObserver(self, selector: #selector(refreshTable), name: NSNotification.Name(rawValue: "done loading history"), object: nil)
-        
+    }
+    
+    private func turnOnData() {
+        let url = URL(string: "App-Prefs:root=WIFI") //for bluetooth setting
+        let app = UIApplication.shared
+        app.open(url!, options: ["string":""], completionHandler: nil)
     }
     
     @objc func refreshTable(){
