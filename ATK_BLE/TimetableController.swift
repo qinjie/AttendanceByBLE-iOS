@@ -74,8 +74,20 @@ class TimetableController: UITableViewController {
     }
     
     @IBAction func RefreshButtonPressed(_ sender: UIBarButtonItem) {
+     let appdelegate = UIApplication.shared.delegate as! AppDelegate
+        if appdelegate.isInternetAvailable() == true {
         alamofire.loadTimetable()
         NotificationCenter.default.addObserver(self, selector: #selector(refreshTable), name: NSNotification.Name(rawValue: "done loading timetable"), object: nil)
+        }
+        else {
+            let alert = UIAlertController(title: "Internet turn on request", message: "Please make sure that your phone has internet connection! ", preferredStyle: UIAlertControllerStyle.alert)
+           alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.cancel, handler: nil))
+            self.present(alert, animated: true, completion: nil)        }
+    }
+    private func turnOnData() {
+        let url = URL(string: "App-Prefs:root=WIFI") //for bluetooth setting
+        let app = UIApplication.shared
+        app.open(url!, options: ["string":""], completionHandler: nil)
     }
     
     @objc func refreshTable(){

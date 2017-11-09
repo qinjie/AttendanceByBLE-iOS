@@ -43,13 +43,18 @@ class LoginController: UIViewController, UITextFieldDelegate {
     }
     
     @IBAction func LoginPressed(_ sender: UIButton) {
-        
+        let appdelegate = UIApplication.shared.delegate as! AppDelegate
         if usernameTxt.text == "" || passwordTxt.text == ""{
-            
             displayAlert(title: "Missing infomations", message: "Both username and password are required")
             
-        }else{
-            self.login()
+        }
+        else {
+            if appdelegate.isInternetAvailable() == true {
+               self.login()
+            }
+            else {
+                 displayAlert(title: "LOGIN FAILED", message: "Your phone has no internet connection!")
+            }
         }
         
     }
@@ -70,8 +75,7 @@ class LoginController: UIViewController, UITextFieldDelegate {
         spinnerIndicator.startAnimating()
         alertController.view.addSubview(spinnerIndicator)
         self.present(alertController, animated: false, completion: nil)
-        
-        //Use the api to login
+            //Use the api to login
         Alamofire.request(Constant.URLstudentlogin, method: .post, parameters: parameters, encoding: JSONEncoding.default, headers: nil).responseJSON(completionHandler: { (response:DataResponse) in
             
             //Check the status code return from the api
@@ -113,9 +117,9 @@ class LoginController: UIViewController, UITextFieldDelegate {
                     UserDefaults.standard.set(Constant.student_id, forKey: "student_id")
                 }
             }else{
-                alertController.dismiss(animated: false, completion: nil)
-                self.displayAlert(title: "LOGIN FAILED", message: "Username or password incorrect!")
-            }
+                    alertController.dismiss(animated: false, completion: nil)
+                    self.displayAlert(title: "LOGIN FAILED", message: "Username or password incorrect!")
+           }
         })
         
     }

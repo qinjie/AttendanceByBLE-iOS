@@ -363,7 +363,7 @@
                                             <constraint firstAttribute="height" relation="lessThanOrEqual" constant="200" id="sBu-fa-X4e"/>
                                         </constraints>
                                     </imageView>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Press the above button to broadcast ur beacon" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="6cZ-g6-jAs">
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Broadcast My Beacon" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="6cZ-g6-jAs">
                                         <rect key="frame" x="0.0" y="579" width="0.0" height="24"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="20"/>
                                         <nil key="textColor"/>
@@ -601,7 +601,7 @@
                                     </tableViewCell>
                                 </cells>
                             </tableViewSection>
-                            <tableViewSection headerTitle="Setting" id="JSt-U0-fwI">
+                            <tableViewSection headerTitle="Notification time" id="JSt-U0-fwI">
                                 <cells>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" id="eoA-JM-n2e" customClass="UserInfoCell" customModule="ATK_BLE" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="314" width="414" height="44"/>
@@ -610,8 +610,8 @@
                                             <rect key="frame" x="0.0" y="0.0" width="414" height="43.666666666666664"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Notification:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Z4H-jd-LM0">
-                                                    <rect key="frame" x="23" y="11" width="93" height="21"/>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Before:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Z4H-jd-LM0">
+                                                    <rect key="frame" x="23" y="11" width="55" height="21"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
@@ -619,8 +619,8 @@
                                                 <stepper opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" maximumValue="100" translatesAutoresizingMaskIntoConstraints="NO" id="CO2-vC-PqK">
                                                     <rect key="frame" x="312" y="7" width="94" height="29"/>
                                                 </stepper>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Jfc-lF-kbA">
-                                                    <rect key="frame" x="119" y="11" width="193" height="21"/>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Jfc-lF-kbA">
+                                                    <rect key="frame" x="90" y="11" width="193" height="21"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
@@ -628,7 +628,7 @@
                                             </subviews>
                                             <constraints>
                                                 <constraint firstItem="Z4H-jd-LM0" firstAttribute="leading" secondItem="9hq-Gv-YVA" secondAttribute="leading" constant="23" id="6mb-mF-J2m"/>
-                                                <constraint firstItem="Jfc-lF-kbA" firstAttribute="leading" secondItem="9hq-Gv-YVA" secondAttribute="leading" constant="119" id="815-rh-xRa"/>
+                                                <constraint firstItem="Jfc-lF-kbA" firstAttribute="leading" secondItem="9hq-Gv-YVA" secondAttribute="leading" constant="90" id="815-rh-xRa"/>
                                                 <constraint firstItem="Jfc-lF-kbA" firstAttribute="centerY" secondItem="9hq-Gv-YVA" secondAttribute="centerY" id="GH5-Xj-8VQ"/>
                                                 <constraint firstItem="Z4H-jd-LM0" firstAttribute="centerY" secondItem="9hq-Gv-YVA" secondAttribute="centerY" id="dtZ-vK-K4t"/>
                                                 <constraint firstAttribute="trailing" secondItem="CO2-vC-PqK" secondAttribute="trailing" constant="8" id="nAO-NQ-VV7"/>

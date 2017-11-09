@@ -45,6 +45,17 @@ struct alamofire{
                         newLesson.lecEmail = lecturer["email"] as? String
                         newLesson.lecOffice = lecturer["office"] as? String
                         newLesson.lecPhone = lecturer["phone"] as? String
+                        newLesson.lecturer_id = lecturer["user_id"] as? Int
+                        
+                        if let beacon = lecturer["beacon"] as? [String:Any]{
+                            
+                            let newLecturer = Lecturer()
+                            newLecturer.lec_id = beacon["user_id"] as? Int
+                            newLecturer.major = beacon["major"] as? Int
+                            newLecturer.minor = beacon["minor"] as? Int
+                            GlobalData.lecturers.append(newLecturer)
+                            
+                        }
                     }
                     
                     if let lesson_date = json["lesson_date"] as? [String:Any]{
