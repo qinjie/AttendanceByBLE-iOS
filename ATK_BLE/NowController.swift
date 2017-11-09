@@ -55,10 +55,11 @@ class NowController: UIViewController,UIPopoverPresentationControllerDelegate, C
         UNUserNotificationCenter.current().delegate = self
         setupTimer()    //For every lesson before 10 mins
         
+        
     }
     override func viewWillAppear(_ animated: Bool) {
-        let appdelegate = UIApplication.shared.delegate as! AppDelegate
-         appdelegate.uploadLogFile()
+        //let appdelegate = UIApplication.shared.delegate as! AppDelegate
+        //appdelegate.uploadLogFile()
         //let result = appdelegate.deleteLogFile()
         //if (result){
         ///   print("LOG FILE DELETED")
@@ -125,6 +126,7 @@ class NowController: UIViewController,UIPopoverPresentationControllerDelegate, C
     }
     
     @objc func notTaken(){
+        imageView.isUserInteractionEnabled = true
         imageView.image = #imageLiteral(resourceName: "blue-on")
     }
     
@@ -141,6 +143,7 @@ class NowController: UIViewController,UIPopoverPresentationControllerDelegate, C
         self.imageView.stopAnimating()
         imageView.isUserInteractionEnabled = false
         imageView.image = #imageLiteral(resourceName: "blue-off")
+        broadcastLabel.isHidden = true
         self.currentTimeLabel.text = "Your attendance is taken"
         self.currentTimeLabel.textColor = UIColor(red: 0.1412, green: 0.6078, blue: 0, alpha: 1.0)
     }
