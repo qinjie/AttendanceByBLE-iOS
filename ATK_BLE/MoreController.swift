@@ -30,14 +30,14 @@ class MoreController: UITableViewController {
         self.tableView.allowsSelection = false
         
         stepperValue = Int(UserDefaults.standard.string(forKey: "notification time")!)!
-        stepper.addTarget(self, action: #selector(stepperValueChanged(sender:)), for: .valueChanged)
+        stepper.addTarget(self, action: #selector(stepperValueChanged(_:)), for: .valueChanged)
         stepper.value = Double(Int(UserDefaults.standard.string(forKey: "notification time")!)!)
         stepper.minimumValue = 5
         stepper.maximumValue = 20
         stepper.stepValue = 5
         
         if let value = UserDefaults.standard.string(forKey: "notification time"){
-            notifiactionLabel.text = "before \(value) mins"
+            notifiactionLabel.text = "\(value) mins"
         }
         
         if let name = UserDefaults.standard.string(forKey: "name"){
@@ -75,9 +75,9 @@ class MoreController: UITableViewController {
         self.performSegue(withIdentifier: "sign out", sender: nil)
     }
     
-    @objc func stepperValueChanged(sender:UIStepper){
+    @objc func stepperValueChanged(_ sender:UIStepper){
         let value = Int(sender.value)
-        notifiactionLabel.text = "before \(value) mins"
+        notifiactionLabel.text = "\(value) mins"
         UserDefaults.standard.set(value, forKey: "notification time")
         NotificationCenter.default.post(name: NSNotification.Name(rawValue: "stepper changed"), object: nil)
     }

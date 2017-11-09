@@ -53,21 +53,18 @@ class NowController: UIViewController,UIPopoverPresentationControllerDelegate, C
         bluetoothManager = CBPeripheralManager.init(delegate: self, queue: nil)
         locationManager.requestAlwaysAuthorization()
         UNUserNotificationCenter.current().delegate = self
-        checkTime()
         setupTimer()    //For every lesson before 10 mins
         
     }
     override func viewWillAppear(_ animated: Bool) {
         let appdelegate = UIApplication.shared.delegate as! AppDelegate
-        appdelegate.uploadLogFile()
+         appdelegate.uploadLogFile()
         //let result = appdelegate.deleteLogFile()
         //if (result){
-         ///   print("LOG FILE DELETED")
+        ///   print("LOG FILE DELETED")
         //}
-   
+        
         //appdelegate.downloadLogFile(filename: "kyizar")
-        
-        
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -117,21 +114,36 @@ class NowController: UIViewController,UIPopoverPresentationControllerDelegate, C
         NotificationCenter.default.addObserver(self, selector: #selector(checkTime), name: NSNotification.Name(rawValue: "enter foreground"), object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(detectLecturer), name: NSNotification.Name(rawValue: "update time"), object: nil)
         NotificationCenter.default.addObserver(self,selector: #selector(success), name: NSNotification.Name(rawValue: "atksuccesfully"), object: nil)
-        NotificationCenter.default.addObserver(self,selector: #selector(changeLabel), name: NSNotification.Name(rawValue: "taken"), object: nil)
+        NotificationCenter.default.addObserver(self,selector: #selector(attendanceTaken), name: NSNotification.Name(rawValue: "taken"), object: nil)
         NotificationCenter.default.addObserver(self,selector: #selector(enableImageView), name: NSNotification.Name(rawValue: "enable imageView"), object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(enableImageView), name: Notification.Name(rawValue: "taken"), object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(notTaken), name: Notification.Name(rawValue: "notTaken"), object: nil)
         
-    }
-    
-    @objc func disableImage(){
-        imageView.isUserInteractionEnabled = false
-        imageView.image = #imageLiteral(resourceName: "blue-off")
     }
     
     @objc func enableImageView(){
         imageView.isUserInteractionEnabled = true
     }
     
+    @objc func notTaken(){
+        imageView.image = #imageLiteral(resourceName: "blue-on")
+    }
+    
+    @objc func attendanceTaken(){
+        Timer.after(2) {
+            for i in self.locationManager.monitoredRegions{
+                self.locationManager.stopMonitoring(for: i)
+            }
+        }
+        if timer != nil{
+            timer?.invalidate()
+            timer = nil
+        }
+        self.imageView.stopAnimating()
+        imageView.isUserInteractionEnabled = false
+        imageView.image = #imageLiteral(resourceName: "blue-off")
+        self.currentTimeLabel.text = "Your attendance is taken"
+        self.currentTimeLabel.textColor = UIColor(red: 0.1412, green: 0.6078, blue: 0, alpha: 1.0)
+    }
     private func checkDevice(){
         
         if Constant.change_device == true{
@@ -240,7 +252,7 @@ class NowController: UIViewController,UIPopoverPresentationControllerDelegate, C
         bluetoothManager.stopAdvertising()
         self.imageView.stopAnimating()
     }
-  
+    
     @objc private func detectLecturer() {
         uuid = NSUUID(uuidString: GlobalData.lessonUUID[currentLesson.lesson_id!]!)as UUID?
         let lecturerRegion = CLBeaconRegion(proximityUUID: uuid, major: UInt16(GlobalData.currentLecturerMajor)as CLBeaconMajorValue, minor: UInt16(GlobalData.currentLecturerMinor)as CLBeaconMinorValue, identifier: GlobalData.currentLecturerId.description)
@@ -289,9 +301,11 @@ class NowController: UIViewController,UIPopoverPresentationControllerDelegate, C
                 imageView.startAnimating()
             }
             log.info("broadcasting")
-            let mDate = Date().addingTimeInterval(TimeInterval(5.0))
-            let atimer = Timer(fireAt: mDate, interval: 0, target: self, selector: #selector(mcheckAttendance), userInfo: nil, repeats: false)
-            RunLoop.main.add(atimer, forMode: RunLoopMode.commonModes)
+            if self.timer == nil{
+                self.timer = Timer.every(3, {
+                    checkAttendance.checkAttendance()
+                })
+            }
             let major = UInt16(Int(UserDefaults.standard.string(forKey: "major")!)!)as CLBeaconMajorValue
             let minor = UInt16(Int(UserDefaults.standard.string(forKey: "minor")!)!)as CLBeaconMinorValue
             uuid = NSUUID(uuidString: GlobalData.lessonUUID[currentLesson.lesson_id!]!)as UUID?
@@ -314,10 +328,6 @@ class NowController: UIViewController,UIPopoverPresentationControllerDelegate, C
             self.present(alert, animated: true, completion: nil)
             
         }
-    }
-    
-    @objc func mcheckAttendance(){
-        checkAttendance.checkAttendance()
     }
     
     private func testSendNoti() {
@@ -376,9 +386,9 @@ class NowController: UIViewController,UIPopoverPresentationControllerDelegate, C
             timeLabel.text = displayTime.display(time: currentLesson.start_time!) + " - " + displayTime.display(time: currentLesson.end_time!)
             venueLabel.text = currentLesson.location
             currentTimeLabel.textColor = UIColor.gray
-            currentTimeLabel.text = "Waiting for \nbeacons from classmates"
+            currentTimeLabel.text = "Waiting for \nlecturer's beacon"
             GlobalData.currentLesson = currentLesson
-            imageView.image = #imageLiteral(resourceName: "blue-on")
+            //imageView.image = #imageLiteral(resourceName: "blue-on")
             log.info("Self.classmatesall \(GlobalData.classmates.count)!")
             //print("Current Lesson : \(GlobalData.lessonUUID)")
             self.lecturer = GlobalData.lecturers.filter({$0.lec_id == currentLesson.lecturer_id}).first!
@@ -386,7 +396,7 @@ class NowController: UIViewController,UIPopoverPresentationControllerDelegate, C
             GlobalData.currentLecturerMajor = lecturer.major!
             GlobalData.currentLecturerMinor = lecturer.minor!
             /*self.classmate = GlobalData.classmates.filter({($0.lesson_id! == currentLesson.lesson_id!)}).first!
-            print("Students  \(String(describing: self.classmate.student_id?.count))")*/
+             print("Students  \(String(describing: self.classmate.student_id?.count))")*/
             log.info("\(String(describing: GlobalData.currentLesson.catalog))")
             log.info(UserDefaults.standard.string(forKey: "student_id")!)
             NotificationCenter.default.removeObserver(self, name: Notification.Name(rawValue:"detect lecturer"), object: nil)
@@ -425,11 +435,6 @@ class NowController: UIViewController,UIPopoverPresentationControllerDelegate, C
         }
         
     }
-    @objc func changeLabel() {
-        self.imageView.stopAnimating()
-        self.currentTimeLabel.text = "Your attendance is taken"
-        self.currentTimeLabel.textColor = UIColor(red: 0.1412, green: 0.6078, blue: 0, alpha: 1.0)
-    }
     
     private func updateLabels(){
         
@@ -455,6 +460,7 @@ class NowController: UIViewController,UIPopoverPresentationControllerDelegate, C
             broadcastLabel.isHidden = false
             currentTimeLabel.textColor = UIColor.gray
             imageView.image = #imageLiteral(resourceName: "blue-off")
+            broadcastLabel.isHidden = true
             broadcastLabel.textColor = UIColor.gray
             
         }else{
@@ -486,36 +492,33 @@ class NowController: UIViewController,UIPopoverPresentationControllerDelegate, C
         spinnerIndicator.color = UIColor.black
         spinnerIndicator.startAnimating()
         self.view.addSubview(spinnerIndicator)
-        Alamofire.request(Constant.URLstudentlogin, method: .post, parameters: parameters, encoding: JSONEncoding.default, headers: nil).responseJSON { (response:DataResponse) in
-            let code = response.response?.statusCode
-            spinnerIndicator.removeFromSuperview()
-            log.info("Status code : " + String(describing: code))
-            if code == 200{
-                if let json = response.result.value as? [String:AnyObject]{
-                    UserDefaults.standard.set(json["token"], forKey: "token")
-                    let status = json["status"] as? Int
-                    NotificationCenter.default.post(name: NSNotification.Name(rawValue: "enable imageView"), object: nil)
-                    if status != 10{
-                        Constant.change_device = true
-                    }else{
-                        NotificationCenter.default.post(name: NSNotification.Name(rawValue:"detect lecturer"), object: nil)
-                    }
-                }
-            }
-        }
-        
         let token = UserDefaults.standard.string(forKey: "token")!
         let headersTimetable:HTTPHeaders = [
             "Authorization" : "Bearer " + token
         ]
-        
-        DispatchQueue.global().async {
-            Alamofire.request(Constant.URLtimetable, method: .get, parameters: nil, encoding: JSONEncoding.default, headers: headersTimetable).responseJSON { (response:DataResponse) in
-                let code = response.response?.statusCode
-                if code == 200{
-                }else{
-                    NotificationCenter.default.post(name: Notification.Name(rawValue: "userFailed"), object: nil)
+        Alamofire.request(Constant.URLtimetable, method: .get, parameters: nil, encoding: JSONEncoding.default, headers: headersTimetable).responseJSON { (response:DataResponse) in
+            let code = response.response?.statusCode
+            if code == 200{
+                Alamofire.request(Constant.URLstudentlogin, method: .post, parameters: parameters, encoding: JSONEncoding.default, headers: nil).responseJSON { (response:DataResponse) in
+                    let code = response.response?.statusCode
+                    spinnerIndicator.removeFromSuperview()
+                    log.info("Status code : " + String(describing: code))
+                    if code == 200{
+                        if let json = response.result.value as? [String:AnyObject]{
+                            UserDefaults.standard.set(json["token"], forKey: "token")
+                            let status = json["status"] as? Int
+                            NotificationCenter.default.post(name: NSNotification.Name(rawValue: "enable imageView"), object: nil)
+                            self.checkTime()
+                            if status != 10{
+                                Constant.change_device = true
+                            }else{
+                                NotificationCenter.default.post(name: NSNotification.Name(rawValue:"detect lecturer"), object: nil)
+                            }
+                        }
+                    }
                 }
+            }else if (code!>=400) && (code!<=500){
+                NotificationCenter.default.post(name: Notification.Name(rawValue: "userFailed"), object: nil)
             }
         }
     }

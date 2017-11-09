@@ -37,6 +37,9 @@ class LessonDetailController: UIViewController, UITableViewDelegate, UITableView
         tableView.allowsSelection = false
         tableView.tableFooterView = UIView(frame: .zero)
         
+        NotificationCenter.default.removeObserver(self, name: Notification.Name(rawValue:"update attendance"), object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(refreshTable), name: Notification.Name(rawValue:"update attendance"), object: nil)
+        
         GlobalData.currentHistoryLesson = lesson
         
         let nib = UINib(nibName: "LessonDetailCell", bundle: nil)
@@ -48,13 +51,9 @@ class LessonDetailController: UIViewController, UITableViewDelegate, UITableView
         // Dispose of any resources that can be recreated.
     }
     
-    private var credit:Int{
-        var credit = 0
-        let weekSession = GlobalData.timetable.filter({$0.catalog == lesson.catalog})
-        for session in weekSession{
-            credit += calTimeDiff(start_time: session.start_time!, end_time: session.end_time!)
-        }
-        return credit
+    @objc private func refreshTable(){
+        self.setupLabels()
+        self.tableView.reloadData() 
     }
     
     private func setupLabels(){
@@ -75,7 +74,7 @@ class LessonDetailController: UIViewController, UITableViewDelegate, UITableView
         }
         
         value.append(lesson.catalog!)
-        value.append(String(credit))
+        value.append(String(lesson.credit_unit!))
         value.append(lesson.class_section!)
         value.append(dict[Int(lesson.weekday!)!]! + "\n" + displayTime.display(time: lesson.start_time!) + " - " + displayTime.display(time: lesson.end_time!))
         value.append(lesson.location!)

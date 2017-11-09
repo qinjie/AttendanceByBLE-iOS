@@ -16,6 +16,7 @@ class Lesson : NSObject, NSCoding {
     var venueName: String?
     var location: String?
     var class_section: String?
+    var credit_unit: Int?
     
     var lecturer: String?
     var lecOffice: String?
@@ -58,6 +59,7 @@ class Lesson : NSObject, NSCoding {
         status = nil
         recorded_time = "00:00"
         lecturer_id = 0
+        credit_unit = 0
     }
     
     required init(coder aDecoder: NSCoder) {
@@ -69,6 +71,7 @@ class Lesson : NSObject, NSCoding {
         venueName = aDecoder.decodeObject(forKey: "venueName") as! String?
         location = aDecoder.decodeObject(forKey: "location") as! String?
         class_section = aDecoder.decodeObject(forKey: "class_section") as! String?
+        credit_unit = aDecoder.decodeObject(forKey: "credit_unit") as! Int?
         
         lecturer = aDecoder.decodeObject(forKey: "lecturer") as! String?
         lecOffice = aDecoder.decodeObject(forKey: "lecOffice") as! String?
@@ -101,6 +104,7 @@ class Lesson : NSObject, NSCoding {
         
         aCoder.encode(location, forKey: "location")
         aCoder.encode(class_section, forKey: "class_section")
+        aCoder.encode(credit_unit, forKey: "credit_unit")
         
         aCoder.encode(lecturer, forKey: "lecturer")
         aCoder.encode(lecOffice, forKey: "lecOffice")

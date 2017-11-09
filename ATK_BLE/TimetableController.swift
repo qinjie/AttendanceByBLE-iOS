@@ -19,15 +19,22 @@ class TimetableController: UITableViewController {
     
     let wdayInt = ["2", "3", "4", "5", "6", "7"]
     
+    let indicatorView = UIActivityIndicatorView(activityIndicatorStyle: .whiteLarge)
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         tableView.rowHeight = UITableViewAutomaticDimension
         tableView.tableFooterView = UIView(frame: .zero)
         
+        indicatorView.center = CGPoint(x: self.view.bounds.width/2, y: self.view.bounds.height)
+        indicatorView.color = UIColor.black
+        
         dateFormatter.dateFormat = "MMM dd (E)"
         let title = dateFormatter.string(from: today)
         navigationItem.title = "Timetable \(title)"
         NotificationCenter.default.addObserver(self, selector: #selector(refreshTable), name: NSNotification.Name(rawValue: "enter foreground"), object: nil)
+        
+        refreshControl?.addTarget(self, action: #selector(refreshTimetable), for: .valueChanged)
         // Do any additional setup after loading the view.
     }
     
@@ -73,13 +80,14 @@ class TimetableController: UITableViewController {
         return wday[section]
     }
     
-    @IBAction func RefreshButtonPressed(_ sender: UIBarButtonItem) {
+    @objc private func refreshTimetable() {
         alamofire.loadTimetable()
         NotificationCenter.default.addObserver(self, selector: #selector(refreshTable), name: NSNotification.Name(rawValue: "done loading timetable"), object: nil)
     }
     
     @objc func refreshTable(){
-        
+        NotificationCenter.default.removeObserver(self, name: Notification.Name(rawValue: "done loading timetable"), object: nil)
+        refreshControl?.endRefreshing()
         self.tableView.reloadData()
         
     }
