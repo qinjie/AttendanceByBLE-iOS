@@ -152,7 +152,7 @@ class LoginController: UIViewController, UITextFieldDelegate {
         
         
         Alamofire.request(Constant.URLallClassmate, method: .post, parameters: parameters, encoding: JSONEncoding.default, headers: headers).responseJSON { (response:DataResponse) in
-            print("start load clssmates")
+            log.info("start load classmates")
             if let JSON = response.result.value as? [[String: AnyObject]]{
                 
                 GlobalData.classmates.removeAll()
@@ -207,7 +207,7 @@ class LoginController: UIViewController, UITextFieldDelegate {
                 //Write classmates to local directory
                 NSKeyedArchiver.archiveRootObject(GlobalData.classmates, toFile: filePath.classmatePath)
                 
-                print("Done loading classmates")
+                log.info("Done loading classmates")
                 self.removeKeyBoardNotification()
                 NotificationCenter.default.removeObserver(self)
                 self.performSegue(withIdentifier: "sign in", sender: nil)

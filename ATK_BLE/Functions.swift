@@ -77,7 +77,7 @@ struct alamofire{
                 //Write timetable to the local directory
                 NSKeyedArchiver.archiveRootObject(GlobalData.lecturers, toFile: filePath.lecturerPath)
                 NSKeyedArchiver.archiveRootObject(GlobalData.timetable, toFile: filePath.timetablePath)
-                print("Done loading timetable")
+                log.info("Done loading timetable")
                 NotificationCenter.default.post(name: NSNotification.Name(rawValue: "done loading timetable"), object: nil)
             }
             
@@ -162,14 +162,13 @@ struct checkAttendance{
                 "Authorization" : "Bearer " + token!
             ]
             let parameter:Parameters = ["lesson_date_id":GlobalData.currentLesson.ldateid!]
-            print(GlobalData.currentLesson.ldateid!)
+            log.info("Lesson Date Id : \(GlobalData.currentLesson.ldateid!)")
             
             Alamofire.request(Constant.URLcheckAttandance,method: .post, parameters: parameter, encoding: JSONEncoding.default, headers: header).responseJSON(completionHandler: { (response:DataResponse) in
                 if let JSON = response.result.value as? Int{
-                    print("JSON below")
-                    print(JSON)
+                    log.info("JSON returned \(JSON)")
                     if(JSON >= 0) {
-                        print("/////////taken already")
+                        log.info("/////////taken already")
                         NotificationCenter.default.post(name: NSNotification.Name(rawValue: "taken"), object: nil)
                     }
                     else {

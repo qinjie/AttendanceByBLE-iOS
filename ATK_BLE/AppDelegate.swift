@@ -285,15 +285,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
         let tokenParts = deviceToken.map { data -> String in
             return String(format: "%02.2hhx", data)
         }
-        let token = tokenParts.joined()
-        print("Device Token: \(token)")
+        _ = tokenParts.joined()
+        //print("Device Token: \(token)")
         
         Messaging.messaging().apnsToken = deviceToken
         Messaging.messaging().setAPNSToken(deviceToken, type: MessagingAPNSTokenType.unknown)
         Messaging.messaging().setAPNSToken(deviceToken, type: MessagingAPNSTokenType.prod)
         InstanceID.instanceID()
-        let take = Messaging.messaging().fcmToken
-        log.info("FCMToken \(String(describing:take))")
+        _ = Messaging.messaging().fcmToken
     }
     @nonobjc func application(_ application: UIApplication, didRegister notificationSettings: UNNotificationSettings)
     {
@@ -366,17 +365,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
     func peripheralManagerDidUpdateState(_ peripheral: CBPeripheralManager) {
         var status = ""
         switch peripheral.state {
-        case .poweredOff: status = "Bluetooth Status: \n Turned Off"
-        case .poweredOn: status = "Bluetooth Status: \n Turned On"
-        case .resetting: status = "Bluetooth Status: \n Resetting"
-        case .unauthorized: status = "BLuetooth Status: \n Not Authorized"
-        case .unsupported: status = "Bluetooth Status: \n Not Supported"
-        default: status = "Bluetooth Status: \n Unknown"
+        case .poweredOff: status = "Bluetooth Status: Turned Off"
+        case .poweredOn: status = "Bluetooth Status: Turned On"
+        case .resetting: status = "Bluetooth Status: Resetting"
+        case .unauthorized: status = "BLuetooth Status: Not Authorized"
+        case .unsupported: status = "Bluetooth Status: Not Supported"
+        default: status = "Bluetooth Status: Unknown"
         }
-        log.info(status)
+        log.debug(status)
     }
     func locationManager(_ manager: CLLocationManager, didStartMonitoringFor region: CLRegion) {
-        log.info("Start bg monitoring \(region.identifier) region")
+        log.debug("Start bg monitoring \(region.identifier) region")
         
     }
     func locationManager(_ manager: CLLocationManager, didStopMonitoringFor region: CLRegion) {
