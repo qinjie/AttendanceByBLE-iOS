@@ -211,6 +211,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
                     print("response.data\(String(describing: response.data))")     // server data
                     print(response.result)   // result of response serialization
                     //remove the file
+                    if response.response?.statusCode == 200{
+                        self.deleteLogFile()
+                    }
                     if let JSON = response.result.value {
                         print("JSON: \(JSON)")
                     }
@@ -220,9 +223,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
             }
         })
     }
-    func deleteLogFile() -> Bool {
+    func deleteLogFile(){
         let file = FileDestination()
-        return file.deleteLogFile()
+        let _  = file.deleteLogFile()
     }
     func downloadLogFile(filename: String) {
         let parameters: [String: Any] = [
@@ -543,7 +546,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
     }
     
     private func loadData(){
-        
         if let timetable = NSKeyedUnarchiver.unarchiveObject(withFile: filePath.timetablePath) as? [Lesson]{
             GlobalData.timetable = timetable
         }

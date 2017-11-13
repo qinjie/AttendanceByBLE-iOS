@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Scheme
-   LastUpgradeVersion = "0900"
+   LastUpgradeVersion = "0910"
    version = "1.3">
    <BuildAction
       parallelizeBuildables = "YES"
@@ -14,7 +14,7 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "F877A7FE0BA37B1992284CE3823A7D92"
+               BlueprintIdentifier = "EEA74B6645AD0F55E53B56A64EB6EA1A"
                BuildableName = "SwiftyTimer.framework"
                BlueprintName = "SwiftyTimer"
                ReferencedContainer = "container:Pods.xcodeproj">
@@ -47,7 +47,7 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "F877A7FE0BA37B1992284CE3823A7D92"
+            BlueprintIdentifier = "EEA74B6645AD0F55E53B56A64EB6EA1A"
             BuildableName = "SwiftyTimer.framework"
             BlueprintName = "SwiftyTimer"
             ReferencedContainer = "container:Pods.xcodeproj">

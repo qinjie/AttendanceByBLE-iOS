@@ -36,6 +36,7 @@ struct alamofire{
                         newLesson.end_time = lesson["end_time"] as? String
                         newLesson.weekday = lesson["weekday"] as? String
                         newLesson.class_section = lesson["class_section"] as? String
+                        newLesson.credit_unit =  Int((lesson["credit_unit"] as? String)!)
                     }
                     
                     if let lecturer = json["lecturers"] as? [String:Any]{
@@ -119,12 +120,15 @@ struct alamofire{
                     let history = Lesson()
                     history.ldateid = json["lesson_date_id"] as? Int
                     history.lecturer_id = json["lecturer_id"] as? Int
-                    history.status = json["status"] as? Int
-                    let time = Format.Format(date: Format.Format(string: (json["recorded_time"] as? String)!, format: "HH:mm:ss"), format: "HH:mm")
+                    let status = json["status"] as! Int
+                    if status > 0 {
+                        history.status = status/60
+                    }else{
+                        history.status = status
+                    }
                     if let lesson = json["lesson_date"] as? [String:AnyObject]{
                         history.lesson_id = lesson["lesson_id"] as? Int
                         history.ldate = lesson["ldate"] as? String
-                        history.recorded_time = time
                     }
                     if let lesson = json["lesson"] as? [String:AnyObject]{
                         history.subject = lesson["subject_area"] as? String
@@ -212,10 +216,10 @@ class checkLesson{
             var minute:Int!
             hour = Int((time?[0])!)
             minute = Int((time?[1])!)
-            let totalSecond = hour*3600 + minute*60 - 300
+            let totalSecond = hour*3600 + minute*60
             let hr = totalSecond/3600
-            let min = (totalSecond%3600)/60
-            GlobalData.nextLessonTime = "not yet time \ntry again after \(hr):\(min)"
+            //let min = (totalSecond%3600)/60
+            GlobalData.nextLessonTime = "not yet time \ntry again after \(hr):00"
             GlobalData.nextLesson = nLesson
             return true
         }else{

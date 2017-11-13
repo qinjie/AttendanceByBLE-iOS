@@ -31,6 +31,7 @@ class LoginController: UIViewController, UITextFieldDelegate {
         
         if let username = UserDefaults.standard.string(forKey: "username"){
             usernameTxt.text = username
+            passwordTxt.becomeFirstResponder()
         }else{
             usernameTxt.placeholder = "Name"
         }
@@ -125,78 +126,15 @@ class LoginController: UIViewController, UITextFieldDelegate {
     }
     
     private func setupData(){
-        
-        let token = UserDefaults.standard.string(forKey: "token")
-        //Load timetable, lecturer and lesson...
-        let headersTimetable:HTTPHeaders = [
-            "Authorization" : "Bearer " + token!
-        ]
-        
-        Alamofire.request(Constant.URLtimetable, method: .get, parameters: nil, encoding: JSONEncoding.default, headers: headersTimetable).responseJSON { (response:DataResponse) in
-            if let JSON = response.result.value as? [AnyObject]{
-                
-                GlobalData.timetable.removeAll()
-                
-                for json in JSON{
-                    let newLesson = Lesson()
-                    
-                    if let lesson = json["lesson"] as? [String:Any]{
-                        newLesson.lesson_id = lesson["id"] as? Int
-                        newLesson.catalog = lesson["catalog_number"] as? String
-                        newLesson.subject = lesson["subject_area"] as? String
-                        newLesson.start_time = lesson["start_time"] as? String
-                        newLesson.end_time = lesson["end_time"] as? String
-                        newLesson.weekday = lesson["weekday"] as? String
-                        newLesson.class_section = lesson["class_section"] as? String
-                    }
-                    
-                    if let lecturer = json["lecturers"] as? [String:Any]{
-                        
-                        newLesson.lecturer = lecturer["name"] as? String
-                        newLesson.lecAcad = lecturer["acad"] as? String
-                        newLesson.lecEmail = lecturer["email"] as? String
-                        newLesson.lecOffice = lecturer["office"] as? String
-                        newLesson.lecPhone = lecturer["phone"] as? String
-                        newLesson.lecturer_id = lecturer["user_id"] as? Int
-                        
-                        if let beacon = lecturer["beacon"] as? [String:Any]{
-                            
-                            let newLecturer = Lecturer()
-                            newLecturer.lec_id = beacon["user_id"] as? Int
-                            newLecturer.major = beacon["major"] as? Int
-                            newLecturer.minor = beacon["minor"] as? Int
-                            GlobalData.lecturers.append(newLecturer)
-                            
-                        }
-                        
-                    }
-                    
-                    if let lesson_date = json["lesson_date"] as? [String:Any]{
-                        
-                        newLesson.ldateid = lesson_date["id"] as? Int
-                        newLesson.ldate = lesson_date["ldate"] as? String
-                    }
-                    
-                    if let venue = json["venue"] as? [String:Any]{
-                        
-                        newLesson.major = venue["major"] as? Int32
-                        newLesson.minor = venue["minor"] as? Int32
-                        newLesson.venueName = venue["name"] as? String
-                        newLesson.location = venue["location"] as? String
-                    }
-                    GlobalData.timetable.append(newLesson)
-                }
-                //Write timetable to the local directory
-                NSKeyedArchiver.archiveRootObject(GlobalData.lecturers, toFile: filePath.lecturerPath)
-                NSKeyedArchiver.archiveRootObject(GlobalData.timetable, toFile: filePath.timetablePath)
-                
-                print("Done loading timetable")
-                self.loadUUID()
-                self.loadClassmate()
-                self.loadHistory()
-            }
-            
-        }
+        NotificationCenter.default.removeObserver(self, name: Notification.Name(rawValue:"done loading timetable"), object: nil)
+        NotificationCenter.default.addObserver(self , selector: #selector(doneLoadingTimetable), name: Notification.Name(rawValue:"done loading timetable"), object: nil)
+        alamofire.loadTimetable()
+    }
+    
+    @objc func doneLoadingTimetable(){
+        self.loadUUID()
+        self.loadClassmate()
+        self.loadHistory()
     }
     
     private func loadClassmate(){
@@ -352,7 +290,7 @@ class LoginController: UIViewController, UITextFieldDelegate {
             if (endFrame?.origin.y)! >= UIScreen.main.bounds.size.height {
                 self.keyboardHeightLayoutConstraint?.constant = 30
             } else {
-                self.keyboardHeightLayoutConstraint?.constant = endFrame?.size.height ?? 0.0
+                self.keyboardHeightLayoutConstraint?.constant = ((endFrame?.size.height)! + 2) ?? 0.0
             }
             UIView.animate(withDuration: duration,
                            delay: TimeInterval(0),

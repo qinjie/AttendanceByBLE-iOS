@@ -35,8 +35,8 @@ class HistoryController: UITableViewController {
         super.viewDidLoad()
         tableView.tableFooterView = UIView(frame: .zero)
         historyDate = HistoryBrain.getHistoryDate()
-        // Do any additional setup after loading the view.
         
+        refreshControl?.addTarget(self, action: #selector(refreshHistory), for: .valueChanged)
     }
     
     override func didReceiveMemoryWarning() {
@@ -44,12 +44,11 @@ class HistoryController: UITableViewController {
         // Dispose of any resources that can be recreated.
     }
     
-    
-    @IBAction func refreshButton(_ sender: UIBarButtonItem) {
+    @objc private func refreshHistory() {
         let appdelegate = UIApplication.shared.delegate as! AppDelegate
         if appdelegate.isInternetAvailable() == true {
-        alamofire.loadHistory()
-        NotificationCenter.default.addObserver(self, selector: #selector(refreshTable), name: NSNotification.Name(rawValue: "done loading history"), object: nil)
+            alamofire.loadHistory()
+            NotificationCenter.default.addObserver(self, selector: #selector(refreshTable), name: NSNotification.Name(rawValue: "done loading history"), object: nil)
         }
         else {
             let alert = UIAlertController(title: "Internet turn on request", message: "Please make sure that your phone has internet connection! ", preferredStyle: UIAlertControllerStyle.alert)
@@ -58,6 +57,7 @@ class HistoryController: UITableViewController {
         }
         
     }
+    
     private func turnOnData() {
         let url = URL(string: "App-Prefs:root=WIFI") //for bluetooth setting
         let app = UIApplication.shared
@@ -65,7 +65,9 @@ class HistoryController: UITableViewController {
     }
     
     @objc func refreshTable(){
-        
+        NotificationCenter.default.removeObserver(self, name: Notification.Name(rawValue: "done loading history"), object: nil)
+        refreshControl?.endRefreshing()
+        NotificationCenter.default.post(name: Notification.Name(rawValue:"update attendance"), object: nil)
         self.tableView.reloadData()
         
     }
@@ -79,15 +81,13 @@ class HistoryController: UITableViewController {
         
         let historyInDay = GlobalData.attendance.filter({$0.ldate == historyDate[indexPath.section]})
         let lesson = historyInDay[indexPath.row]
-        
+        lesson.credit_unit = GlobalData.timetable.filter({$0.lesson_id == lesson.lesson_id}).first?.credit_unit!
         cell.lesson = lesson
         cell.venue.isHidden = true
         cell.iconView.isHidden = false
         if lesson.status != nil {
             if lesson.status == 0 {
                 cell.iconView.image = #imageLiteral(resourceName: "green")
-                cell.arrivingtimeLabel.text = lesson.recorded_time
-                cell.arrivingtimeLabel.isHidden = false
             }
                 
             else if lesson.status == -1{
@@ -97,7 +97,7 @@ class HistoryController: UITableViewController {
                 
             else{
                 cell.iconView.image = #imageLiteral(resourceName: "yellow")
-                cell.arrivingtimeLabel.text = lesson.recorded_time
+                cell.arrivingtimeLabel.text = String(describing: lesson.status!) + " mins"
                 cell.arrivingtimeLabel.isHidden = false
             }
             
