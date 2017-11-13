@@ -140,8 +140,14 @@ class NowController: UIViewController,UIPopoverPresentationControllerDelegate, C
         if timer != nil{
             timer?.invalidate()
             timer = nil
+            
+            if let start_time = UserDefaults.standard.string(forKey: "broadcast time"){
+                let end_time = Format.Format(date: Date(), format: "HH:mm:ss")
+                let time_interval = Format.Format(string: end_time, format: "HH:mm:ss").timeIntervalSince(Format.Format(string: start_time, format: "HH:mm:ss"))
+                print("Performance" + String(describing:time_interval))
+            }
         }
-        self.imageView.stopAnimating()
+        self.stopBroadcast()
         imageView.isUserInteractionEnabled = false
         imageView.image = #imageLiteral(resourceName: "blue-off")
         broadcastLabel.isHidden = true
@@ -287,58 +293,50 @@ class NowController: UIViewController,UIPopoverPresentationControllerDelegate, C
         log.info(status)
     }
     
-    func broadcastTime(time:Int) {
-        let rand = time + Int(arc4random_uniform(3))
-        let x = rand * 60
-        let date = Date().addingTimeInterval(TimeInterval(x))
-        print("date \(date)")
-        let timer = Timer(fireAt: date, interval: 0, target: self, selector: #selector(broadcast), userInfo: nil, repeats: false)
-        RunLoop.main.add(timer, forMode: RunLoopMode.commonModes)
-    }
     @objc func broadcast() {
         
         if bluetoothManager.state == .poweredOn {
-         let appdelegate = UIApplication.shared.delegate as! AppDelegate
+            let appdelegate = UIApplication.shared.delegate as! AppDelegate
             if appdelegate.isInternetAvailable() == true {
-            if Constant.change_device == true{
-                let alertController = UIAlertController(title: "New Device", message: "Cannot take attendance with this device\nNew device can attendance after the day register", preferredStyle: .alert)
-                let okAction = UIAlertAction(title: "OK", style: .default, handler: nil)
-                alertController.addAction(okAction)
-                self.present(alertController, animated: false, completion: nil)
-            }else{
-                imageView.animationImages = [
-                    #imageLiteral(resourceName: "blue-1"),
-                    #imageLiteral(resourceName: "blue-2"),
-                    #imageLiteral(resourceName: "blue-3")
-                ]
-                imageView.animationDuration = 0.5
-                imageView.startAnimating()
-                let major = UInt16(Int(UserDefaults.standard.string(forKey: "major")!)!)as CLBeaconMajorValue
-                let minor = UInt16(Int(UserDefaults.standard.string(forKey: "minor")!)!)as CLBeaconMinorValue
-                uuid = NSUUID(uuidString: GlobalData.lessonUUID[currentLesson.lesson_id!]!)as UUID?
-                let beaconRegion = CLBeaconRegion(proximityUUID: uuid!, major: major, minor: minor, identifier: "\(String(describing: UserDefaults.standard.string(forKey: "student_id")!))")
-                dataDictionary = beaconRegion.peripheralData(withMeasuredPower: nil)
-                bluetoothManager.startAdvertising(dataDictionary as?[String: Any])
-                
-            log.info("broadcasting")
-            if self.timer == nil{
-                self.timer = Timer.every(3, {
-                    checkAttendance.checkAttendance()
-                })
-            }
-            
-            let date = Date().addingTimeInterval(TimeInterval(120))
-            let timer = Timer(fireAt: date, interval: 0, target: self, selector: #selector(stopBroadcast), userInfo: nil, repeats: false)
-            RunLoop.main.add(timer, forMode: RunLoopMode.commonModes)
+                if Constant.change_device == true{
+                    let alertController = UIAlertController(title: "New Device", message: "Cannot take attendance with this device\nNew device can attendance after the day register", preferredStyle: .alert)
+                    let okAction = UIAlertAction(title: "OK", style: .default, handler: nil)
+                    alertController.addAction(okAction)
+                    self.present(alertController, animated: false, completion: nil)
+                }else{
+                    imageView.animationImages = [
+                        #imageLiteral(resourceName: "blue-1"),
+                        #imageLiteral(resourceName: "blue-2"),
+                        #imageLiteral(resourceName: "blue-3")
+                    ]
+                    imageView.animationDuration = 0.5
+                    imageView.startAnimating()
+                    let major = UInt16(Int(UserDefaults.standard.string(forKey: "major")!)!)as CLBeaconMajorValue
+                    let minor = UInt16(Int(UserDefaults.standard.string(forKey: "minor")!)!)as CLBeaconMinorValue
+                    uuid = NSUUID(uuidString: GlobalData.lessonUUID[currentLesson.lesson_id!]!)as UUID?
+                    let beaconRegion = CLBeaconRegion(proximityUUID: uuid!, major: major, minor: minor, identifier: "\(String(describing: UserDefaults.standard.string(forKey: "student_id")!))")
+                    dataDictionary = beaconRegion.peripheralData(withMeasuredPower: nil)
+                    bluetoothManager.startAdvertising(dataDictionary as?[String: Any])
+                    
+                    log.info("broadcasting")
+                    if self.timer == nil{
+                        self.timer = Timer.every(3, {
+                            checkAttendance.checkAttendance()
+                        })
+                    }
+                    UserDefaults.standard.set(Format.Format(date: Date(), format: "HH:mm:ss"), forKey: "broadcast time")
+                    let date = Date().addingTimeInterval(TimeInterval(120))
+                    let timer = Timer(fireAt: date, interval: 0, target: self, selector: #selector(stopBroadcast), userInfo: nil, repeats: false)
+                    RunLoop.main.add(timer, forMode: RunLoopMode.commonModes)
                 }
             }
             else {
                 let alert = UIAlertController(title: "Internet turn on request", message: "Please make sure that your phone has internet connection! ", preferredStyle: UIAlertControllerStyle.alert)
-               /* alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: { action in
-                    self.turnOnData()
-                    self.broadcast()
-                    self.dismiss(animated: true, completion: nil)
-                }))*/
+                /* alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: { action in
+                 self.turnOnData()
+                 self.broadcast()
+                 self.dismiss(animated: true, completion: nil)
+                 }))*/
                 alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.cancel, handler: nil))
                 self.present(alert, animated: true, completion: nil)
                 

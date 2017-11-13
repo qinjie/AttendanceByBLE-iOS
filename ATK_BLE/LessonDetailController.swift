@@ -92,15 +92,15 @@ class LessonDetailController: UIViewController, UITableViewDelegate, UITableView
     }
 
     
-    private func calTimeDiff(start_time:String, end_time:String) -> Int{
-        
-        let startSplit = start_time.components(separatedBy: ":")
-        let sHour = Int(startSplit[0])!
-        let endSplit = end_time.components(separatedBy: ":")
-        let eHour = Int(endSplit[0])!
-        return eHour - sHour
-        
-    }
+//    private func calTimeDiff(start_time:String, end_time:String) -> Int{
+//        
+//        let startSplit = start_time.components(separatedBy: ":")
+//        let sHour = Int(startSplit[0])!
+//        let endSplit = end_time.components(separatedBy: ":")
+//        let eHour = Int(endSplit[0])!
+//        return eHour - sHour
+//        
+//    }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         let destinationVC = segue.destination as! HistoryByLessonController

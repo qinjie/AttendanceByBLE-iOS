@@ -440,6 +440,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
                 let statusCode = response.response?.statusCode
                 if (statusCode == 200){
                     NotificationCenter.default.post(name: Notification.Name(rawValue:"taken"), object: nil)
+//                    if let start_time = UserDefaults.standard.string(forKey: "broadcast time"){
+//                        let end_time = Format.Format(date: Date(), format: "HH:mm:ss")
+//                        let time_interval = Format.Format(string: end_time, format: "HH:mm:ss").timeIntervalSince(Format.Format(string: start_time, format: "HH:mm:ss"))
+//                        print("Performance" + String(describing:time_interval))
+//                    }
                     
                     GlobalData.myAttendance.append(GlobalData.currentLesson.ldateid!)
                     NotificationCenter.default.post(name: NSNotification.Name(rawValue: "atksuccesfully"), object: nil)
