@@ -190,6 +190,8 @@ class NowController: UIViewController,UIPopoverPresentationControllerDelegate, C
                 })
                 alertController.addAction(okAction)
                 self.present(alertController, animated: false, completion: nil)
+            }else{
+                self.checkTime()
             }
             
         })

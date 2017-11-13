@@ -439,6 +439,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
                 
                 let statusCode = response.response?.statusCode
                 if (statusCode == 200){
+                    NotificationCenter.default.post(name: Notification.Name(rawValue:"taken"), object: nil)
+                    
                     GlobalData.myAttendance.append(GlobalData.currentLesson.ldateid!)
                     NotificationCenter.default.post(name: NSNotification.Name(rawValue: "atksuccesfully"), object: nil)
                     let systemSoundID: SystemSoundID = 1315

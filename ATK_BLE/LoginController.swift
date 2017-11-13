@@ -209,6 +209,7 @@ class LoginController: UIViewController, UITextFieldDelegate {
                 
                 print("Done loading classmates")
                 self.removeKeyBoardNotification()
+                NotificationCenter.default.removeObserver(self)
                 self.performSegue(withIdentifier: "sign in", sender: nil)
                 
             }else{

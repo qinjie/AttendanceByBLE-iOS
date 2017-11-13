@@ -46,12 +46,12 @@ struct alamofire{
                         newLesson.lecEmail = lecturer["email"] as? String
                         newLesson.lecOffice = lecturer["office"] as? String
                         newLesson.lecPhone = lecturer["phone"] as? String
-                        newLesson.lecturer_id = lecturer["user_id"] as? Int
+                        newLesson.lecturer_id = lecturer["id"] as? Int
                         
                         if let beacon = lecturer["beacon"] as? [String:Any]{
                             
                             let newLecturer = Lecturer()
-                            newLecturer.lec_id = beacon["user_id"] as? Int
+                            newLecturer.lec_id = lecturer["id"] as? Int
                             newLecturer.major = beacon["major"] as? Int
                             newLecturer.minor = beacon["minor"] as? Int
                             GlobalData.lecturers.append(newLecturer)
@@ -75,6 +75,7 @@ struct alamofire{
                     GlobalData.timetable.append(newLesson)
                 }
                 //Write timetable to the local directory
+                NSKeyedArchiver.archiveRootObject(GlobalData.lecturers, toFile: filePath.lecturerPath)
                 NSKeyedArchiver.archiveRootObject(GlobalData.timetable, toFile: filePath.timetablePath)
                 print("Done loading timetable")
                 NotificationCenter.default.post(name: NSNotification.Name(rawValue: "done loading timetable"), object: nil)
