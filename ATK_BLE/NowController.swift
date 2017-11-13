@@ -267,20 +267,20 @@ class NowController: UIViewController,UIPopoverPresentationControllerDelegate, C
         uuid = NSUUID(uuidString: GlobalData.lessonUUID[currentLesson.lesson_id!]!)as UUID?
         let lecturerRegion = CLBeaconRegion(proximityUUID: uuid, major: UInt16(GlobalData.currentLecturerMajor)as CLBeaconMajorValue, minor: UInt16(GlobalData.currentLecturerMinor)as CLBeaconMinorValue, identifier: GlobalData.currentLecturerId.description)
         locationManager.startMonitoring(for: lecturerRegion)
-        log.info(uuid)
-        log.info(GlobalData.currentLecturerMajor)
-        log.info(GlobalData.currentLecturerMinor)
+        log.info("Lesson UUID = \(uuid)")
+        log.info("Lecturer Major = \(GlobalData.currentLecturerMajor)")
+        log.info("Lecturer Minor = \(GlobalData.currentLecturerMinor)")
     }
     
     func peripheralManagerDidUpdateState(_ peripheral: CBPeripheralManager) {
         var status = ""
         switch peripheral.state {
-        case .poweredOff: status = "Bluetooth Status: \n Turned Off"
-        case .poweredOn: status = "Bluetooth Status: \n Turned On"
-        case .resetting: status = "Bluetooth Status: \n Resetting"
-        case .unauthorized: status = "BLuetooth Status: \n Not Authorized"
-        case .unsupported: status = "Bluetooth Status: \n Not Supported"
-        default: status = "Bluetooth Status: \n Unknown"
+        case .poweredOff: status = "Bluetooth Status: Turned Off"
+        case .poweredOn: status = "Bluetooth Status: Turned On"
+        case .resetting: status = "Bluetooth Status: Resetting"
+        case .unauthorized: status = "BLuetooth Status: Not Authorized"
+        case .unsupported: status = "Bluetooth Status: Not Supported"
+        default: status = "Bluetooth Status: Unknown"
         }
         log.info(status)
     }
@@ -393,7 +393,7 @@ class NowController: UIViewController,UIPopoverPresentationControllerDelegate, C
     }
     
     @objc private func checkTime(){
-        log.info("checking time")
+        print("checking time")
         self.setupTitle()
         nextLesson = 1
         //check if today have lessons
@@ -418,7 +418,7 @@ class NowController: UIViewController,UIPopoverPresentationControllerDelegate, C
             /*self.classmate = GlobalData.classmates.filter({($0.lesson_id! == currentLesson.lesson_id!)}).first!
              print("Students  \(String(describing: self.classmate.student_id?.count))")*/
             log.info("\(String(describing: GlobalData.currentLesson.catalog))")
-            log.info(UserDefaults.standard.string(forKey: "student_id")!)
+            log.info("My Student Id = \(UserDefaults.standard.string(forKey: "student_id")!)")
             NotificationCenter.default.removeObserver(self, name: Notification.Name(rawValue:"detect lecturer"), object: nil)
             NotificationCenter.default.addObserver(self, selector: #selector(detectLecturer), name: Notification.Name(rawValue: "detect lecturer"), object: nil)
         }else{
@@ -522,7 +522,7 @@ class NowController: UIViewController,UIPopoverPresentationControllerDelegate, C
                 Alamofire.request(Constant.URLstudentlogin, method: .post, parameters: parameters, encoding: JSONEncoding.default, headers: nil).responseJSON { (response:DataResponse) in
                     let code = response.response?.statusCode
                     spinnerIndicator.removeFromSuperview()
-                    log.info("Status code : " + String(describing: code))
+                    //log.info("Status code : " + String(describing: code))
                     if code == 200{
                         if let json = response.result.value as? [String:AnyObject]{
                             UserDefaults.standard.set(json["token"], forKey: "token")

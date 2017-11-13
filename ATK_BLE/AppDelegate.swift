@@ -42,12 +42,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
         bluetoothManager.delegate = self
         bluetoothManager = CBPeripheralManager.init(delegate: self, queue: nil)
         
-        if UserDefaults.standard.string(forKey: "student_id") != nil{
+        /*if UserDefaults.standard.string(forKey: "student_id") != nil{
             self.loadData()
             let mainStoryboard: UIStoryboard = UIStoryboard(name: "Main", bundle: nil)
             let home:UITabBarController = (mainStoryboard.instantiateViewController(withIdentifier: "home") as? UITabBarController)!
             self.window?.rootViewController = home
-        }
+        }*/
         UNUserNotificationCenter.current().delegate = self
         FirebaseApp.configure()
         Messaging.messaging().delegate = self
@@ -292,8 +292,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
         Messaging.messaging().setAPNSToken(deviceToken, type: MessagingAPNSTokenType.unknown)
         Messaging.messaging().setAPNSToken(deviceToken, type: MessagingAPNSTokenType.prod)
         InstanceID.instanceID()
-        let take = Messaging.messaging().fcmToken
-        log.info("FCMToken \(String(describing:take))")
+        _ = Messaging.messaging().fcmToken
+        //log.info("FCMToken \(String(describing:take))")
     }
     @nonobjc func application(_ application: UIApplication, didRegister notificationSettings: UNNotificationSettings)
     {
@@ -366,12 +366,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
     func peripheralManagerDidUpdateState(_ peripheral: CBPeripheralManager) {
         var status = ""
         switch peripheral.state {
-        case .poweredOff: status = "Bluetooth Status: \n Turned Off"
-        case .poweredOn: status = "Bluetooth Status: \n Turned On"
-        case .resetting: status = "Bluetooth Status: \n Resetting"
-        case .unauthorized: status = "BLuetooth Status: \n Not Authorized"
-        case .unsupported: status = "Bluetooth Status: \n Not Supported"
-        default: status = "Bluetooth Status: \n Unknown"
+        case .poweredOff: status = "Bluetooth Status: Turned Off"
+        case .poweredOn: status = "Bluetooth Status: Turned On"
+        case .resetting: status = "Bluetooth Status: Resetting"
+        case .unauthorized: status = "BLuetooth Status: Not Authorized"
+        case .unsupported: status = "Bluetooth Status: Not Supported"
+        default: status = "Bluetooth Status: Unknown"
         }
         log.info(status)
     }
