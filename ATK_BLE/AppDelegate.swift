@@ -381,6 +381,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
     }
     
     @objc func takeAttendance() {
+        NotificationCenter.default.removeObserver(self, name: Notification.Name(rawValue: "notTaken"), object: nil)
         if Constant.change_device == true{
             
         }else{
@@ -420,7 +421,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
                     }
                     
                     //Upload log file
-                    self.uploadLogFile()
                     
                     GlobalData.myAttendance.append(GlobalData.currentLesson.ldateid!)
                     NotificationCenter.default.post(name: NSNotification.Name(rawValue: "atksuccesfully"), object: nil)

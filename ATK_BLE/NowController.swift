@@ -394,6 +394,13 @@ class NowController: UIViewController,UIPopoverPresentationControllerDelegate, C
             
             checkAttendance.checkAttendance()
             currentLesson = GlobalData.currentLesson
+            
+            let timeInterval = Format.Format(string: Format.Format(date: Date(), format: "HH:mm:ss"), format: "HH:mm:ss").timeIntervalSince(Format.Format(string: currentLesson.start_time!, format: "HH:mm:ss"))
+            if timeInterval >= 5400{
+                let appdelegate = UIApplication.shared.delegate as! AppDelegate
+                appdelegate.uploadLogFile()
+            }
+            
             subjectLabel.text = currentLesson.subject! + " " + currentLesson.catalog!
             classLabel.text = currentLesson.class_section
             timeLabel.text = displayTime.display(time: currentLesson.start_time!) + " - " + displayTime.display(time: currentLesson.end_time!)
@@ -415,6 +422,7 @@ class NowController: UIViewController,UIPopoverPresentationControllerDelegate, C
             log.info("My Name : \(UserDefaults.standard.string(forKey: "name")!)")
             NotificationCenter.default.removeObserver(self, name: Notification.Name(rawValue:"detect lecturer"), object: nil)
             NotificationCenter.default.addObserver(self, selector: #selector(detectLecturer), name: Notification.Name(rawValue: "detect lecturer"), object: nil)
+            
         }else{
             currentLesson = nil
             if checkLesson.checkNextLesson() == true{
