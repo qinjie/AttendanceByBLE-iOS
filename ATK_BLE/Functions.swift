@@ -185,11 +185,12 @@ struct checkAttendance{
 class checkLesson{
     
     static func checkCurrentLesson() -> Bool{
-        let today = Date()
+        var today = Date()
         GlobalData.currentDateStr = Format.Format(date: today, format: "yyyy-MM-dd")
         GlobalData.today = GlobalData.timetable.filter({$0.ldate == GlobalData.currentDateStr})
         //check if today have lessons
         if GlobalData.today.count > 0 {
+            today.addTimeInterval(300)
             let currentTimeStr = Format.Format(date: today, format: "HH:mm:ss")
             let currentLesson = GlobalData.today.first(where: {$0.start_time!<=currentTimeStr && $0.end_time!>=currentTimeStr})
             //check current have lessons?
@@ -216,10 +217,10 @@ class checkLesson{
             var minute:Int!
             hour = Int((time?[0])!)
             minute = Int((time?[1])!)
-            let totalSecond = hour*3600 + minute*60
+            let totalSecond = hour*3600 + minute*60 - 300
             let hr = totalSecond/3600
-            //let min = (totalSecond%3600)/60
-            GlobalData.nextLessonTime = "not yet time \ntry again after \(hr):00"
+            let min = (totalSecond%3600)/60
+            GlobalData.nextLessonTime = "not yet time \ntry again after \(hr):\(min)"
             GlobalData.nextLesson = nLesson
             return true
         }else{

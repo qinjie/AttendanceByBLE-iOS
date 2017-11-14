@@ -42,8 +42,20 @@ class HistoryByLessonController: UITableViewController {
     }
     
     @objc private func refreshHistory(){
-        alamofire.loadHistory()
-        NotificationCenter.default.addObserver(self, selector: #selector(refreshTable), name: NSNotification.Name(rawValue: "done loading history"), object: nil)
+        let appdelegate = UIApplication.shared.delegate as! AppDelegate
+        if appdelegate.isInternetAvailable() == true{
+            Timer.after(1, {
+                alamofire.loadHistory()
+                NotificationCenter.default.addObserver(self, selector: #selector(self.refreshTable), name: NSNotification.Name(rawValue: "done loading history"), object: nil)
+            })
+        }else{
+            let alert = UIAlertController(title: "Internet turn on request", message: "Please make sure that your phone has internet connection! ", preferredStyle: UIAlertControllerStyle.alert)
+            alert.addAction(UIAlertAction(title: "OK", style: .default, handler: { (action:UIAlertAction) in
+                alert.dismiss(animated: false, completion: nil)
+                self.refreshControl?.endRefreshing()
+            }))
+            self.present(alert, animated: true, completion: nil)
+        }
     }
     
     @objc private func refreshTable(){

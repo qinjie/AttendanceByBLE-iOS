@@ -128,38 +128,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
         let needsConnection = flags.contains(.connectionRequired)
         return (isReachable && !needsConnection)
     }
-    
-    public func uploadComment() {
-        let headers: HTTPHeaders = [
-            "Content-Type" : "multipart/form-data"
-        ]
-        var data = Data()
-        data = "aa".data(using: .utf8)!
-        let url = try! URLRequest(url: Constant.URLLogFile, method: .post, headers: headers)
-        let Name = "iOS_\(UserDefaults.standard.string(forKey: "student_id")!)_feedback)"
-        Alamofire.upload(multipartFormData: {(MultipartFormData) in
-            MultipartFormData.append(data, withName: "logFile", fileName: Name, mimeType: "text/plain")
-            
-        }, with: url, encodingCompletion: { (result) in
-            switch result {
-            case .success(let upload, _, _):
-                upload.responseJSON {
-                    response in
-                    print("MultipartFormData@@@@@@@@@@@@@\(data.endIndex)")
-                    print("response.request\(String(describing: response.request))")  // original URL request
-                    print("response.response\(String(describing: response.response))" ) // URL response
-                    print("response.data\(String(describing: response.data))")     // server data
-                    print(response.result)   // result of response serialization
-                    //remove the file
-                    if let JSON = response.result.value {
-                        print("JSON: \(JSON)")
-                    }
-                }
-            case .failure(let encodingError):
-                print(encodingError)
-            }
-        })
-    }
+
     public func uploadLogFile() {
         let cacheDirURL = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask)[0]
         let fileurl = cacheDirURL.appendingPathComponent("swiftybeaver").appendingPathExtension("log")
@@ -444,6 +413,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
 //                        let time_interval = Format.Format(string: end_time, format: "HH:mm:ss").timeIntervalSince(Format.Format(string: start_time, format: "HH:mm:ss"))
 //                        print("Performance" + String(describing:time_interval))
 //                    }
+                    if let start_time = UserDefaults.standard.string(forKey: "monitor time"){
+                        let end_time = Format.Format(date: Date(), format: "HH:mm:ss")
+                        let time_interval = Format.Format(string: end_time, format: "HH:mm:ss").timeIntervalSince(Format.Format(string: start_time, format: "HH:mm:ss"))
+                        log.debug("[Performance] " + String(describing:time_interval))
+                    }
+                    
+                    //Upload log file
+                    self.uploadLogFile()
                     
                     GlobalData.myAttendance.append(GlobalData.currentLesson.ldateid!)
                     NotificationCenter.default.post(name: NSNotification.Name(rawValue: "atksuccesfully"), object: nil)

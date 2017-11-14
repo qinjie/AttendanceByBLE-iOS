@@ -93,19 +93,6 @@ class NowController: UIViewController,UIPopoverPresentationControllerDelegate, C
             
         }
         
-        for i in upcomingLesson{
-            date = Format.Format(date: Date(), format: "HH:mm:ss")
-            let start_time = Format.Format(string: i.start_time!, format: "HH:mm:ss")
-            let calendar = Calendar.current.dateComponents([.hour,.minute,.second], from: Format.Format(string: date, format: "HH:mm:ss"), to: start_time)
-            let interval = Double(calendar.hour!*3600 + calendar.minute!*60 + calendar.second!)
-            if interval > 0 {
-                let notificationContent = notification.notiContent(title: "Lesson started", body: "Please open your app to take attendance")
-                let trigger = UNTimeIntervalNotificationTrigger(timeInterval: interval, repeats: false)
-                notification.addNotification(trigger: trigger, content: notificationContent, identifier: String(describing:i.ldateid)+"lesson time")
-            }
-            
-        }
-        
     }
     
     private func addObservers(){
@@ -144,8 +131,12 @@ class NowController: UIViewController,UIPopoverPresentationControllerDelegate, C
             if let start_time = UserDefaults.standard.string(forKey: "broadcast time"){
                 let end_time = Format.Format(date: Date(), format: "HH:mm:ss")
                 let time_interval = Format.Format(string: end_time, format: "HH:mm:ss").timeIntervalSince(Format.Format(string: start_time, format: "HH:mm:ss"))
-                print("Performance" + String(describing:time_interval))
+                log.debug("[Performance] " + String(describing:time_interval))
             }
+            
+            //Upload log file
+            let appdelegate = UIApplication.shared.delegate as! AppDelegate
+            appdelegate.uploadLogFile()
         }
         self.stopBroadcast()
         imageView.isUserInteractionEnabled = false
@@ -164,6 +155,7 @@ class NowController: UIViewController,UIPopoverPresentationControllerDelegate, C
             })
             let noAction =  UIAlertAction(title: "No", style: .default, handler: { (action:UIAlertAction) in
                 Constant.change_device = true
+                self.checkTime()
             })
             deviceAlertController.addAction(yesAction)
             deviceAlertController.addAction(noAction)
@@ -274,6 +266,7 @@ class NowController: UIViewController,UIPopoverPresentationControllerDelegate, C
     }
     
     @objc private func detectLecturer() {
+        UserDefaults.standard.set(Format.Format(date: Date(), format: "HH:mm:ss"), forKey: "monitor time")
         uuid = NSUUID(uuidString: GlobalData.lessonUUID[currentLesson.lesson_id!]!)as UUID?
         let lecturerRegion = CLBeaconRegion(proximityUUID: uuid, major: UInt16(GlobalData.currentLecturerMajor)as CLBeaconMajorValue, minor: UInt16(GlobalData.currentLecturerMinor)as CLBeaconMinorValue, identifier: GlobalData.currentLecturerId.description)
         locationManager.startMonitoring(for: lecturerRegion)
@@ -306,6 +299,7 @@ class NowController: UIViewController,UIPopoverPresentationControllerDelegate, C
                     alertController.addAction(okAction)
                     self.present(alertController, animated: false, completion: nil)
                 }else{
+                    
                     imageView.animationImages = [
                         #imageLiteral(resourceName: "blue-1"),
                         #imageLiteral(resourceName: "blue-2"),
@@ -327,9 +321,6 @@ class NowController: UIViewController,UIPopoverPresentationControllerDelegate, C
                         })
                     }
                     UserDefaults.standard.set(Format.Format(date: Date(), format: "HH:mm:ss"), forKey: "broadcast time")
-                    let date = Date().addingTimeInterval(TimeInterval(120))
-                    let timer = Timer(fireAt: date, interval: 0, target: self, selector: #selector(stopBroadcast), userInfo: nil, repeats: false)
-                    RunLoop.main.add(timer, forMode: RunLoopMode.commonModes)
                 }
             }
             else {
