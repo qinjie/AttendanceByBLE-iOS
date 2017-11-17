@@ -448,7 +448,7 @@ class NowController: UIViewController,UIPopoverPresentationControllerDelegate, C
         let date = Format.Format(date: Date(), format: "HH:mm:ss")
         let start_time = Format.Format(string: nLesson.start_time!, format: "HH:mm:ss")
         let calendar = Calendar.current.dateComponents([.hour,.minute,.second], from: Format.Format(string: date, format: "HH:mm:ss"), to: start_time)
-        let interval = Double(calendar.hour!*3600 + calendar.minute!*60 + calendar.second!)
+        let interval = Double(calendar.hour!*3600 + calendar.minute!*60 + calendar.second! - 600)
         if interval > 0 {
             
             let nTimer = Timer.scheduledTimer(timeInterval: interval, target: self, selector: #selector(checkTime), userInfo: nil, repeats: false)

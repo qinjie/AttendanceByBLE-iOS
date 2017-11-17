@@ -190,7 +190,7 @@ class checkLesson{
         GlobalData.today = GlobalData.timetable.filter({$0.ldate == GlobalData.currentDateStr})
         //check if today have lessons
         if GlobalData.today.count > 0 {
-            today.addTimeInterval(300)
+            today.addTimeInterval(600)
             let currentTimeStr = Format.Format(date: today, format: "HH:mm:ss")
             let currentLesson = GlobalData.today.first(where: {$0.start_time!<=currentTimeStr && $0.end_time!>=currentTimeStr})
             //check current have lessons?
