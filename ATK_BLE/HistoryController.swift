@@ -49,6 +49,7 @@ class HistoryController: UITableViewController {
         if appdelegate.isInternetAvailable() == true {
             Timer.after(1, {
                 alamofire.loadHistory()
+                alamofire.loadOverallHistory()
                 NotificationCenter.default.addObserver(self, selector: #selector(self.refreshTable), name: NSNotification.Name(rawValue: "done loading history"), object: nil)
             })
         }

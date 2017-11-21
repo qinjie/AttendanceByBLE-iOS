@@ -53,7 +53,6 @@ class NowController: UIViewController,UIPopoverPresentationControllerDelegate, C
         locationManager.delegate = self
         bluetoothManager.delegate = self
         bluetoothManager = CBPeripheralManager.init(delegate: self, queue: nil)
-        locationManager.requestAlwaysAuthorization()
         UNUserNotificationCenter.current().delegate = self
         setupTimer()    //For every lesson before 10 mins
         
@@ -114,8 +113,16 @@ class NowController: UIViewController,UIPopoverPresentationControllerDelegate, C
     }
     
     @objc func notTaken(){
-        imageView.isUserInteractionEnabled = true
-        imageView.image = #imageLiteral(resourceName: "blue-on")
+        let timeInterval = Format.Format(string: Format.Format(date: Date(), format: "HH:mm:ss"), format: "HH:mm:ss").timeIntervalSince(Format.Format(string: currentLesson.start_time!, format: "HH:mm:ss"))
+        if timeInterval >= 0{
+            imageView.isUserInteractionEnabled = true
+            imageView.image = #imageLiteral(resourceName: "blue-on")
+            broadcastLabel.isHidden = false
+        }else{
+            imageView.isUserInteractionEnabled = false
+            imageView.image = #imageLiteral(resourceName: "blue-off")
+            broadcastLabel.isHidden = true
+        }
     }
     
     @objc func attendanceTaken(){
@@ -124,20 +131,15 @@ class NowController: UIViewController,UIPopoverPresentationControllerDelegate, C
                 self.locationManager.stopMonitoring(for: i)
             }
         }
+        
         if timer != nil{
-            timer?.invalidate()
-            timer = nil
-            
             if let start_time = UserDefaults.standard.string(forKey: "broadcast time"){
                 let end_time = Format.Format(date: Date(), format: "HH:mm:ss")
                 let time_interval = Format.Format(string: end_time, format: "HH:mm:ss").timeIntervalSince(Format.Format(string: start_time, format: "HH:mm:ss"))
                 log.debug("[Performance] " + String(describing:time_interval))
             }
-            
-            //Upload log file
-            let appdelegate = UIApplication.shared.delegate as! AppDelegate
-            appdelegate.uploadLogFile()
         }
+        
         self.stopBroadcast()
         imageView.isUserInteractionEnabled = false
         imageView.image = #imageLiteral(resourceName: "blue-off")
@@ -235,9 +237,7 @@ class NowController: UIViewController,UIPopoverPresentationControllerDelegate, C
     @objc private func broadcastSignal() {
         if currentLesson != nil {
             if imageView.isAnimating{
-                imageView.stopAnimating()
-                bluetoothManager.stopAdvertising()
-                log.info("Stop Broadcasting")
+                
             }else{
                 broadcast()
             }
@@ -260,12 +260,21 @@ class NowController: UIViewController,UIPopoverPresentationControllerDelegate, C
     }
     
     @objc func stopBroadcast() {
+        
+        if timer != nil{
+            timer?.invalidate()
+            timer = nil
+        }
+        
         bluetoothManager.stopAdvertising()
         self.imageView.stopAnimating()
+        broadcastLabel.textColor = UIColor.black
+        broadcastLabel.text = "Broadcast my beacon"
         log.info("Stop Broadcasting")
     }
     
     @objc private func detectLecturer() {
+        NotificationCenter.default.removeObserver(self, name: Notification.Name(rawValue:"detect lecturer"), object: nil)
         UserDefaults.standard.set(Format.Format(date: Date(), format: "HH:mm:ss"), forKey: "monitor time")
         uuid = NSUUID(uuidString: GlobalData.lessonUUID[currentLesson.lesson_id!]!)as UUID?
         let lecturerRegion = CLBeaconRegion(proximityUUID: uuid, major: UInt16(GlobalData.currentLecturerMajor)as CLBeaconMajorValue, minor: UInt16(GlobalData.currentLecturerMinor)as CLBeaconMinorValue, identifier: GlobalData.currentLecturerId.description)
@@ -301,9 +310,9 @@ class NowController: UIViewController,UIPopoverPresentationControllerDelegate, C
                 }else{
                     
                     imageView.animationImages = [
-                        #imageLiteral(resourceName: "blue-1"),
-                        #imageLiteral(resourceName: "blue-2"),
-                        #imageLiteral(resourceName: "blue-3")
+                        #imageLiteral(resourceName: "blue_1"),
+                        #imageLiteral(resourceName: "blue_2"),
+                        #imageLiteral(resourceName: "blue_3")
                     ]
                     imageView.animationDuration = 0.5
                     imageView.startAnimating()
@@ -321,6 +330,10 @@ class NowController: UIViewController,UIPopoverPresentationControllerDelegate, C
                         })
                     }
                     UserDefaults.standard.set(Format.Format(date: Date(), format: "HH:mm:ss"), forKey: "broadcast time")
+                    broadcastLabel.textColor = UIColor.blue
+                    broadcastLabel.text = "Broadcasting..."
+                    let nTimer = Timer.scheduledTimer(timeInterval: 120, target: self, selector: #selector(stopBroadcast), userInfo: nil, repeats: false)
+                    RunLoop.main.add(nTimer, forMode: RunLoopMode.commonModes)
                 }
             }
             else {
@@ -386,6 +399,35 @@ class NowController: UIViewController,UIPopoverPresentationControllerDelegate, C
     }
     
     @objc private func checkTime(){
+        
+        if CLLocationManager.locationServicesEnabled(){
+            switch CLLocationManager.authorizationStatus(){
+            case .authorizedAlways:
+                break
+            default:
+                let alertController = UIAlertController(title: "Location Services", message: "Please always allow location services for background functions", preferredStyle: .alert)
+                let action = UIAlertAction(title: "OK", style: .default, handler: { (action:UIAlertAction) in
+                    if let url = URL(string: "App-Prefs:root=Privacy&path=LOCATION") {
+                        // If general location settings are disabled then open general location settings
+                        UIApplication.shared.open(url, options: [:], completionHandler: nil)
+                    }
+                })
+                alertController.addAction(action)
+                self.present(alertController, animated: false, completion: nil)
+            }
+        }else{
+            //location Services off
+            let alertController = UIAlertController(title: "Location Services", message: "Please always allow location services for background functions", preferredStyle: .alert)
+            let action = UIAlertAction(title: "OK", style: .default, handler: { (action:UIAlertAction) in
+                if let url = URL(string: "App-Prefs:root=Privacy&path=LOCATION") {
+                    // If general location settings are disabled then open general location settings
+                    UIApplication.shared.open(url, options: [:], completionHandler: nil)
+                }
+            })
+            alertController.addAction(action)
+            self.present(alertController, animated: false, completion: nil)
+        }
+        
         log.info("checking time")
         self.setupTitle()
         nextLesson = 1
@@ -394,6 +436,8 @@ class NowController: UIViewController,UIPopoverPresentationControllerDelegate, C
             
             checkAttendance.checkAttendance()
             currentLesson = GlobalData.currentLesson
+            
+            self.currentLessonRefresh()
             
             let timeInterval = Format.Format(string: Format.Format(date: Date(), format: "HH:mm:ss"), format: "HH:mm:ss").timeIntervalSince(Format.Format(string: currentLesson.start_time!, format: "HH:mm:ss"))
             if timeInterval >= 5400{
@@ -450,12 +494,24 @@ class NowController: UIViewController,UIPopoverPresentationControllerDelegate, C
         let calendar = Calendar.current.dateComponents([.hour,.minute,.second], from: Format.Format(string: date, format: "HH:mm:ss"), to: start_time)
         let interval = Double(calendar.hour!*3600 + calendar.minute!*60 + calendar.second! - 600)
         if interval > 0 {
-            
             let nTimer = Timer.scheduledTimer(timeInterval: interval, target: self, selector: #selector(checkTime), userInfo: nil, repeats: false)
             RunLoop.main.add(nTimer, forMode: RunLoopMode.commonModes)
             
         }
         
+    }
+    
+    private func currentLessonRefresh(){
+        let cLesson = GlobalData.currentLesson
+        let date = Format.Format(date: Date(), format: "HH:mm:ss")
+        let start_time = Format.Format(string: cLesson.start_time!, format: "HH:mm:ss")
+        let calendar = Calendar.current.dateComponents([.hour,.minute,.second], from: Format.Format(string: date, format: "HH:mm:ss"), to: start_time)
+        let interval = Double(calendar.hour!*3600 + calendar.minute!*60 + calendar.second!)
+        if interval > 0 {
+            let nTimer = Timer.scheduledTimer(timeInterval: interval, target: self, selector: #selector(checkTime), userInfo: nil, repeats: false)
+            RunLoop.main.add(nTimer, forMode: RunLoopMode.commonModes)
+            
+        }
     }
     
     private func updateLabels(){
