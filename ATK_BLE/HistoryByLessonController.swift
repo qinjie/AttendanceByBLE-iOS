@@ -85,7 +85,7 @@ class HistoryByLessonController: UITableViewController {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = (tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as? LessonCell)!
         let mHistory = history[indexPath.row]
-        let lesson = GlobalData.timetable.filter({$0.lesson_id == mHistory.lesson_id}).first
+        let lesson = GlobalData.semesterTimetable.filter({$0.lesson_id == mHistory.lesson_id}).first
         lesson?.status = GlobalData.attendance.filter({$0.lesson_id == lesson?.lesson_id}).first?.status
         cell.lesson = lesson
         cell.venue.isHidden = true

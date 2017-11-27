@@ -87,7 +87,13 @@ class HistoryController: UITableViewController {
         
         let historyInDay = GlobalData.attendance.filter({$0.ldate == historyDate[indexPath.section]})
         let lesson = historyInDay[indexPath.row]
-        lesson.credit_unit = GlobalData.timetable.filter({$0.lesson_id == lesson.lesson_id}).first?.credit_unit!
+        
+        let semesterTimetable = GlobalData.semesterTimetable.filter({$0.lesson_id == lesson.lesson_id}).first!
+        lesson.credit_unit = semesterTimetable.credit_unit!
+        lesson.lecturer = semesterTimetable.lecturer
+        lesson.lecPhone = semesterTimetable.lecPhone
+        lesson.lecOffice = semesterTimetable.lecOffice
+        lesson.lecEmail  = semesterTimetable.lecEmail
         cell.lesson = lesson
         cell.venue.isHidden = true
         cell.iconView.isHidden = false

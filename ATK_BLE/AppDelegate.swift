@@ -529,6 +529,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
     }
     
     private func loadData(){
+        
+        if let semesterTimetable = NSKeyedUnarchiver.unarchiveObject(withFile: filePath.semesterTimetablePath) as? [Lesson]{
+            GlobalData.semesterTimetable = semesterTimetable
+        }
+        
         if let timetable = NSKeyedUnarchiver.unarchiveObject(withFile: filePath.timetablePath) as? [Lesson]{
             GlobalData.timetable = timetable
         }

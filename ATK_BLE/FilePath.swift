@@ -8,6 +8,13 @@
 
 import Foundation
 struct filePath{
+    
+    static var semesterTimetablePath: String{
+        let manager = FileManager.default
+        let url = manager.urls(for: .documentDirectory, in: .userDomainMask).first
+        return url!.appendingPathComponent("semester timetable").path
+    }
+    
     static var timetablePath: String{
         let manager = FileManager.default
         let url = manager.urls(for: .documentDirectory, in: .userDomainMask).first

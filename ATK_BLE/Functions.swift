@@ -12,6 +12,46 @@ import UserNotifications
 
 struct alamofire{
     
+    static func loadSemesterTimetable(){
+        let token = UserDefaults.standard.string(forKey: "token")
+        //Load semester timetable
+        let headers:HTTPHeaders = [
+            "Authorization" : "Bearer " + token!
+        ]
+        
+        Alamofire.request(Constant.URLSemesterTimetable, method: .get, parameters: nil, encoding: JSONEncoding.default, headers: headers).responseJSON { (response:DataResponse) in
+            if let JSON = response.result.value as? [AnyObject]{
+                GlobalData.semesterTimetable.removeAll()
+                
+                for json in JSON{
+                    let newLesson = Lesson()
+                    newLesson.lesson_id = json["id"] as? Int
+                    newLesson.subject = json["subject_area"] as? String
+                    newLesson.catalog = json["catalog_number"] as? String
+                    newLesson.class_section = json["class_section"] as? String
+                    newLesson.location = json["facility"] as? String
+                    newLesson.weekday   = json["weekday"] as? String
+                    newLesson.start_time = json["start_time"] as? String
+                    newLesson.end_time = json["end_time"] as? String
+                    newLesson.credit_unit = Int((json["credit_unit"] as? String)!)
+                    
+                    if let lecturer = json["lecturers"] as? [String: Any]{
+                        newLesson.lecturer = lecturer["name"] as? String
+                        newLesson.lecAcad = lecturer["acad"] as? String
+                        newLesson.lecEmail = lecturer["email"] as? String
+                        newLesson.lecPhone = lecturer["phone"] as? String
+                        newLesson.lecOffice = lecturer["office"] as? String
+                        newLesson.lecturer_id = lecturer["id"] as? Int
+                    }
+                    
+                    GlobalData.semesterTimetable.append(newLesson)
+                }
+                NSKeyedArchiver.archiveRootObject(GlobalData.semesterTimetable, toFile: filePath.semesterTimetablePath)
+                log.info("done loading semester timetable")
+            }
+        }
+    }
+    
     static func loadTimetable(){
         
         let token = UserDefaults.standard.string(forKey: "token")

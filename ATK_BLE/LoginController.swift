@@ -132,6 +132,8 @@ class LoginController: UIViewController, UITextFieldDelegate {
     }
     
     @objc func doneLoadingTimetable(){
+        NotificationCenter.default.removeObserver(self, name: Notification.Name(rawValue: "done loading timetable"), object: nil)
+        alamofire.loadSemesterTimetable()
         self.loadUUID()
         self.loadClassmate()
         self.loadHistory()

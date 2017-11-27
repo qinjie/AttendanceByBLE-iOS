@@ -56,8 +56,8 @@ class NowController: UIViewController,UIPopoverPresentationControllerDelegate, C
         UNUserNotificationCenter.current().delegate = self
         setupTimer()    //For every lesson before 10 mins
         
-        
     }
+
     override func viewWillAppear(_ animated: Bool) {
         //let appdelegate = UIApplication.shared.delegate as! AppDelegate
         //appdelegate.uploadLogFile()
