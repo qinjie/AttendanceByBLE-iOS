@@ -275,7 +275,6 @@ class NowController: UIViewController,UIPopoverPresentationControllerDelegate, C
     
     @objc private func detectLecturer() {
         NotificationCenter.default.removeObserver(self, name: Notification.Name(rawValue:"detect lecturer"), object: nil)
-        UserDefaults.standard.set(Format.Format(date: Date(), format: "HH:mm:ss"), forKey: "monitor time")
         uuid = NSUUID(uuidString: GlobalData.lessonUUID[currentLesson.lesson_id!]!)as UUID?
         let lecturerRegion = CLBeaconRegion(proximityUUID: uuid, major: UInt16(GlobalData.currentLecturerMajor)as CLBeaconMajorValue, minor: UInt16(GlobalData.currentLecturerMinor)as CLBeaconMinorValue, identifier: GlobalData.currentLecturerId.description)
         locationManager.startMonitoring(for: lecturerRegion)
@@ -434,8 +433,15 @@ class NowController: UIViewController,UIPopoverPresentationControllerDelegate, C
         //check if today have lessons
         if checkLesson.checkCurrentLesson() == true {
             
-            checkAttendance.checkAttendance()
-            currentLesson = GlobalData.currentLesson
+            let appdelegate = UIApplication.shared.delegate as! AppDelegate
+            if appdelegate.isInternetAvailable() != false{
+                checkAttendance.checkAttendance()
+                currentLesson = GlobalData.currentLesson
+            }else{
+                let alert = UIAlertController(title: "Internet turn on request", message: "Please make sure that your phone has internet connection! ", preferredStyle: UIAlertControllerStyle.alert)
+                alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.cancel, handler: nil))
+                self.present(alert, animated: true, completion: nil)
+            }
             
             self.currentLessonRefresh()
             

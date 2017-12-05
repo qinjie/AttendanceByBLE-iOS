@@ -360,6 +360,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
             checkAttendance.checkAttendance()
             //checkStudent(id: Int(region.identifier)!)
             Constant.identifier = region.identifier
+            UserDefaults.standard.set(Format.Format(date: Date(), format: "HH:mm:ss"), forKey: "monitor time")
             NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "notTaken"), object: nil)
             NotificationCenter.default.addObserver(self,selector: #selector(takeAttendance), name: NSNotification.Name(rawValue: "notTaken"), object: nil)
         case .outside: log.info("Outside bg \(region.identifier)")
