@@ -42,6 +42,7 @@ class NowController: UIViewController,UIPopoverPresentationControllerDelegate, C
     var dataDictionary = NSDictionary()
     var classmate = Classmate()
     var lecturer = Lecturer()
+    let appdelegate = UIApplication.shared.delegate as! AppDelegate
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -100,11 +101,11 @@ class NowController: UIViewController,UIPopoverPresentationControllerDelegate, C
         NotificationCenter.default.addObserver(self, selector: #selector(setupTimer), name: NSNotification.Name(rawValue: "stepper changed"), object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(checkTime), name: NSNotification.Name(rawValue: "done loading timetable"), object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(checkTime), name: NSNotification.Name(rawValue: "enter foreground"), object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(detectLecturer), name: NSNotification.Name(rawValue: "update time"), object: nil)
         NotificationCenter.default.addObserver(self,selector: #selector(success), name: NSNotification.Name(rawValue: "atksuccesfully"), object: nil)
         NotificationCenter.default.addObserver(self,selector: #selector(attendanceTaken), name: NSNotification.Name(rawValue: "taken"), object: nil)
         NotificationCenter.default.addObserver(self,selector: #selector(enableImageView), name: NSNotification.Name(rawValue: "enable imageView"), object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(notTaken), name: Notification.Name(rawValue: "notTaken"), object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(detectLecturer), name: Notification.Name(rawValue: "detect lecturer"), object: nil)
         
     }
     
@@ -113,6 +114,7 @@ class NowController: UIViewController,UIPopoverPresentationControllerDelegate, C
     }
     
     @objc func notTaken(){
+        self.detectLecturer()
         let timeInterval = Format.Format(string: Format.Format(date: Date(), format: "HH:mm:ss"), format: "HH:mm:ss").timeIntervalSince(Format.Format(string: currentLesson.start_time!, format: "HH:mm:ss"))
         if timeInterval >= 0{
             imageView.isUserInteractionEnabled = true
@@ -399,6 +401,43 @@ class NowController: UIViewController,UIPopoverPresentationControllerDelegate, C
     
     @objc private func checkTime(){
         
+        //check if this is a new week
+        let date = Format.Format(date: Date(), format: "EEEE")
+        print("today----> \(date)")
+        if date == "Monday"{
+            if let week = UserDefaults.standard.string(forKey: "week"){
+                if date != week{
+                    alamofire.loadTimetable()
+                    UserDefaults.standard.set(date, forKey: "week")
+                }
+            }else{
+                UserDefaults.standard.set(date, forKey: "week")
+            }
+        }
+        
+        //check if there is a new version on app store
+//            _ = try? self.appdelegate.isUpdateAvailable { (update, error) in
+//                if let error = error {
+//                    print(error)
+//                } else if let update = update {
+//                    print(update)
+//                        if update{
+//                            let alertController = UIAlertController(title: "Update", message: "New version is available on the app store.", preferredStyle: .alert)
+//                            let action = UIAlertAction(title: "OK", style: .default, handler: { (action:UIAlertAction) in
+//                                let appID = "1298489232"
+//                                if let url = URL(string: "itms-apps://itunes.apple.com/app/id" + appID ),
+//                                    UIApplication.shared.canOpenURL(url){
+//                                    UIApplication.shared.open(url, options: [:], completionHandler: nil)
+//                                }
+//                            })
+//                            alertController.addAction(action)
+//                            self.present(alertController, animated: false, completion: nil)
+//                        }
+//
+//                }
+//            }
+        
+        //check location services enabled?
         if CLLocationManager.locationServicesEnabled(){
             switch CLLocationManager.authorizationStatus(){
             case .authorizedAlways:
@@ -432,8 +471,6 @@ class NowController: UIViewController,UIPopoverPresentationControllerDelegate, C
         nextLesson = 1
         //check if today have lessons
         if checkLesson.checkCurrentLesson() == true {
-            
-            let appdelegate = UIApplication.shared.delegate as! AppDelegate
             if appdelegate.isInternetAvailable() != false{
                 checkAttendance.checkAttendance()
                 currentLesson = GlobalData.currentLesson
@@ -446,9 +483,11 @@ class NowController: UIViewController,UIPopoverPresentationControllerDelegate, C
             self.currentLessonRefresh()
             
             let timeInterval = Format.Format(string: Format.Format(date: Date(), format: "HH:mm:ss"), format: "HH:mm:ss").timeIntervalSince(Format.Format(string: currentLesson.start_time!, format: "HH:mm:ss"))
-            if timeInterval >= 5400{
-                let appdelegate = UIApplication.shared.delegate as! AppDelegate
-                appdelegate.uploadLogFile()
+            if timeInterval >= 3600{
+                if UserDefaults.standard.string(forKey: "\(String(describing: GlobalData.currentLesson.ldateid))") != "true"{
+                    let appdelegate = UIApplication.shared.delegate as! AppDelegate
+                    appdelegate.uploadLogFile()
+                }
             }
             
             subjectLabel.text = currentLesson.subject! + " " + currentLesson.catalog!
@@ -470,8 +509,6 @@ class NowController: UIViewController,UIPopoverPresentationControllerDelegate, C
             log.info("current lesson : \(String(describing: GlobalData.currentLesson.catalog!))")
             log.info("My Student Id : \(UserDefaults.standard.string(forKey: "student_id")!)")
             log.info("My Name : \(UserDefaults.standard.string(forKey: "name")!)")
-            NotificationCenter.default.removeObserver(self, name: Notification.Name(rawValue:"detect lecturer"), object: nil)
-            NotificationCenter.default.addObserver(self, selector: #selector(detectLecturer), name: Notification.Name(rawValue: "detect lecturer"), object: nil)
             
         }else{
             currentLesson = nil
@@ -581,29 +618,31 @@ class NowController: UIViewController,UIPopoverPresentationControllerDelegate, C
             "Authorization" : "Bearer " + token
         ]
         Alamofire.request(Constant.URLtimetable, method: .get, parameters: nil, encoding: JSONEncoding.default, headers: headersTimetable).responseJSON { (response:DataResponse) in
-            let code = response.response?.statusCode
-            if code == 200{
-                Alamofire.request(Constant.URLstudentlogin, method: .post, parameters: parameters, encoding: JSONEncoding.default, headers: nil).responseJSON { (response:DataResponse) in
-                    let code = response.response?.statusCode
-                    spinnerIndicator.removeFromSuperview()
-                    log.info("Login Status code : " + String(describing: code))
-                    if code == 200{
-                        if let json = response.result.value as? [String:AnyObject]{
-                            UserDefaults.standard.set(json["token"], forKey: "token")
-                            let status = json["status"] as? Int
-                            NotificationCenter.default.post(name: NSNotification.Name(rawValue: "enable imageView"), object: nil)
-                            self.checkTime()
-                            if status != 10{
-                                Constant.change_device = true
-                            }else{
-                                NotificationCenter.default.post(name: NSNotification.Name(rawValue:"detect lecturer"), object: nil)
+            if let code = response.response?.statusCode{
+                if code == 200{
+                    Alamofire.request(Constant.URLstudentlogin, method: .post, parameters: parameters, encoding: JSONEncoding.default, headers: nil).responseJSON { (response:DataResponse) in
+                        let code = response.response?.statusCode
+                        spinnerIndicator.removeFromSuperview()
+                        log.info("Login Status code : " + String(describing: code))
+                        if code == 200{
+                            if let json = response.result.value as? [String:AnyObject]{
+                                UserDefaults.standard.set(json["token"], forKey: "token")
+                                let status = json["status"] as? Int
+                                NotificationCenter.default.post(name: NSNotification.Name(rawValue: "enable imageView"), object: nil)
+                                self.checkTime()
+                                if status != 10{
+                                    Constant.change_device = true
+                                }else{
+                                    self.checkTime()
+                                }
                             }
                         }
                     }
+                }else if (code>=400) && (code<=500){
+                    NotificationCenter.default.post(name: Notification.Name(rawValue: "userFailed"), object: nil)
                 }
-            }else if (code!>=400) && (code!<=500){
-                NotificationCenter.default.post(name: Notification.Name(rawValue: "userFailed"), object: nil)
             }
+            
         }
     }
     

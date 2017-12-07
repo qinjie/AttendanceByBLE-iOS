@@ -179,6 +179,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
                     print("response.response\(String(describing: response.response))" ) // URL response
                     print("response.data\(String(describing: response.data))")     // server data
                     print(response.result)   // result of response serialization
+                    UserDefaults.standard.set("true", forKey: "\(GlobalData.currentLesson.ldateid)")
                     //remove the file
                     if response.response?.statusCode == 200{
                         self.deleteLogFile()
@@ -484,6 +485,35 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
         backgroundTask = UIBackgroundTaskInvalid
     }
     
+    func isUpdateAvailable(completion: @escaping (Bool?, Error?) -> Void) throws -> URLSessionDataTask {
+        guard let info = Bundle.main.infoDictionary,
+            let currentVersion = info["CFBundleShortVersionString"] as? String,
+            let identifier = info["CFBundleIdentifier"] as? String,
+            let url = URL(string: "http://itunes.apple.com/lookup?bundleId=\(identifier)") else {
+                throw VersionError.invalidBundleInfo
+        }
+        log.debug("CurrentVersion:" + currentVersion)
+        let task = URLSession.shared.dataTask(with: url) { (data, response, error) in
+            do {
+                if let error = error { throw error }
+                guard let data = data else { throw VersionError.invalidResponse }
+                let json = try JSONSerialization.jsonObject(with: data, options: [.allowFragments]) as? [String: Any]
+                guard let result = (json?["results"] as? [Any])?.first as? [String: Any], let version = result["version"] as? String else {
+                    throw VersionError.invalidResponse
+                }
+                completion(version != currentVersion, nil)
+            } catch {
+                completion(nil, error)
+            }
+        }
+        task.resume()
+        return task
+    }
+    
+    enum VersionError: Error{
+        case invalidResponse, invalidBundleInfo
+    }
+    
     func applicationWillResignActive(_ application: UIApplication) {
         // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
         // Use this method to pause ongoing tasks, disable timers, and invalidate graphics rendering callbacks. Games should use this method to pause the game.
@@ -499,9 +529,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
     func applicationWillEnterForeground(_ application: UIApplication) {
         if UserDefaults.standard.string(forKey: "student_id") != nil{
             NotificationCenter.default.post(name: NSNotification.Name(rawValue: "enter foreground"), object: nil)
-            Timer.after(3, {
-                NotificationCenter.default.post(name: Notification.Name(rawValue:"detect lecturer"), object: nil)
-            })
             UIApplication.shared.applicationIconBadgeNumber = 0
         }
         // Called as part of the transition from the background to the active state; here you can undo many of the changes made on entering the background.
