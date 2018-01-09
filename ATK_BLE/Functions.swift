@@ -64,6 +64,7 @@ struct alamofire{
             if let JSON = response.result.value as? [AnyObject]{
                 
                 GlobalData.timetable.removeAll()
+                GlobalData.lecturers.removeAll()
                 
                 for json in JSON{
                     let newLesson = Lesson()

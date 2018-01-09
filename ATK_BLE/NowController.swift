@@ -56,18 +56,15 @@ class NowController: UIViewController,UIPopoverPresentationControllerDelegate, C
         bluetoothManager = CBPeripheralManager.init(delegate: self, queue: nil)
         UNUserNotificationCenter.current().delegate = self
         setupTimer()    //For every lesson before 10 mins
+        if !appdelegate.isInternetAvailable(){
+            let alert = UIAlertController(title: "Internet turn on request", message: "Please make sure that your phone has internet connection! ", preferredStyle: UIAlertControllerStyle.alert)
+            alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.cancel, handler: nil))
+            self.present(alert, animated: true, completion: nil)
+        }
         
     }
 
     override func viewWillAppear(_ animated: Bool) {
-        //let appdelegate = UIApplication.shared.delegate as! AppDelegate
-        //appdelegate.uploadLogFile()
-        //let result = appdelegate.deleteLogFile()
-        //if (result){
-        ///   print("LOG FILE DELETED")
-        //}
-        
-        //appdelegate.downloadLogFile(filename: "kyizar")
     }
     override func viewDidAppear(_ animated: Bool) {
         
@@ -414,29 +411,6 @@ class NowController: UIViewController,UIPopoverPresentationControllerDelegate, C
                 UserDefaults.standard.set(date, forKey: "week")
             }
         }
-        
-        //check if there is a new version on app store
-//            _ = try? self.appdelegate.isUpdateAvailable { (update, error) in
-//                if let error = error {
-//                    print(error)
-//                } else if let update = update {
-//                    print(update)
-//                        if update{
-//                            let alertController = UIAlertController(title: "Update", message: "New version is available on the app store.", preferredStyle: .alert)
-//                            let action = UIAlertAction(title: "OK", style: .default, handler: { (action:UIAlertAction) in
-//                                let appID = "1298489232"
-//                                if let url = URL(string: "itms-apps://itunes.apple.com/app/id" + appID ),
-//                                    UIApplication.shared.canOpenURL(url){
-//                                    UIApplication.shared.open(url, options: [:], completionHandler: nil)
-//                                }
-//                            })
-//                            alertController.addAction(action)
-//                            self.present(alertController, animated: false, completion: nil)
-//                        }
-//
-//                }
-//            }
-        
         //check location services enabled?
         if CLLocationManager.locationServicesEnabled(){
             switch CLLocationManager.authorizationStatus(){
@@ -474,42 +448,34 @@ class NowController: UIViewController,UIPopoverPresentationControllerDelegate, C
             if appdelegate.isInternetAvailable() != false{
                 checkAttendance.checkAttendance()
                 currentLesson = GlobalData.currentLesson
+                if currentLesson.lecturer_id != 0 {
+                    self.currentLessonRefresh()
+                    
+                    subjectLabel.text = currentLesson.subject! + " " + currentLesson.catalog!
+                    classLabel.text = currentLesson.class_section
+                    timeLabel.text = displayTime.display(time: currentLesson.start_time!) + " - " + displayTime.display(time: currentLesson.end_time!)
+                    venueLabel.text = currentLesson.location
+                    currentTimeLabel.textColor = UIColor.gray
+                    currentTimeLabel.text = "Waiting for \nlecturer's beacon"
+                    GlobalData.currentLesson = currentLesson
+                    //imageView.image = #imageLiteral(resourceName: "blue-on")
+                    log.info("Self.classmatesall \(GlobalData.classmates.count)")
+                    //print("Current Lesson : \(GlobalData.lessonUUID)")
+                    self.lecturer = GlobalData.lecturers.filter({$0.lec_id == currentLesson.lecturer_id}).first!
+                    GlobalData.currentLecturerId = lecturer.lec_id!
+                    GlobalData.currentLecturerMajor = lecturer.major!
+                    GlobalData.currentLecturerMinor = lecturer.minor!
+                    /*self.classmate = GlobalData.classmates.filter({($0.lesson_id! == currentLesson.lesson_id!)}).first!
+                     print("Students  \(String(describing: self.classmate.student_id?.count))")*/
+                    log.info("current lesson : \(String(describing: GlobalData.currentLesson.catalog!))")
+                    log.info("My Student Id : \(UserDefaults.standard.string(forKey: "student_id")!)")
+                    log.info("My Name : \(UserDefaults.standard.string(forKey: "name")!)")
+                }
             }else{
                 let alert = UIAlertController(title: "Internet turn on request", message: "Please make sure that your phone has internet connection! ", preferredStyle: UIAlertControllerStyle.alert)
                 alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.cancel, handler: nil))
                 self.present(alert, animated: true, completion: nil)
             }
-            
-            self.currentLessonRefresh()
-            
-            let timeInterval = Format.Format(string: Format.Format(date: Date(), format: "HH:mm:ss"), format: "HH:mm:ss").timeIntervalSince(Format.Format(string: currentLesson.start_time!, format: "HH:mm:ss"))
-            if timeInterval >= 3600{
-                if UserDefaults.standard.string(forKey: "\(String(describing: GlobalData.currentLesson.ldateid))") != "true"{
-                    let appdelegate = UIApplication.shared.delegate as! AppDelegate
-                    appdelegate.uploadLogFile()
-                }
-            }
-            
-            subjectLabel.text = currentLesson.subject! + " " + currentLesson.catalog!
-            classLabel.text = currentLesson.class_section
-            timeLabel.text = displayTime.display(time: currentLesson.start_time!) + " - " + displayTime.display(time: currentLesson.end_time!)
-            venueLabel.text = currentLesson.location
-            currentTimeLabel.textColor = UIColor.gray
-            currentTimeLabel.text = "Waiting for \nlecturer's beacon"
-            GlobalData.currentLesson = currentLesson
-            //imageView.image = #imageLiteral(resourceName: "blue-on")
-            log.info("Self.classmatesall \(GlobalData.classmates.count)")
-            //print("Current Lesson : \(GlobalData.lessonUUID)")
-            self.lecturer = GlobalData.lecturers.filter({$0.lec_id == currentLesson.lecturer_id}).first!
-            GlobalData.currentLecturerId = lecturer.lec_id!
-            GlobalData.currentLecturerMajor = lecturer.major!
-            GlobalData.currentLecturerMinor = lecturer.minor!
-            /*self.classmate = GlobalData.classmates.filter({($0.lesson_id! == currentLesson.lesson_id!)}).first!
-             print("Students  \(String(describing: self.classmate.student_id?.count))")*/
-            log.info("current lesson : \(String(describing: GlobalData.currentLesson.catalog!))")
-            log.info("My Student Id : \(UserDefaults.standard.string(forKey: "student_id")!)")
-            log.info("My Name : \(UserDefaults.standard.string(forKey: "name")!)")
-            
         }else{
             currentLesson = nil
             if checkLesson.checkNextLesson() == true{
@@ -528,6 +494,30 @@ class NowController: UIViewController,UIPopoverPresentationControllerDelegate, C
             }
         }
         updateLabels()
+        
+        if appdelegate.isInternetAvailable(){
+            //check if there is a new version on app store
+            _ = try? self.appdelegate.isUpdateAvailable { (update, error) in
+                if let error = error {
+                    print(error)
+                } else if let update = update {
+                    print(update)
+                    if update{
+                        let alertController = UIAlertController(title: "Update", message: "New version is available on the app store.", preferredStyle: .alert)
+                        let action = UIAlertAction(title: "OK", style: .default, handler: { (action:UIAlertAction) in
+                            let appID = "1298489232"
+                            if let url = URL(string: "itms-apps://itunes.apple.com/app/id" + appID ),
+                                UIApplication.shared.canOpenURL(url){
+                                UIApplication.shared.open(url, options: [:], completionHandler: nil)
+                            }
+                        })
+                        alertController.addAction(action)
+                        self.present(alertController, animated: false, completion: nil)
+                    }
+                    
+                }
+            }
+        }
     }
     
     private func nextLessonRefresh(){
@@ -618,6 +608,68 @@ class NowController: UIViewController,UIPopoverPresentationControllerDelegate, C
             "Authorization" : "Bearer " + token
         ]
         Alamofire.request(Constant.URLtimetable, method: .get, parameters: nil, encoding: JSONEncoding.default, headers: headersTimetable).responseJSON { (response:DataResponse) in
+            
+            if let JSON = response.result.value as? [AnyObject]{
+                
+                GlobalData.timetable.removeAll()
+                GlobalData.lecturers.removeAll()
+                
+                for json in JSON{
+                    let newLesson = Lesson()
+                    
+                    if let lesson = json["lesson"] as? [String:Any]{
+                        newLesson.lesson_id = lesson["id"] as? Int
+                        newLesson.catalog = lesson["catalog_number"] as? String
+                        newLesson.subject = lesson["subject_area"] as? String
+                        newLesson.start_time = lesson["start_time"] as? String
+                        newLesson.end_time = lesson["end_time"] as? String
+                        newLesson.weekday = lesson["weekday"] as? String
+                        newLesson.class_section = lesson["class_section"] as? String
+                        newLesson.credit_unit =  Int((lesson["credit_unit"] as? String)!)
+                    }
+                    
+                    if let lecturer = json["lecturers"] as? [String:Any]{
+                        
+                        newLesson.lecturer = lecturer["name"] as? String
+                        newLesson.lecAcad = lecturer["acad"] as? String
+                        newLesson.lecEmail = lecturer["email"] as? String
+                        newLesson.lecOffice = lecturer["office"] as? String
+                        newLesson.lecPhone = lecturer["phone"] as? String
+                        newLesson.lecturer_id = lecturer["id"] as? Int
+                        
+                        if let beacon = lecturer["beacon"] as? [String:Any]{
+                            
+                            let newLecturer = Lecturer()
+                            newLecturer.lec_id = lecturer["id"] as? Int
+                            newLecturer.major = beacon["major"] as? Int
+                            newLecturer.minor = beacon["minor"] as? Int
+                            GlobalData.lecturers.append(newLecturer)
+                            
+                        }
+                    }
+                    
+                    if let lesson_date = json["lesson_date"] as? [String:Any]{
+                        
+                        newLesson.ldateid = lesson_date["id"] as? Int
+                        newLesson.ldate = lesson_date["ldate"] as? String
+                    }
+                    
+                    if let venue = json["venue"] as? [String:Any]{
+                        
+                        newLesson.major = venue["major"] as? Int32
+                        newLesson.minor = venue["minor"] as? Int32
+                        newLesson.venueName = venue["name"] as? String
+                        newLesson.location = venue["location"] as? String
+                    }
+                    GlobalData.timetable.append(newLesson)
+                }
+                //Write timetable to the local directory
+                NSKeyedArchiver.archiveRootObject(GlobalData.lecturers, toFile: filePath.lecturerPath)
+                NSKeyedArchiver.archiveRootObject(GlobalData.timetable, toFile: filePath.timetablePath)
+                log.info("Done loading timetable")
+                NotificationCenter.default.post(name: NSNotification.Name(rawValue: "done loading timetable"), object: nil)
+            }
+            
             if let code = response.response?.statusCode{
                 if code == 200{
                     Alamofire.request(Constant.URLstudentlogin, method: .post, parameters: parameters, encoding: JSONEncoding.default, headers: nil).responseJSON { (response:DataResponse) in
@@ -642,7 +694,6 @@ class NowController: UIViewController,UIPopoverPresentationControllerDelegate, C
                     NotificationCenter.default.post(name: Notification.Name(rawValue: "userFailed"), object: nil)
                 }
             }
-            
         }
     }
     

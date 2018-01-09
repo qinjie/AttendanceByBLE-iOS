@@ -56,4 +56,10 @@ struct filePath{
         let url = manager.urls(for: .documentDirectory, in: .userDomainMask).first
         return url!.appendingPathComponent("tempStudents").path
     }
+    
+    static var offlineData: String{
+        let manager = FileManager.default
+        let url = manager.urls(for: .documentDirectory, in: .userDomainMask).first
+        return url!.appendingPathComponent("offlineData").path
+    }
 }

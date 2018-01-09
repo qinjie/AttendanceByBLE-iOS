@@ -130,6 +130,30 @@ class Lesson : NSObject, NSCoding {
     
 }
 
+class Attendance:NSObject, NSCoding{
+    var lessonDateID:Int?
+    var lecturerID:Int?
+    var studentID:Int?
+    
+    init(lessonDateId:Int,lecturerId:Int,studentId:Int){
+        lessonDateID = lessonDateId
+        lecturerID = lecturerId
+        studentID = studentId
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        lessonDateID = aDecoder.decodeObject(forKey: "lessonDateID") as? Int
+        lecturerID = aDecoder.decodeObject(forKey: "lecturerID") as? Int
+        studentID = aDecoder.decodeObject(forKey: "studentID") as? Int
+    }
+    
+    func encode(with aCoder: NSCoder) {
+        aCoder.encode(lessonDateID, forKey: "lessonDateID")
+        aCoder.encode(lecturerID, forKey: "lecturerID")
+        aCoder.encode(studentID, forKey: "studentID")
+    }
+}
+
 class TempStudents : NSObject, NSCoding{
     
     var id : Int?

@@ -32,12 +32,21 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
     var id1 = ""
     var id2 = ""
     var backgroundTask:UIBackgroundTaskIdentifier = UIBackgroundTaskInvalid
+    private var reachability:Reachability!
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
         
         locationManager.delegate = self
         locationManager.requestAlwaysAuthorization()
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(checkForReachability(notification:)), name: ReachabilityChangedNotification, object: nil)
+        self.reachability = Reachability.init()
+        do{
+            try self.reachability.startNotifier()
+        }catch{
+            log.error(error.localizedDescription)
+        }
         
         bluetoothManager.delegate = self
         bluetoothManager = CBPeripheralManager.init(delegate: self, queue: nil)
@@ -49,9 +58,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
             self.window?.rootViewController = home
         }
         UNUserNotificationCenter.current().delegate = self
-        FirebaseApp.configure()
-        Messaging.messaging().delegate = self
-        Messaging.messaging().shouldEstablishDirectChannel = true
         /*UNUserNotificationCenter.current().delegate = self
          UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound]) {
          (success, error) in
@@ -108,6 +114,30 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
         
         return true
     }
+    
+    @objc func checkForReachability(notification:NSNotification){
+        
+        let reachability = notification.object as! Reachability
+        if reachability.isReachable{
+            if reachability.isReachableViaWiFi{
+                print("Reachable via WiFi")
+            }else{
+                print("Reachable via Cellular")
+            }
+            
+            //take attendance for offline data
+            if let offlineData = NSKeyedUnarchiver.unarchiveObject(withFile: filePath.offlineData) as? [Attendance]{
+                for i in offlineData{
+                    self.takeAttendance(attendance: i)
+                }
+            }
+            
+        }else{
+            print("Network not reachable")
+        }
+        
+    }
+    
     func isInternetAvailable() -> Bool
     {
         var zeroAddress = sockaddr_in()
@@ -357,43 +387,64 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
         log.info("bg did determine state \(region.identifier)" )
         switch state {
         case .inside:
-            log.info("inside !!!!!")
-            checkAttendance.checkAttendance()
-            //checkStudent(id: Int(region.identifier)!)
+            log.info("inside \(region.identifier)")
             Constant.identifier = region.identifier
+            if isInternetAvailable(){
+                checkAttendance.checkAttendance()
+                NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "notTaken"), object: nil)
+                NotificationCenter.default.addObserver(self,selector: #selector(registerAttendance), name: NSNotification.Name(rawValue: "notTaken"), object: nil)
+            }else{
+                registerAttendance()
+            }
             UserDefaults.standard.set(Format.Format(date: Date(), format: "HH:mm:ss"), forKey: "monitor time")
-            NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "notTaken"), object: nil)
-            NotificationCenter.default.addObserver(self,selector: #selector(takeAttendance), name: NSNotification.Name(rawValue: "notTaken"), object: nil)
+            
         case .outside: log.info("Outside bg \(region.identifier)")
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "notTaken"), object: nil)
         case .unknown: log.info("Unknown")
         }
     }
     
-    private func checkStudent(id:Int){
-        var check = false
-        for i in GlobalData.tempStudents{
-            if i.id == id{
-                check = true
+    @objc func registerAttendance(){
+        print("registering attendace")
+        NotificationCenter.default.removeObserver(self, name: Notification.Name(rawValue: "notTaken"), object: nil)
+        if !Constant.change_device{
+            let newAttendance = Attendance(lessonDateId: GlobalData.currentLesson.ldateid!, lecturerId: Int(Constant.identifier)!, studentId: Constant.student_id)
+            if isInternetAvailable(){
+                takeAttendance(attendance: newAttendance)
+            }else{
+                if var offlineData = NSKeyedUnarchiver.unarchiveObject(withFile: filePath.offlineData) as? [Attendance]{
+                    if offlineData.filter({$0.lessonDateID == GlobalData.currentLesson.ldateid}).first == nil{
+                        offlineData.append(newAttendance)
+                    }
+                    NSKeyedArchiver.archiveRootObject(offlineData, toFile: filePath.offlineData)
+                }else{
+                    var offlineData = [Attendance]()
+                    offlineData.append(newAttendance)
+                    NSKeyedArchiver.archiveRootObject(offlineData, toFile: filePath.offlineData)
+                }
             }
-        }
-        if check == false{
-            NotificationCenter.default.post(name: NSNotification.Name(rawValue: "notTaken"), object: nil)
         }
     }
     
-    @objc func takeAttendance() {
-        NotificationCenter.default.removeObserver(self, name: Notification.Name(rawValue: "notTaken"), object: nil)
+    private func removeAttendance(attendance:Attendance){
+        print("removing attendance")
+        if var offlineData = NSKeyedUnarchiver.unarchiveObject(withFile: filePath.offlineData) as? [Attendance]{
+            offlineData = offlineData.filter({$0.lessonDateID != attendance.lessonDateID})
+            NSKeyedArchiver.archiveRootObject(offlineData, toFile: filePath.offlineData)
+        }
+    }
+    
+    private func takeAttendance(attendance:Attendance) {
+        print("taking attendance")
         if Constant.change_device == true{
             
         }else{
-            log.info(" bg Inside \(Constant.identifier)");
             Constant.token = UserDefaults.standard.string(forKey: "token")!
             Constant.student_id = UserDefaults.standard.integer(forKey: "student_id")
             
             let para1: Parameters = [
-                "lesson_date_id": GlobalData.currentLesson.ldateid!,
-                "lecturer_id": Constant.identifier,
+                "lesson_date_id": attendance.lessonDateID!,
+                "lecturer_id": attendance.lecturerID!,
                 "student_id": Constant.student_id,
                 ]
             
@@ -409,6 +460,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
             Alamofire.request(Constant.URLatk, method: .post, parameters: parameters, encoding: JSONEncoding.default, headers: headers).responseJSON { (response:DataResponse) in
                 
                 let statusCode = response.response?.statusCode
+                Timer.after(5, {
+                    self.uploadLogFile()
+                })
                 if (statusCode == 200){
                     NotificationCenter.default.post(name: Notification.Name(rawValue:"taken"), object: nil)
 //                    if let start_time = UserDefaults.standard.string(forKey: "broadcast time"){
@@ -416,6 +470,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
 //                        let time_interval = Format.Format(string: end_time, format: "HH:mm:ss").timeIntervalSince(Format.Format(string: start_time, format: "HH:mm:ss"))
 //                        print("Performance" + String(describing:time_interval))
 //                    }
+                    self.removeAttendance(attendance: attendance)
                     if let start_time = UserDefaults.standard.string(forKey: "monitor time"){
                         let end_time = Format.Format(date: Date(), format: "HH:mm:ss")
                         let time_interval = Format.Format(string: end_time, format: "HH:mm:ss").timeIntervalSince(Format.Format(string: start_time, format: "HH:mm:ss"))
@@ -424,7 +479,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
                     
                     //Upload log file
                     
-                    GlobalData.myAttendance.append(GlobalData.currentLesson.ldateid!)
+                    GlobalData.myAttendance.append(attendance.lessonDateID!)
                     NotificationCenter.default.post(name: NSNotification.Name(rawValue: "atksuccesfully"), object: nil)
                     let systemSoundID: SystemSoundID = 1315
                     AudioServicesPlaySystemSound(systemSoundID)
@@ -433,7 +488,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
                     notification.addNotification(trigger: trigger, content: content, identifier: "a")
                     //Save record locally
                     let tempStudent = TempStudents()
-                    tempStudent.id = Int(Constant.identifier)
+                    tempStudent.id = attendance.lecturerID
                     GlobalData.tempStudents.append(tempStudent)
                     NSKeyedArchiver.archiveRootObject(GlobalData.tempStudents, toFile: filePath.tempStudents)
                 }
